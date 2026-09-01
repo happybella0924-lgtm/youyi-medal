@@ -13,7 +13,7 @@
 :root{--orange:#e8622a;--orange-light:#f09060;--orange-deep:#c4520e;--orange-tint:#fef8f4;--orange-tint2:#fdf0e8;--red:#c8372e;--red-light:#e04940;--red-deep:#a02520;--red-tint:#fdf0ee;--gold:#c49a3a;--gold-light:#dbb050;--bg:#f5f5f2;--bg-warm:#fafbfc;--text:#1a2332;--text-soft:#5c6b7a;--text-muted:#8e99a4;--border:rgba(0,0,0,.08);--border-warm:rgba(0,0,0,.06);--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 16px rgba(0,0,0,.07);--shadow-lg:0 12px 40px rgba(0,0,0,.1);--shadow-hover:0 8px 24px rgba(0,0,0,.09);--radius:16px;--radius-sm:10px;--serif:'MiSans','PingFang SC','Microsoft YaHei',sans-serif;--sans:'MiSans',-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC',sans-serif;--ease-out:cubic-bezier(.23,1,.32,1);--ease-in-out:cubic-bezier(.77,0,.175,1);--ease-spring:cubic-bezier(.22,1,.36,1)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:radial-gradient(ellipse 120% 100% at 50% 0%,#fff8f3 0%,#fef0e6 30%,#f5f5f2 70%,var(--bg) 100%) fixed;color:var(--text);line-height:1.7;overflow-x:hidden}
+body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F6 50%,#B8C3E8 100%);background-attachment:fixed;min-height:100vh;color:var(--text);line-height:1.7;overflow-x:hidden}
 ::selection{background:var(--orange);color:#fff}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:var(--bg)}
@@ -410,7 +410,7 @@ img{max-width:100%;height:auto}
 #hero{min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
 .hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px}
 .hero-left-5200{flex:0 1 520px;padding-top:32px;opacity:0;animation:h5-fadeUp 1s .2s cubic-bezier(.22,1,.36,1) forwards}
-.hero-edition{font-size:13px;font-weight:600;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards}
+.hero-edition{font-size:13px;font-weight:700;color:#c8372e;letter-spacing:2px;margin-bottom:8px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards;display:inline-block;border:1.5px solid #c8372e;border-radius:4px;padding:3px 10px;background:rgba(200,55,46,.06)}
 .hero-heading-5200{font-family:var(--serif);font-size:64px;font-weight:900;line-height:64px;letter-spacing:-1.5px}
 .hero-heading-5200 .t-dark{color:#111;font-size:72px;font-weight:900}
 .hero-heading-5200 .t-light{background:linear-gradient(90deg,#f55a28 0%,#f09030 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:54px;font-weight:900;line-height:1.3;letter-spacing:0;margin-top:12px;display:inline-block;white-space:nowrap}
@@ -558,7 +558,7 @@ hero.addEventListener('pointerleave',()=>{px=0;py=0});
 <!-- TIMELINE -->
 <section id="timeline" style="padding:36px 28px;max-width:1080px;margin:0 auto">
 <div class="section-header">
-<div class="section-label">PROJECT OVERVIEW</div>
+
 <h2 class="section-title">项目简介</h2>
 </div>
 <div class="timeline-h" style="position:relative;margin-top:48px;display:flex;align-items:flex-start;justify-content:space-between">
@@ -598,7 +598,7 @@ hero.addEventListener('pointerleave',()=>{px=0;py=0});
 <!-- DIARIES -->
 <section id="diaries">
 <div class="section-header">
-<div class="section-label">ALL DIARIES</div>
+
 <h2 class="section-title">点亮他人</h2>
 <p class="section-subtitle">每人每天5票，选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
 </div>
@@ -627,7 +627,7 @@ hero.addEventListener('pointerleave',()=>{px=0;py=0});
 <!-- VOTING / STATS -->
 <section id="voting">
 <div class="section-header">
-<div class="section-label">LIVE FEED</div>
+
 <h2 class="section-title">实时动态</h2>
 <p class="section-subtitle">每一次点赞都是对他人努力的认可，让光芒被更多人看见。</p>
 </div>
@@ -646,7 +646,7 @@ hero.addEventListener('pointerleave',()=>{px=0;py=0});
 <!-- SHARE -->
 <section id="share" style="padding:64px 32px;max-width:1080px;margin:0 auto">
 <div class="section-header">
-<div class="section-label">SHARE YOUR STORY</div>
+
 <h2 class="section-title">分享自己</h2>
 <p class="section-subtitle">下载投稿模版，写下你的故事，发送给小王即可参与</p>
 </div>
@@ -668,7 +668,7 @@ hero.addEventListener('pointerleave',()=>{px=0;py=0});
 
 <!-- ABOUT -->
 <section id="about">
-<div class="section-header"><div class="section-label">ABOUT US</div><h2 class="section-title">关于我们</h2></div>
+<div class="section-header"><h2 class="section-title">关于我们</h2></div>
 <p style="text-align:center;font-size:17px;color:var(--text-soft);max-width:720px;margin:0 auto 24px;line-height:1.9">"和用户交朋友"本质上是指导所有小米人工作的价值原点，以平等、尊重的态度面对每一个内/外部用户，倾听真实声音，洞察真实需求，解决实际问题，不欺骗，不盲从，追求长期发展，与用户共同成长。</p>
 <p style="text-align:center;font-size:17px;color:var(--text-soft);max-width:720px;margin:0 auto 48px;line-height:1.9">我们致力于挖掘践行"和用户交朋友"的价值观标杆，并对他/她说：<strong style="color:var(--orange)">"谢谢你，朋友"</strong></p>
 </section>
