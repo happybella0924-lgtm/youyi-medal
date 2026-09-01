@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>友谊奖章｜致敬每一位与用户交朋友的朋友</title>
+<link rel="stylesheet" href="fonts/misans-local.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@font-face{font-family:'MiSans';src:url('file:///Users/mi/Desktop/youyi-medal-v2/public/fonts/MiSans-Heavy.ttf') format('truetype');font-weight:900;font-display:block}
+</style>
+<style>
+:root{--orange:#e8622a;--orange-light:#f09060;--orange-deep:#c4520e;--orange-tint:#fef8f4;--orange-tint2:#fdf0e8;--red:#c8372e;--red-light:#e04940;--red-deep:#a02520;--red-tint:#fdf0ee;--gold:#c49a3a;--gold-light:#dbb050;--bg:#f5f5f2;--bg-warm:#fafbfc;--text:#1a2332;--text-soft:#5c6b7a;--text-muted:#8e99a4;--border:rgba(0,0,0,.08);--border-warm:rgba(0,0,0,.06);--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 16px rgba(0,0,0,.07);--shadow-lg:0 12px 40px rgba(0,0,0,.1);--shadow-hover:0 8px 24px rgba(0,0,0,.09);--radius:16px;--radius-sm:10px;--serif:'MiSans','PingFang SC','Microsoft YaHei',sans-serif;--sans:'MiSans',-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC',sans-serif;--ease-out:cubic-bezier(.23,1,.32,1);--ease-in-out:cubic-bezier(.77,0,.175,1);--ease-spring:cubic-bezier(.22,1,.36,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:radial-gradient(ellipse 120% 100% at 50% 0%,#fff8f3 0%,#fef0e6 30%,#f5f5f2 70%,var(--bg) 100%) fixed;color:var(--text);line-height:1.7;overflow-x:hidden}
+::selection{background:var(--orange);color:#fff}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
+.nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
+.nav-logo-text{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--text);letter-spacing:-0.01em;line-height:1.3}
+.nav-logo-text .sub{font-size:11px;color:var(--text-muted);font-weight:400;display:block;margin-top:2px;letter-spacing:1px}
+.nav-links{display:flex;gap:28px;align-items:center;margin-right:0}
+.nav-links a{text-decoration:none;color:var(--text);font-size:14px;font-weight:500;position:relative;padding:4px 0;transition:color .2s var(--ease-out);cursor:pointer}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:var(--orange);transition:width .25s var(--ease-out)}
+.nav-links a:hover{color:var(--orange)}
+.nav-links a:hover::after{width:100%}
+.nav-links a.active{color:var(--orange)}
+.nav-links a.active::after{width:100%}
+.nav-cta{background:var(--orange);color:#fff!important;padding:8px 20px!important;border-radius:9999px;font-size:13px!important;font-weight:600;transition:transform .16s var(--ease-out),background .2s var(--ease-out),box-shadow .3s var(--ease-out);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.nav-cta:hover{background:var(--orange-deep);transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,98,42,.2)}
+.nav-cta:active{transform:scale(.97)}
+.nav-cta::after{display:none}
+
+/* HERO */
+#hero{min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;max-width:none;padding:0 32px}
+.hero-particles{display:none}
+.hero-particle-wrap{position:absolute;animation:floatParticle var(--float-dur,20s) infinite linear;animation-delay:var(--float-delay,0s);will-change:transform;pointer-events:auto}
+@keyframes floatParticle{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(8px,-10px) rotate(1.5deg)}50%{transform:translate(-6px,8px) rotate(-1deg)}75%{transform:translate(5px,5px) rotate(.5deg)}100%{transform:translate(0,0) rotate(0)}}
+.hero-particle{width:52px;height:52px;border-radius:50%;background-size:cover;background-position:center;opacity:.35;cursor:pointer;transition:opacity .3s var(--ease-out),transform .3s var(--ease-out),box-shadow .3s var(--ease-out);position:relative;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-particle:hover{opacity:1;transform:scale(1.35);z-index:10;border-color:var(--orange);box-shadow:0 8px 32px rgba(245,124,46,.3)}
+.hero-particle .particle-text{font-family:var(--serif);font-weight:700;font-size:20px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.2)}
+.particle-preview{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) scale(.95) translateY(6px);width:220px;background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.14);opacity:0;visibility:hidden;transition:opacity .25s var(--ease-out),transform .25s var(--ease-out),visibility .25s;pointer-events:none;z-index:20;overflow:hidden}
+.hero-particle:hover .particle-preview{opacity:1;visibility:visible;transform:translateX(-50%) scale(1) translateY(0)}
+.particle-preview-img{width:100%;height:100px;background-size:cover;background-position:center}
+.particle-preview-body{padding:12px 14px}
+.particle-preview-cat{font-size:10px;font-weight:600;letter-spacing:.5px;margin-bottom:4px}
+.particle-preview-title{font-family:var(--serif);font-size:14px;font-weight:700;line-height:1.4;margin-bottom:6px;color:var(--text)}
+.particle-preview-excerpt{font-size:11px;color:var(--text-muted);line-height:1.6;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.particle-preview-author{font-size:11px;font-weight:500}
+.particle-preview-author::before{content:'— '}
+.hero-particle-wrap.pb-bottom .particle-preview{bottom:auto;top:calc(100% + 14px)}
+.hero-content{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.hero-logo-medal{width:200px;height:200px;filter:drop-shadow(0 8px 28px rgba(245,124,46,.3)) brightness(1.08) contrast(1.15) saturate(1.1);position:relative}
+.hero-logo-medal::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4) 0%,transparent 50%);pointer-events:none}
+.medal-reveal{position:relative;z-index:15;width:clamp(260px,38vw,420px);height:clamp(260px,38vw,420px);cursor:none;user-select:none;filter:drop-shadow(0 0 60px rgba(255,120,50,.2)) drop-shadow(0 0 120px rgba(200,80,30,.1))}
+.medal-base{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat}
+.medal-top{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat;z-index:2;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.hero-title-inline{font-family:var(--serif);font-weight:800;font-size:clamp(40px,7vw,96px);line-height:1.05;letter-spacing:0.04em;color:#111}
+.hero-title-inline .accent{background:linear-gradient(90deg,#f55a28 0%,#f09030 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-line1{font-family:var(--sans);font-weight:300;font-size:clamp(18px,3vw,36px);color:var(--text-soft);letter-spacing:0.08em;position:relative;z-index:10;margin-bottom:clamp(-30px,-4vw,-16px);opacity:0;animation:fadeUp 1s .2s forwards}
+.hero-line2{font-family:var(--sans);font-weight:800;font-size:clamp(52px,12vw,140px);color:var(--text);letter-spacing:-0.02em;position:relative;z-index:30;margin-top:clamp(-50px,-6vw,-24px);opacity:0;animation:fadeUp 1s .5s forwards}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(245,124,46,.06) 0%,rgba(245,124,46,.02) 40%,transparent 70%);pointer-events:none;z-index:1}
+.hero-stars{position:absolute;inset:0;z-index:1;pointer-events:none}
+.hero-star{position:absolute;width:2px;height:2px;background:var(--orange);border-radius:50%;opacity:0;animation:starTwinkle 3s ease-in-out infinite}
+@keyframes starTwinkle{0%,100%{opacity:.05}50%{opacity:.35}}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.6);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:0.5px solid rgba(255,255,255,.5);padding:6px 16px;border-radius:30px;font-size:13px;color:var(--orange-deep);font-weight:500;margin-bottom:16px;opacity:0;animation:fadeUp .8s .2s forwards}
+.hero-tag .live-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 1.5s infinite}
+.hero-slogan{font-family:var(--serif);font-weight:600;font-size:clamp(24px,3.5vw,40px);color:var(--orange);margin-bottom:16px;letter-spacing:6px;opacity:0;animation:fadeUp 1s .6s forwards}
+.hero-intro{font-size:15px;color:var(--text-muted);max-width:640px;line-height:1.6;margin:0 auto 16px;opacity:0;animation:fadeUp 1s .8s forwards;white-space:normal}
+.hero-actions{display:flex;gap:16px;align-items:center;justify-content:center;opacity:0;animation:fadeUp 1s 1s forwards}
+.btn-primary{background:var(--orange);color:#fff;border:none;padding:14px 32px;border-radius:9999px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s var(--ease-out),background .2s var(--ease-out),box-shadow .25s var(--ease-out);display:inline-flex;align-items:center;gap:8px;font-family:var(--sans)}
+.btn-primary:hover{background:var(--orange-deep);transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,98,42,.18)}
+.btn-primary:active{transform:scale(.97);transition-duration:.08s}
+.btn-outline{background:rgba(255,255,255,.6);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);color:var(--text);border:0.5px solid rgba(255,255,255,.5);padding:12px 30px;border-radius:30px;font-size:15px;font-weight:500;cursor:pointer;transition:transform .16s ease-out,border-color .2s ease,color .2s ease;font-family:var(--sans)}
+.btn-outline:hover{border-color:var(--orange);color:var(--orange)}
+.btn-outline:active{transform:scale(.97)}
+.hero-stats{display:flex;gap:20px;justify-content:center;margin-top:20px;opacity:0;animation:fadeUp 1s 1.2s forwards}
+.hero-stat{text-align:center;padding:0;background:none;border:none}
+.hero-stat .num{font-family:var(--serif);font-weight:800;font-size:32px;color:var(--orange);display:block;line-height:1.2}
+.hero-stat .label{font-size:11px;color:var(--text-muted);letter-spacing:0.5px;margin-top:4px}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-muted);font-size:10px;letter-spacing:2px;opacity:0;animation:fadeUp 1s 1.4s forwards}
+.scroll-indicator .arrow{width:1px;height:32px;background:var(--orange);position:relative;overflow:hidden}
+.scroll-indicator .arrow::after{content:'';position:absolute;top:-32px;left:0;width:1px;height:32px;background:var(--orange-deep);animation:scrollDown 2s infinite}
+@keyframes scrollDown{0%{top:-32px}100%{top:32px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+/* TAG COLORS */
+.tag-rescue{--tag-c:#c8372e;--tag-bg:#fdf0ee}
+.tag-support{--tag-c:#f57c2e;--tag-bg:#fff5ed}
+.tag-warm{--tag-c:#d4a843;--tag-bg:#fef9ee}
+.tag-shine{--tag-c:#2e8b57;--tag-bg:#edf8f2}
+
+/* SECTION COMMON */
+section{padding:36px 24px;max-width:1080px;margin:0 auto}
+.section-header{margin-bottom:20px;text-align:center}
+.section-label{font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;font-weight:600;margin-bottom:12px}
+.section-title{font-family:var(--serif);font-weight:700;font-size:clamp(28px,3.5vw,40px);color:var(--text);letter-spacing:-0.02em;line-height:1.2;margin-bottom:12px}
+.section-subtitle{font-size:15px;color:var(--text-muted);max-width:540px;margin:0 auto;line-height:1.7}
+
+/* DIARIES */
+#diaries{background:transparent}
+.diary-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.filter-tab{padding:8px 18px;border:1px solid rgba(0,0,0,.08);border-radius:9999px;background:#fff;font-size:13px;color:var(--text-soft);cursor:pointer;transition:transform .12s var(--ease-out),border-color .2s ease,color .2s ease,background .2s ease;font-family:var(--sans);font-weight:500;display:flex;align-items:center;gap:6px}
+.filter-tab:hover{border-color:var(--orange);color:var(--orange)}
+.filter-tab:active{transform:scale(.97)}
+.filter-tab.active{background:var(--orange);border-color:var(--orange);color:#fff}
+.filter-tab .tag-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.filter-tab.active .tag-dot{background:#fff!important}
+.diary-tools-right{display:flex;align-items:center;gap:16px}
+.search-box{position:relative;display:flex;align-items:center}
+.search-box input{padding:8px 16px 8px 36px;border:1.5px solid var(--border);border-radius:30px;font-size:13px;width:200px;outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out),width .3s var(--ease-out);font-family:var(--sans);background:#fff}
+.search-box input:focus{border-color:var(--orange);width:260px;box-shadow:0 0 0 3px rgba(232,98,42,.08)}
+.search-box svg{position:absolute;left:12px;width:16px;height:16px;color:var(--text-muted)}
+.shuffle-btn{padding:8px 18px;border:1.5px solid var(--orange);border-radius:30px;font-size:13px;background:var(--orange-tint);color:var(--orange-deep);cursor:pointer;transition:transform .12s var(--ease-out),background .2s var(--ease-out),color .2s var(--ease-out),box-shadow .2s var(--ease-out);font-family:var(--sans);font-weight:500;display:flex;align-items:center;gap:6px}
+.shuffle-btn:hover{background:var(--orange);color:#fff;box-shadow:0 2px 8px rgba(232,98,42,.2)}
+.shuffle-btn:active{transform:scale(.97)}
+
+/* MASONRY */
+.masonry{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1200px){.masonry{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){.masonry{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.masonry{grid-template-columns:repeat(2,1fr);gap:10px}}
+.card{background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:1px solid rgba(0,0,0,.06);transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),border-color .25s var(--ease-out),opacity .4s var(--ease-out);position:relative;opacity:0;transform:translateY(16px);cursor:pointer;display:flex;flex-direction:column}
+.card.visible{opacity:1;transform:translateY(0)}
+.card:hover{box-shadow:var(--shadow-hover);border-color:rgba(0,0,0,.1);transform:translateY(-2px)}
+.card:active{transform:scale(.98);transition-duration:.1s}
+.card.voted{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange),var(--shadow-sm)}
+.card-img{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;background:#f5f5f5}
+.card-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .35s var(--ease-out)}
+.card-gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:4;transition:background .3s}
+.card-gallery-nav:hover{background:rgba(245,124,46,.85)}
+.card-gallery-prev{left:8px}
+.card-gallery-next{right:8px}
+.card-gallery-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 8px;border-radius:12px;z-index:4}
+.card-video-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:rgba(245,124,46,.9);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;pointer-events:none}
+.card-media-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:4px 10px;border-radius:20px;z-index:3;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px)}
+.card-tag-badge{position:absolute;top:12px;right:12px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;z-index:3;color:var(--tag-c);background:var(--tag-bg);backdrop-filter:blur(4px);border:1px solid var(--tag-c)}
+.card-zoom-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(245,124,46,.85);padding:6px 16px;border-radius:20px;font-size:12px;color:#fff;opacity:0;transition:opacity .3s;z-index:3;display:flex;align-items:center;gap:4px;font-weight:500;pointer-events:none}
+.card:hover .card-zoom-hint{opacity:.9}
+.card-new-badge{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 12px;border-radius:20px;z-index:3;letter-spacing:1px;animation:pulse 2s infinite}
+.card-body{padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:6px}
+.card-title{font-weight:600;font-size:14px;color:var(--text);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-excerpt{font-size:12px;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px}
+.card-author{display:flex;align-items:center;gap:8px}
+.author-avatar{width:36px;height:36px;border-radius:50%;background:var(--orange-tint);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--orange-deep);flex-shrink:0;overflow:hidden}
+.author-avatar img{width:100%;height:100%;object-fit:cover}
+.author-info{display:flex;flex-direction:column}
+.author-name{font-size:12px;font-weight:500;color:var(--text)}
+.author-date{font-size:10px;color:var(--text-muted)}
+.card-footer-right{display:flex;align-items:center;gap:6px}
+.card-comment-count{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text-muted);padding:3px 8px;border:1px solid var(--border);border-radius:20px;background:#fff}
+.card-comment-count svg{width:12px;height:12px}
+.like-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid rgba(0,0,0,.08);border-radius:9999px;background:#fff;cursor:pointer;transition:transform .12s var(--ease-out),border-color .2s ease,color .2s ease,background .2s ease;font-size:12px;font-weight:600;color:var(--text-soft);font-family:var(--sans)}
+.like-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-tint)}
+.like-btn:active{transform:scale(.97)}
+.like-btn.voted{background:var(--orange);border-color:var(--orange);color:#fff}
+.like-btn .heart-icon{width:16px;height:16px;transition:transform .3s}
+.like-btn.voted .heart-icon{animation:heartBeat .6s}
+
+/* IMAGE VIEWER */
+#imageViewer{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s var(--ease-out)}
+#imageViewer.show{opacity:1;pointer-events:all}
+#viewerImg{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.viewer-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s var(--ease-out),background .2s var(--ease-out);z-index:2}
+.viewer-nav:hover{background:rgba(245,124,46,.8)}
+.viewer-nav:active{transform:translateY(-50%) scale(.9)}
+#viewerPrev{left:24px}
+#viewerNext{right:24px}
+#viewerClose{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s;z-index:2}
+#viewerClose:hover{background:rgba(245,124,46,.8)}
+#viewerCount{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:14px;background:rgba(0,0,0,.4);padding:6px 16px;border-radius:20px}
+.detail-gallery{position:relative;width:100%}
+.detail-gallery .detail-media{width:100%;border-radius:var(--radius);max-height:480px;object-fit:cover}
+.detail-gallery .card-gallery-nav{top:45%}
+@keyframes heartBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.25)}50%{transform:scale(.95)}75%{transform:scale(1.1)}}
+.card-gradient{height:100px;border-radius:0;margin:-24px -24px 20px}
+
+/* VOTING SECTION - LEFT RIGHT LAYOUT */
+#voting{background:transparent}
+.voting-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;align-items:start}
+@media(max-width:900px){.voting-layout{grid-template-columns:1fr}}
+.voting-stats-col{display:flex;flex-direction:column;gap:16px}
+.voting-stat{text-align:center;padding:16px 12px;background:#fff;border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out)}
+.voting-stat:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.voting-stat .stat-num{font-family:var(--serif);font-weight:900;font-size:36px;color:var(--orange);display:block;line-height:1;margin-bottom:8px}
+.voting-stat .stat-label{font-size:12px;color:var(--text-muted);letter-spacing:2px}
+.activity-feed{background:#fff;border-radius:var(--radius);padding:16px;border:1px solid rgba(0,0,0,.06)}
+.activity-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.activity-title{font-family:var(--serif);font-weight:700;font-size:20px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--orange);font-weight:600;background:var(--orange-tint);padding:4px 12px;border-radius:20px}
+.live-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 1.5s infinite}
+.activity-list{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto}
+.activity-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--orange-tint);border-radius:var(--radius-sm);animation:slideInRight .35s var(--ease-out)}
+@keyframes slideInRight{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.activity-avatar{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.activity-text{font-size:13px;color:var(--text-soft);flex:1}
+.activity-text .vote-target{font-weight:600;color:var(--orange-deep)}
+.activity-time{font-size:11px;color:var(--text-muted);white-space:nowrap}
+
+/* ABOUT */
+#about{background:transparent}
+.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+@media(max-width:900px){.about-layout{grid-template-columns:1fr}}
+.about-text h2{font-family:var(--serif);font-weight:700;font-size:28px;margin-bottom:12px;line-height:1.3}
+.about-text h2 .accent{color:var(--orange)}
+.about-text p{font-size:14px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;word-break:keep-all;overflow-wrap:break-word;line-break:strict}
+.about-text .activity-desc{background:var(--orange-tint);border-left:4px solid var(--orange);padding:16px 20px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:16px 0}
+.about-text .activity-desc p{font-size:15px;color:var(--text-soft);margin-bottom:12px;line-height:2;word-break:keep-all;overflow-wrap:break-word;line-break:strict}
+.about-text .activity-desc p:last-child{margin-bottom:0}
+.about-text .activity-desc strong{color:var(--orange-deep)}
+.about-values{display:flex;flex-direction:column;align-items:center;gap:20px;max-width:560px;margin:0 auto}
+@media(max-width:640px){.about-values{max-width:100%}}
+.value-card{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;background:#fff;border-radius:var(--radius);border:1px solid var(--border);transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),border-color .25s var(--ease-out);width:100%}
+.value-card:hover{border-color:var(--orange);box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.value-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px}
+.value-content h3{font-family:var(--serif);font-weight:600;font-size:18px;margin-bottom:6px}
+.value-content p{font-size:14px;color:var(--text-muted);line-height:1.7;margin:0}
+
+/* MODAL */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),visibility .3s}
+.modal-overlay.active{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:20px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;padding:40px;position:relative;transform:translateY(12px) scale(.97);opacity:0;transition:transform .3s var(--ease-out),opacity .25s var(--ease-out)}
+.modal-overlay.active .modal{transform:translateY(0) scale(1);opacity:1}
+.story-detail-modal{max-width:820px}
+.modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border:none;background:var(--bg);border-radius:50%;cursor:pointer;font-size:18px;color:var(--text-muted);transition:transform .12s var(--ease-out),background .2s var(--ease-out),color .2s var(--ease-out);display:flex;align-items:center;justify-content:center;z-index:5}
+.modal-close:hover{background:var(--orange-tint);color:var(--orange)}
+.modal-close:active{transform:scale(.9)}
+.modal-header{margin-bottom:32px}
+.modal-header h2{font-family:var(--serif);font-weight:700;font-size:28px;margin-bottom:8px}
+.modal-header p{font-size:14px;color:var(--text-muted)}
+.form-group{margin-bottom:24px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--sans);outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out);background:var(--bg-warm);color:var(--text)}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--orange);background:#fff;box-shadow:0 0 0 3px rgba(245,124,46,.1)}
+.form-group textarea{resize:vertical;min-height:120px;line-height:1.8}
+.char-count{text-align:right;font-size:12px;color:var(--text-muted);margin-top:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.modal-footer{display:flex;gap:12px;justify-content:flex-end;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+
+/* DETAIL NAV */
+.detail-nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:var(--orange);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2100;transition:transform .15s var(--ease-out),background .2s var(--ease-out),box-shadow .2s var(--ease-out);box-shadow:0 4px 20px rgba(245,124,46,.4)}
+.detail-nav:hover{background:var(--orange-deep);transform:translateY(-50%) scale(1.08)}
+.detail-nav:active{transform:translateY(-50%) scale(.92)}
+.detail-nav svg{width:22px;height:22px}
+.detail-nav-prev{left:24px}
+.detail-nav-next{right:24px}
+@media(max-width:768px){.detail-nav{width:40px;height:40px}.detail-nav-prev{left:8px}.detail-nav-next{right:8px}}
+
+/* MEDIA UPLOAD */
+.upload-area{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;cursor:pointer;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out);background:var(--bg-warm);position:relative}
+.upload-area:hover{border-color:var(--orange);background:var(--orange-tint)}
+.upload-area.has-file{padding:8px;border-style:solid;border-color:var(--orange);background:var(--orange-tint);cursor:default}
+.upload-preview{position:relative}
+.upload-preview img,.upload-preview video{width:100%;border-radius:var(--radius-sm);max-height:200px;object-fit:cover}
+.upload-remove{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s}
+.upload-remove:hover{background:rgba(0,0,0,.85)}
+.upload-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:var(--text-muted)}
+.upload-placeholder svg{width:28px;height:28px;color:var(--orange);opacity:.5}
+.upload-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.upload-row{grid-template-columns:1fr}}
+
+/* STORY DETAIL */
+.detail-tag-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:12px}
+.detail-title{font-family:var(--serif);font-weight:700;font-size:28px;line-height:1.4;margin-bottom:20px}
+.detail-meta{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.detail-meta .author-avatar{width:42px;height:42px;font-size:16px}
+.detail-media{width:100%;border-radius:var(--radius);margin-bottom:24px;max-height:480px;object-fit:cover;display:block}
+.detail-text{font-size:16px;color:var(--text-soft);line-height:2.1;margin-bottom:24px}
+.detail-text p{margin-bottom:16px}
+.detail-text p:last-child{margin-bottom:0}
+.detail-text img{max-width:100%;max-height:360px;object-fit:cover;object-position:center;border-radius:8px;margin:16px 0;cursor:zoom-in;display:block}
+.detail-text strong{color:var(--text);font-weight:600}
+.detail-actions{display:flex;align-items:center;gap:20px;padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:32px;flex-wrap:wrap}
+.like-btn-large{display:flex;align-items:center;gap:8px;padding:10px 24px;border-radius:30px;border:2px solid var(--orange);background:var(--orange-tint);color:var(--orange-deep);font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s var(--ease-out),background .2s var(--ease-out),color .2s var(--ease-out),box-shadow .2s var(--ease-out);font-family:var(--sans)}
+.like-btn-large:hover{background:var(--orange);color:#fff;box-shadow:0 4px 12px rgba(232,98,42,.2)}
+.like-btn-large:active{transform:scale(.96)}
+.like-btn-large.voted{background:var(--orange);color:#fff}
+.like-btn-large svg{width:20px;height:20px}
+.detail-comment-count{font-size:14px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+
+/* COMMENTS */
+.comments-section{margin-top:8px}
+.comments-title{font-family:var(--serif);font-weight:700;font-size:20px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.comment-count-badge{background:var(--orange-tint);color:var(--orange);font-size:13px;padding:2px 12px;border-radius:20px;font-family:var(--sans)}
+.comment-list{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;max-height:400px;overflow-y:auto;padding-right:4px}
+.comment-item{display:flex;gap:12px;padding:16px;background:var(--bg-warm);border-radius:var(--radius-sm);border:1px solid var(--border);animation:fadeUp .35s var(--ease-out)}
+.comment-avatar{width:36px;height:36px;border-radius:50%;background:var(--orange-tint);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--orange-deep);flex-shrink:0}
+.comment-body{flex:1}
+.comment-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.comment-author{font-size:13px;font-weight:600;color:var(--text)}
+.comment-time{font-size:11px;color:var(--text-muted)}
+.comment-text{font-size:14px;color:var(--text-soft);line-height:1.7}
+.comment-empty{text-align:center;font-size:14px;color:var(--text-muted);padding:24px}
+.comment-form{display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--bg-warm);border-radius:var(--radius);border:1px solid var(--border)}
+.comment-form input,.comment-form textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--sans);outline:none;transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out);background:#fff;color:var(--text)}
+.comment-form input:focus,.comment-form textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(245,124,46,.1)}
+.comment-form textarea{resize:vertical;min-height:80px;line-height:1.7}
+.comment-submit-btn{align-self:flex-end;padding:10px 24px;font-size:14px}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:12px;align-items:center}
+.toast{background:var(--text);color:#fff;padding:14px 28px;border-radius:30px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.12);animation:toastIn .35s var(--ease-out);max-width:400px}
+.toast.success{background:var(--orange)}
+.toast .toast-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+@keyframes toastIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(30px)}}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;width:10px;height:10px;z-index:4000;pointer-events:none;animation:confettiFall 1s ease-out forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(-120px) rotate(360deg)}}
+
+/* FOOTER */
+footer{background:#2a2a2a;color:#fff;padding:24px 28px 14px;text-align:center}
+.footer-inner{max-width:600px;margin:0 auto}
+.footer-logo{width:90px;height:90px;margin:0 auto 16px;filter:drop-shadow(0 4px 16px rgba(245,124,46,.3)) brightness(1.1) contrast(1.15)}
+.footer-name{font-family:var(--serif);font-weight:900;font-size:24px;margin-bottom:10px;letter-spacing:3px}
+.footer-name .accent{color:var(--orange)}
+.footer-slogan{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:24px;letter-spacing:1px}
+.footer-divider{width:60px;height:2px;background:var(--orange);margin:0 auto 20px}
+.footer-links{display:flex;justify-content:center;gap:28px;margin-bottom:24px;flex-wrap:wrap}
+.footer-links a{color:rgba(255,255,255,.65);text-decoration:none;font-size:13px;transition:color .3s;cursor:pointer}
+.footer-links a:hover{color:var(--orange)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.35)}
+
+/* MOBILE NAV */
+.mobile-menu-btn{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px}
+.mobile-menu-btn span{width:22px;height:2px;background:var(--text);transition:transform .25s var(--ease-out),opacity .25s var(--ease-out)}
+@media(max-width:768px){
+nav{padding:14px 20px}nav.scrolled{padding:10px 20px}
+.nav-logo{margin-left:0}.nav-links{margin-right:0}
+.nav-links{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;flex-direction:column;padding:80px 30px 30px;gap:20px;transition:right .4s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 20px rgba(0,0,0,.1)}
+.nav-links.open{right:0}.nav-links a{font-size:16px;padding:12px 0}
+.mobile-menu-btn{display:flex;z-index:1001}
+.mobile-menu-btn.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.mobile-menu-btn.open span:nth-child(2){opacity:0}
+.mobile-menu-btn.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+section{padding:28px 14px}.hero-content{padding:0 14px}
+.form-row{grid-template-columns:1fr}.modal{padding:28px 20px}
+.diary-toolbar{flex-direction:column;align-items:stretch}
+.search-box input{width:100%}.search-box input:focus{width:100%}
+.hero-particle{width:40px;height:40px}
+.hero-stats{gap:24px}
+.hero-intro{white-space:normal}
+.hero-logo-medal{width:120px;height:120px}
+.medal-reveal{width:180px!important;height:180px!important}
+.hero-title-inline{letter-spacing:4px}
+.modal-content{max-height:85vh;-webkit-overflow-scrolling:touch}
+.detail-text{font-size:14px}
+.detail-media{max-height:300px}
+.detail-text img{max-height:280px}
+.voting-layout{grid-template-columns:1fr!important}
+.hero-stats{gap:16px}
+.stat-card{padding:12px}
+.stat-number{font-size:22px}
+}
+@media(max-width:480px){
+.hero-particle{width:32px;height:32px;border-width:2px}
+.nav-logo-text{font-size:15px}
+.nav-logo-text .sub{display:none}
+.hero-title-inline{font-size:20px!important;letter-spacing:2px}
+.modal{width:95%;padding:20px 12px}
+.card-body{padding:10px}
+.card-title{font-size:14px}
+.card-excerpt{font-size:11px}
+.section-title{font-size:22px}
+.hero-stats{flex-wrap:wrap;justify-content:center}
+}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px;border-radius:4px}
+button:focus-visible,a:focus-visible{outline-offset:3px}
+*{-webkit-tap-highlight-color:transparent}
+.modal-content{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+img{max-width:100%;height:auto}
+@media(prefers-reduced-motion:reduce){*,.card,.modal,.toast,.h5-orbit,.h5-avatar,.circles-container-5200{animation:none!important;transition-duration:.15s!important}.card.visible{opacity:1;transform:none}}
+@media(hover:hover)and (pointer:fine){.card:hover .card-img img{transform:scale(1.04)}}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+<div class="nav-logo" onclick="scrollToSection('hero')">
+<img src="logo.png" alt="友谊奖章" class="nav-logo-img">
+<div class="nav-logo-text">友谊奖章<span class="sub">中国区「五奖」荣誉体系</span></div>
+</div>
+<div class="nav-links" id="navLinks">
+<a onclick="scrollToSection('about')" data-section="about">项目简介</a>
+<a onclick="scrollToSection('voting')" data-section="voting">点亮他人</a>
+<a onclick="scrollToSection('diaries')" data-section="diaries">分享自己</a>
+<a onclick="scrollToSection('about')" data-section="about">关于我们</a>
+</div>
+<div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO (5200 style) -->
+<section id="hero">
+<style>
+/* Urbanist removed — unified to MiSans */
+@property --border-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+#hero{min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
+.hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px}
+.hero-left-5200{flex:0 1 520px;padding-top:32px;opacity:0;animation:h5-fadeUp 1s .2s cubic-bezier(.22,1,.36,1) forwards}
+.hero-edition{font-size:13px;font-weight:600;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards}
+.hero-heading-5200{font-family:var(--serif);font-size:64px;font-weight:900;line-height:64px;letter-spacing:-1.5px}
+.hero-heading-5200 .t-dark{color:#111;font-size:72px;font-weight:900}
+.hero-heading-5200 .t-light{background:linear-gradient(90deg,#f55a28 0%,#f09030 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:54px;font-weight:900;line-height:1.3;letter-spacing:0;margin-top:12px;display:inline-block;white-space:nowrap}
+.hero-heading-5200 .typing-cursor{display:inline-block;width:3px;height:56px;background:var(--orange);margin-left:2px;vertical-align:middle;animation:h5-blink .8s step-end infinite}
+@keyframes h5-blink{50%{opacity:0}}
+.hero-cta-5200{display:flex;gap:12px;align-items:center;margin-top:20px;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s}
+.hero-cta-5200.visible{opacity:1;transform:translateY(0)}
+.hero-stats-5200{display:flex;gap:16px;margin-top:20px;opacity:0;transform:translateY(10px);transition:opacity .5s .2s,transform .5s .2s}
+.hero-stats-5200.visible{opacity:1;transform:translateY(0)}
+.hero-stats-5200 .h5-stat{text-align:center}
+.hero-stats-5200 .h5-num{font-family:var(--serif);font-weight:700;font-size:32px;color:var(--orange);display:block;line-height:1.2}
+.hero-stats-5200 .h5-label{font-size:12px;color:var(--text-muted);letter-spacing:.5px;margin-top:4px}
+.h5-btn-wrap{position:relative;border-radius:50px;padding:3px;background:conic-gradient(from var(--border-angle),var(--orange),#1a1a1a,var(--orange),#1a1a1a,var(--orange));animation:h5-rotate 3s linear infinite}
+@keyframes h5-rotate{to{--border-angle:360deg}}
+.h5-btn{position:relative;display:inline-flex;align-items:center;gap:8px;border:none;border-radius:50px;background:#1a1a1a;color:#fff;font-family:var(--sans);font-size:16px;font-weight:500;padding:14px 28px;cursor:pointer;overflow:hidden;z-index:1}
+.h5-btn::after{content:'';position:absolute;inset:0;background:var(--orange);z-index:-1;transform:translateX(100%);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.h5-btn:hover::after{transform:translateX(0)}
+.h5-btn:active{transform:scale(.97)}
+.hero-right-5200{flex:1;display:flex;justify-content:center;align-items:center;margin-left:-80px;position:relative;z-index:0}
+.circles-container-5200{width:720px;height:720px;position:relative;opacity:0;animation:h5-scaleIn 1.2s .3s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes h5-scaleIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(.78)}}
+.circles-wrapper-5200{width:100%;height:100%;position:relative}
+.h5-orbit{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;animation:h5-spin linear infinite}
+.h5-orbit::before{content:'';position:absolute;inset:0;border-radius:50%;padding:1.5px;background:linear-gradient(180deg,rgba(232,98,42,0) 0%,rgba(232,98,42,.55) 43%,rgba(232,98,42,0) 100%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:h5-ringPulse 4s ease-in-out infinite}
+.h5-orbit:nth-child(2)::before{animation-duration:5s;animation-delay:.5s}
+.h5-orbit:nth-child(3)::before{animation-duration:6s;animation-delay:1s}
+.h5-orbit:nth-child(4)::before{animation-duration:4.5s;animation-delay:1.5s}
+@keyframes h5-ringPulse{0%,100%{opacity:.4}50%{opacity:.65}}
+@keyframes h5-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.h5-orbit-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}
+.h5-medal-reveal{position:relative;width:390px;height:390px;cursor:default;filter:drop-shadow(0 0 60px rgba(255,120,50,.25)) drop-shadow(0 0 120px rgba(200,80,30,.12));animation:h5-breathe 3.5s ease-in-out infinite}
+@keyframes h5-breathe{0%,100%{transform:scale(1);filter:drop-shadow(0 0 60px rgba(255,120,50,.25)) drop-shadow(0 0 120px rgba(200,80,30,.12))}50%{transform:scale(1.04);filter:drop-shadow(0 0 80px rgba(255,120,50,.4)) drop-shadow(0 0 140px rgba(200,80,30,.2))}}
+.h5-medal-base,.h5-medal-top{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat}
+.h5-medal-top{z-index:2;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.h5-avatar{position:absolute;top:50%;left:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;opacity:0;animation:h5-flyIn .8s cubic-bezier(.22,1,.36,1) forwards,h5-float var(--float-dur,4s) var(--float-delay,0s) ease-in-out infinite;transition:transform .3s var(--ease-out),border-color .2s,box-shadow .3s}
+.h5-avatar img{width:100%;height:100%;object-fit:cover}
+@keyframes h5-float{0%,100%{translate:0 0}50%{translate:0 -5px}}
+@media(hover:hover)and(pointer:fine){.h5-avatar:hover{border-color:var(--orange);transform:translate(-50%,-50%) rotate(var(--av-deg)) translate(var(--av-radius)) rotate(calc(-1*var(--av-deg))) scale(1.2)!important;z-index:10;box-shadow:0 0 28px var(--orange),0 0 56px rgba(232,98,42,.2)!important}}
+.h5-avatar.round{border-radius:50%}
+.h5-avatar.square{border-radius:20px}
+.h5-avatar.square-lg{border-radius:24px}
+@keyframes h5-flyIn{from{opacity:0;transform:translate(-50%,-50%) rotate(var(--av-deg)) translate(var(--av-radius)) rotate(calc(-1*var(--av-deg))) scale(.3) rotate(-180deg);filter:blur(4px)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--av-deg)) translate(var(--av-radius)) rotate(calc(-1*var(--av-deg))) scale(1) rotate(0deg);filter:blur(0)}}
+@keyframes h5-fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-muted);font-size:10px;letter-spacing:2px;opacity:0;animation:h5-fadeUp 1s 1.4s forwards}
+.scroll-indicator .arrow{width:1px;height:32px;background:var(--orange);position:relative;overflow:hidden}
+.scroll-indicator .arrow::after{content:'';position:absolute;top:-32px;left:0;width:1px;height:32px;background:var(--orange-deep);animation:h5-scrollDown 2s infinite}
+@keyframes h5-scrollDown{0%{top:-32px}100%{top:32px}}
+@media(max-width:1024px){.hero-flex{flex-direction:column;padding:40px 32px}.hero-heading-5200{font-size:48px;line-height:52px}.circles-container-5200{transform:scale(.6)!important}}
+@media(max-width:768px){.hero-heading-5200{font-size:36px;line-height:40px}.circles-container-5200{transform:scale(.45)!important}}
+</style>
+
+<div class="hero-flex">
+  <div class="hero-left-5200">
+    <div class="hero-edition">2026年Q2评选</div>
+    <h1 class="hero-heading-5200" id="h5Heading"></h1>
+    <div class="hero-cta-5200" id="h5Cta">
+      <div class="h5-btn-wrap"><button class="h5-btn" onclick="scrollToSection('diaries')">点亮他人 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    </div>
+  </div>
+  <div class="hero-right-5200">
+    <div class="circles-container-5200">
+      <div class="circles-wrapper-5200" id="h5CirclesWrapper">
+        <div class="h5-orbit" style="width:501px;height:501px;animation-duration:40s"></div>
+        <div class="h5-orbit" style="width:649px;height:649px;animation-duration:50s"></div>
+        <div class="h5-orbit" style="width:797px;height:797px;animation-duration:60s;animation-direction:reverse"></div>
+        <div class="h5-orbit-center">
+          <div class="h5-medal-reveal" id="h5MedalReveal">
+            <div class="h5-medal-base" style="background-image:url('medal-base.png')"></div>
+            <div class="h5-medal-top" id="h5MedalTop" style="background-image:url('medal-glow.png')"></div>
+            <canvas id="h5MedalCanvas" style="display:none"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+// Typewriter
+const FULL_TEXT="友谊奖章\n致敬和用户交朋友的朋友";
+const SPLIT=4;
+const heading=document.getElementById('h5Heading');
+let charCount=0,done=false;
+setTimeout(()=>{
+  const iv=setInterval(()=>{
+    if(charCount>=FULL_TEXT.length){clearInterval(iv);done=true;heading.querySelector('.typing-cursor')?.remove();document.getElementById('h5Cta').classList.add('visible');document.getElementById('h5Stats').classList.add('visible');return}
+    charCount++;
+    const displayed=FULL_TEXT.slice(0,charCount);
+    const line1=displayed.slice(0,SPLIT);
+    const line2=displayed.length>SPLIT?displayed.slice(SPLIT+1):'';
+    heading.innerHTML='<span class="t-dark">'+line1+'</span>'+(displayed.length>SPLIT?'<br>':'')+
+      '<span class="t-light">'+line2+'</span>'+(!done?'<span class="typing-cursor"></span>':'');
+  },35);
+},400);
+
+
+
+// Medal glow effect
+const mc=document.getElementById('h5MedalReveal');
+const mt=document.getElementById('h5MedalTop');
+const cv=document.getElementById('h5MedalCanvas');
+if(mc&&mt&&cv){
+  const ctx=cv.getContext('2d');
+  let mouse={x:-999,y:-999},smooth={x:-999,y:-999};
+  let idle=true,t=0;
+  function resize(){cv.width=mc.offsetWidth;cv.height=mc.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  mc.addEventListener('pointermove',e=>{const r=mc.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;idle=false});
+  mc.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999;idle=true});
+  (function loop(){
+    t+=.015;
+    if(idle){
+      const cx=cv.width/2+Math.cos(t)*cv.width*.3;
+      const cy=cv.height/2+Math.sin(t*.7)*cv.height*.25;
+      smooth.x+=(cx-smooth.x)*.03;smooth.y+=(cy-smooth.y)*.03;
+    }else{
+      smooth.x+=(mouse.x-smooth.x)*.12;smooth.y+=(mouse.y-smooth.y)*.12;
+    }
+    ctx.clearRect(0,0,cv.width,cv.height);
+    if(smooth.x>-500){const g=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,140);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.4,'rgba(255,255,255,1)');g.addColorStop(.6,'rgba(255,255,255,.75)');g.addColorStop(.75,'rgba(255,255,255,.4)');g.addColorStop(.88,'rgba(255,255,255,.12)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(smooth.x,smooth.y,140,0,Math.PI*2);ctx.fill()}
+    const mask=cv.toDataURL();mt.style.webkitMaskImage='url('+mask+')';mt.style.maskImage='url('+mask+')';
+    requestAnimationFrame(loop);
+  })();
+}
+// Parallax on circles
+const hero=document.getElementById('hero');
+const circles=document.querySelector('.circles-container-5200');
+let px=0,py=0,spx=0,spy=0;
+hero.addEventListener('pointermove',e=>{
+  const r=hero.getBoundingClientRect();
+  px=((e.clientX-r.left)/r.width-.5)*-16;
+  py=((e.clientY-r.top)/r.height-.5)*-12;
+});
+hero.addEventListener('pointerleave',()=>{px=0;py=0});
+(function pLoop(){
+  spx+=(px-spx)*.04;spy+=(py-spy)*.04;
+  circles.style.transform=`translate3d(${spx}px,${spy}px,0) scale(.9)`;
+  requestAnimationFrame(pLoop);
+})();
+})();
+</script>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline" style="padding:36px 28px;max-width:1080px;margin:0 auto">
+<div class="section-header">
+<div class="section-label">PROJECT OVERVIEW</div>
+<h2 class="section-title">项目简介</h2>
+</div>
+<div class="timeline-h" style="position:relative;margin-top:48px;display:flex;align-items:flex-start;justify-content:space-between">
+<div style="position:absolute;top:5px;left:6px;right:6px;height:2px;background:linear-gradient(to right,var(--orange),var(--orange-tint))"></div>
+<div style="flex:1;text-align:center;position:relative;padding-top:24px">
+<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-tint)"></div>
+<div style="font-size:13px;color:var(--orange);font-weight:600;margin-bottom:6px">7月中旬 — 8月中旬</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">全员故事征集</div>
+<div style="font-size:13px;color:var(--text-muted)">累计投稿100篇</div>
+</div>
+<div style="flex:1;text-align:center;position:relative;padding-top:24px">
+<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-tint)"></div>
+<div style="font-size:13px;color:var(--orange);font-weight:600;margin-bottom:6px">8月中旬 — 8月底</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">文化组 & HRBP 初筛</div>
+<div style="font-size:13px;color:var(--text-muted)">100 → 45</div>
+</div>
+<div style="flex:1;text-align:center;position:relative;padding-top:24px">
+<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-tint)"></div>
+<div style="font-size:13px;color:var(--orange);font-weight:600;margin-bottom:6px">9月初 — 9月中旬</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">大众投票</div>
+<div style="font-size:13px;color:var(--text-muted)">45 → 20</div>
+</div>
+<div style="flex:1;text-align:center;position:relative;padding-top:24px">
+<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-tint)"></div>
+<div style="font-size:13px;color:var(--orange);font-weight:600;margin-bottom:6px">9月中旬 — 9月底</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">销交服 TMT 评选</div>
+<div style="font-size:13px;color:var(--text-muted)">20 → 15</div>
+</div>
+<div style="flex:1;text-align:center;position:relative;padding-top:24px">
+<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-tint)"></div>
+<div style="font-size:13px;color:var(--orange);font-weight:600;margin-bottom:6px">10月初</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px">名单公示</div>
+</div>
+</div>
+</section>
+
+<!-- DIARIES -->
+<section id="diaries">
+<div class="section-header">
+<div class="section-label">ALL DIARIES</div>
+<h2 class="section-title">点亮他人</h2>
+<p class="section-subtitle">每人每天5票，选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
+</div>
+<div class="diary-toolbar">
+<div class="filter-tabs" id="filterTabs">
+<div class="filter-tab active" data-category="all" data-tag="">全部</div>
+<div class="filter-tab tag-rescue" data-category="" data-tag="rescue"><span class="tag-dot" style="background:#c8372e"></span>深夜救援</div>
+<div class="filter-tab tag-support" data-category="" data-tag="support"><span class="tag-dot" style="background:#f57c2e"></span>专业破局</div>
+<div class="filter-tab tag-warm" data-category="" data-tag="warm"><span class="tag-dot" style="background:#d4a843"></span>温情陪伴</div>
+<div class="filter-tab tag-shine" data-category="" data-tag="shine"><span class="tag-dot" style="background:#2e8b57"></span>超越预期</div>
+</div>
+<div class="diary-tools-right">
+<div class="search-box">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+<input type="text" placeholder="搜索故事..." id="searchInput">
+</div>
+<button class="shuffle-btn" onclick="shuffleStories()">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+盲盒模式
+</button>
+</div>
+</div>
+<div class="masonry" id="masonryGrid"></div>
+</section>
+
+<!-- VOTING / STATS -->
+<section id="voting">
+<div class="section-header">
+<div class="section-label">LIVE FEED</div>
+<h2 class="section-title">实时动态</h2>
+<p class="section-subtitle">每一次点赞都是对他人努力的认可，让光芒被更多人看见。</p>
+</div>
+<div class="voting-layout" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="activity-feed">
+<div class="activity-header"><h3 class="activity-title">实时评论</h3><div class="live-badge"><span class="dot"></span> LIVE</div></div>
+<div class="activity-list" id="commentList"></div>
+</div>
+<div class="activity-feed">
+<div class="activity-header"><h3 class="activity-title">点赞动态</h3><div class="live-badge"><span class="dot"></span> LIVE</div></div>
+<div class="activity-list" id="activityList"></div>
+</div>
+</div>
+</section>
+
+<!-- SHARE -->
+<section id="share" style="padding:64px 32px;max-width:1080px;margin:0 auto">
+<div class="section-header">
+<div class="section-label">SHARE YOUR STORY</div>
+<h2 class="section-title">分享自己</h2>
+<p class="section-subtitle">下载投稿模版，写下你的故事，发送给小王即可参与</p>
+</div>
+<div style="margin-top:40px;background:var(--orange-tint);border-radius:var(--radius);padding:40px;max-width:640px;margin-left:auto;margin-right:auto">
+<h3 style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:16px">投稿要求</h3>
+<ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+<li style="font-size:15px;color:var(--text-soft);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--orange)">✦</span>事迹真实，故事正文 500 字以内</li>
+<li style="font-size:15px;color:var(--text-soft);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--orange)">✦</span>填写候选人姓名、部门、故事发生时间</li>
+<li style="font-size:15px;color:var(--text-soft);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--orange)">✦</span>写完后发送给小王</li>
+</ul>
+<div style="display:flex;gap:12px;align-items:center">
+<a href="【友谊奖章】故事投稿模版.docx" download class="h5-btn" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+下载投稿模版
+</a>
+</div>
+</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+<div class="section-header"><div class="section-label">ABOUT US</div><h2 class="section-title">关于我们</h2></div>
+<p style="text-align:center;font-size:17px;color:var(--text-soft);max-width:720px;margin:0 auto 24px;line-height:1.9">"和用户交朋友"本质上是指导所有小米人工作的价值原点，以平等、尊重的态度面对每一个内/外部用户，倾听真实声音，洞察真实需求，解决实际问题，不欺骗，不盲从，追求长期发展，与用户共同成长。</p>
+<p style="text-align:center;font-size:17px;color:var(--text-soft);max-width:720px;margin:0 auto 48px;line-height:1.9">我们致力于挖掘践行"和用户交朋友"的价值观标杆，并对他/她说：<strong style="color:var(--orange)">"谢谢你，朋友"</strong></p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<img src="logo.png" alt="友谊奖章" class="footer-logo">
+<div class="footer-name">友谊<span class="accent">奖章</span></div>
+<p class="footer-slogan">致敬每一位与用户交朋友的朋友</p>
+<div class="footer-divider"></div>
+<div class="footer-links">
+<a onclick="scrollToSection('diaries')">点亮他人</a>
+<a onclick="openWriteModal()">写故事</a>
+<a onclick="scrollToSection('voting')">实时动态</a>
+<a onclick="scrollToSection('about')">关于我们</a>
+</div>
+<p class="footer-copy">© 2026 友谊奖章 · 用一票认可他人的光芒</p>
+</div>
+</footer>
+
+<!-- WRITE MODAL -->
+<div class="modal-overlay" id="writeModal">
+<div class="modal">
+<button class="modal-close" onclick="closeWriteModal()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+<div class="modal-header"><h2>分享你的故事</h2><p>每一个故事都值得被看见，别让你的努力沉默。支持上传图片和视频。</p></div>
+<form id="storyForm" onsubmit="submitStory(event)">
+<div class="form-group"><label>故事标题</label><input type="text" id="storyTitle" placeholder="给这个时刻起个名字..." required maxlength="40"><div class="char-count"><span id="titleCount">0</span>/40</div></div>
+<div class="form-row">
+<div class="form-group"><label>内容标签</label><select id="storyTag" required><option value="">选择标签</option><option value="rescue">深夜救援</option><option value="support">专业破局</option><option value="warm">温情陪伴</option><option value="shine">超越预期</option></select></div>
+<div class="form-group"><label>你的名字</label><input type="text" id="storyAuthor" placeholder="署名..." required maxlength="20"></div>
+</div>
+<div class="form-group"><label>故事内容</label><textarea id="storyContent" placeholder="说说那个时刻发生了什么，你的感受，为什么它对你来说很重要..." required maxlength="500" oninput="updateCharCount()"></textarea><div class="char-count"><span id="contentCount">0</span>/500</div></div>
+<div class="upload-row">
+<div class="form-group"><label>上传图片（可选）</label><div class="upload-area" id="imageUploadArea" onclick="document.getElementById('storyImageInput').click()"><div class="upload-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>点击上传图片</div></div><input type="file" id="storyImageInput" accept="image/*" hidden onchange="handleImageUpload(this)"></div>
+<div class="form-group"><label>上传视频（可选）</label><div class="upload-area" id="videoUploadArea" onclick="document.getElementById('storyVideoInput').click()"><div class="upload-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>点击上传视频</div></div><input type="file" id="storyVideoInput" accept="video/*" hidden onchange="handleVideoUpload(this)"></div>
+</div>
+<div class="modal-footer"><button type="button" class="btn-outline" onclick="closeWriteModal()">取消</button><button type="submit" class="btn-primary">发布故事<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+</form>
+</div>
+</div>
+
+<!-- STORY DETAIL MODAL -->
+<div class="modal-overlay" id="storyDetailModal">
+<button class="detail-nav detail-nav-prev" onclick="navigateDetail(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+<button class="detail-nav detail-nav-next" onclick="navigateDetail(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+<div class="modal story-detail-modal">
+<button class="modal-close" onclick="closeStoryDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+<div id="storyDetailContent"></div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// Avatars
+const AVATARS=[
+  {deg:340,radius:300,size:58,shape:'square',glow:'#e8622a',delay:.6},
+  {deg:60,radius:251,size:58,shape:'round',glow:'#dbb050',delay:.8},
+  {deg:180,radius:251,size:78,shape:'round',glow:'#f09060',delay:1},
+  {deg:300,radius:251,size:58,shape:'square',glow:'#c49a3a',delay:1.2},
+  {deg:130,radius:325,size:88,shape:'round',glow:'#f09060',delay:1.4},
+  {deg:30,radius:399,size:58,shape:'round',glow:'#e8622a',delay:1.6},
+  {deg:95,radius:399,size:88,shape:'square-lg',glow:'#FF8C00',delay:1.8},
+  {deg:220,radius:399,size:88,shape:'square-lg',glow:'#f09060',delay:2},
+  {deg:320,radius:399,size:58,shape:'round',glow:'#c49a3a',delay:2.3}
+];
+function buildHeroAvatars(){
+  const wrapper=document.getElementById('h5CirclesWrapper');
+  if(!wrapper)return;
+  wrapper.querySelectorAll('.h5-avatar').forEach(el=>el.remove());
+  const pool=[...stories].sort(()=>Math.random()-.5).slice(0,AVATARS.length);
+  AVATARS.forEach((av,i)=>{
+    const s=pool[i];if(!s)return;
+    const el=document.createElement('div');
+    el.className='h5-avatar '+av.shape;
+    const floatDur=(3+Math.random()*2.5).toFixed(1);
+    const floatDelay=(Math.random()*3).toFixed(1);
+    el.style.cssText=`width:${av.size}px;height:${av.size}px;--av-deg:${av.deg}deg;--av-radius:${av.radius}px;--float-dur:${floatDur}s;--float-delay:${floatDelay}s;box-shadow:0 0 20px ${av.glow},0 0 40px ${av.glow}33;animation-delay:${av.delay}s,${floatDelay}s;cursor:pointer`;
+    if(s.avatar&&s.avatar.startsWith('data:')){
+      el.innerHTML=`<img src="${s.avatar}" alt="${s.author}">`;
+    }else{
+      el.style.background=`linear-gradient(135deg,${av.glow}cc,${av.glow}66)`;
+      el.style.display='flex';el.style.alignItems='center';el.style.justifyContent='center';
+      el.style.color='#fff';el.style.fontWeight='700';el.style.fontSize=Math.round(av.size*.42)+'px';
+      el.innerHTML=`<span style="pointer-events:none">${(s.author||'？')[0]}</span>`;
+    }
+    el.title=s.author;
+    el.onclick=(e)=>{e.stopPropagation();openStoryDetail(s.id)};
+    wrapper.appendChild(el);
+  });
+}
+// ========== TAG SYSTEM ==========
+const TAGS={
+rescue:{key:'rescue',name:'深夜救援',category:'深夜救援',color:'#c8372e',bg:'#fdf0ee',desc:'夜幕下的守护，危急时刻第一时间赶到。'},
+support:{key:'support',name:'专业破局',category:'专业破局',color:'#f57c2e',bg:'#fff5ed',desc:'凭借专业技能，为用户化解棘手难题。'},
+warm:{key:'warm',name:'温情陪伴',category:'温情陪伴',color:'#d4a843',bg:'#fef9ee',desc:'平凡日常里伸出援手，送出一份温暖关怀。'},
+shine:{key:'shine',name:'超越预期',category:'超越预期',color:'#2e8b57',bg:'#edf8f2',desc:'超出用户预期，创造令人难忘的服务体验。'}
+};
+
+// ========== DATA ==========
+const imgBase="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=";
+function imgUrl(p,s){return imgBase+encodeURIComponent(p)+"&image_size="+(s||"square")}
+
+const I={
+night:imgUrl("Emergency night scene with warm street lights, person rushing with toolbox, dramatic warm lighting, professional photography, urgent atmosphere","square"),
+road:imgUrl("Long road through countryside at dawn, warm sunrise, luggage and travel mood, professional photography, orange warm tones","square"),
+elder:imgUrl("Warm scene of young person helping elderly with phone, bright cozy room, natural light, warm orange tones, professional photography, heartwarming","square"),
+sunrise:imgUrl("Golden sunrise, person silhouette celebrating success, warm inspirational light, professional photography, achievement moment","square"),
+storm:imgUrl("Storm weather rescue scene, rain and wind, person working on equipment, dramatic lighting, professional photography","square"),
+video:imgUrl("Video call scene on laptop screen, warm cozy room, soft lighting, emotional connection, professional photography","square"),
+team:imgUrl("Intense workspace with multiple screens, team working late night, dramatic warm lighting, focused atmosphere, professional photography","square"),
+train:imgUrl("High speed train at station, travel mood, warm morning light, professional photography","square"),
+hand:imgUrl("Two hands holding a phone, teaching moment, warm tones, professional photography","square"),
+gold:imgUrl("Golden trophy and medal, warm metallic glow, achievement concept, professional photography","square"),
+dawn:imgUrl("Dawn city skyline, warm orange sky, new beginning concept, professional photography","square"),
+repair:imgUrl("Close up of hands repairing equipment, focused, warm lighting, professional photography","square"),
+community:imgUrl("Community service scene, volunteers helping people, warm sunny day, professional photography","square"),
+startup:imgUrl("Small business owner celebrating first sale, warm cozy shop, professional photography","square"),
+hospital:imgUrl("Hospital corridor with warm light, caring atmosphere, professional photography","square"),
+mountain:imgUrl("Mountain field service journey, hiking with equipment bag, warm sunset, professional photography","square"),
+screen:imgUrl("Computer screen with code, late night debugging, warm desk lamp, professional photography","square"),
+handshake:imgUrl("Handshake between two people, warm outdoor light, trust and friendship, professional photography","square"),
+delivery:imgUrl("Delivery person carrying packages to doorstep, warm afternoon, professional photography","square"),
+workshop:imgUrl("Workshop scene with tools and equipment, warm industrial lighting, professional photography","square")
+};
+
+const sampleStories=[{"title":"只有两个字，“靠谱”","author":"侯乖亮","avatar":"侯","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"5月23日凌晨1点，电话响了。我接起来，对方的声音在发抖。一位女用户，车被剐蹭了，车衣和车漆都伤了。人生第一辆车，第","body":"5月23日凌晨1点，电话响了。\n\n我接起来，对方的声音在发抖。一位女用户，车被剐蹭了，车衣和车漆都伤了。人生第一辆车，第一次面对事故，她完全不知道该怎么办。我听得出那种慌张，不只是心疼车，更多是对接下来所有未知的恐惧。\n\n我没急着说流程。先听她说完，然后放慢语速：“您别急，人没事就好，剩下的事我们一步一步来。”\n\n等她稍微平静了些，我给了她三条：先报保险固定证据，我来对接售后安排维修，车衣的问题我全程负责到底。电话那头愣了一下，她问：“这么晚你还管这些？”\n\n我说：“您选择了小米，任何时候我们都在。”\n\n第二天用户到店，我和售后同事已经把工单、配件、维修工位全部协调妥当。整个维修期间，我主动跟进进度，修复完成后又提醒她，30天后记得回来重贴车衣。\n\n她再回来的时候，没空手。带了一面锦旗，上面就两个字：靠谱。\n\n她说：“那天打完电话，我心里一下子就踏实了。买车，真就得买小米。”\n\n锦旗现在挂在我们店里。但说实话，比锦旗更让我记住的，是她离开时那个轻松下来的笑容。","votes":0,"img":"assets/story_1_cover.png","images":["assets/story_1_0.png","assets/story_1_1.png","assets/story_1_2.png"],"comments":[],"id":1},{"title":"从数据中挖掘真实痛点","author":"刘悦","avatar":"刘","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"交付满意度数据里，我发现一个反复出现的词：咖啡。不是投诉交付流程，不是抱怨车辆问题，而是\"要是有杯咖啡就好了\"\"连咖","body":"交付满意度数据里，我发现一个反复出现的词：咖啡。\n\n不是投诉交付流程，不是抱怨车辆问题，而是\"要是有杯咖啡就好了\"\"连咖啡都没有\"。这些声音散落在NSS低分问卷和用户原声里，零星、分散，没人专门盯过。我把\"饮品不满\"从所有差评中单独拆出来，逐条归因。咖啡需求是其中最集中的那一个。\n\n坐办公室猜需求没用。我直接发起了一线门店调研，覆盖全国90家门店。不是发个问卷就完事，我逐一收集每组交付用户的咖啡需求量、用户画像，同步摸清门店现有饮品供给和一线同事的真实反馈。有些门店自己买了咖啡机，但不成体系；有些门店想提供，但不知道从哪下手。调研结论很明确，用户对咖啡的需求强烈，尤其在交付等待那二三十分钟里，一杯咖啡能让人踏实下来，仪式感也有了。\n\n基于这些数据，我出了可执行方案，协调资源推动门店咖啡机配置落地。今年1月正式铺开。到6月，交付用户满意度连续6个月增长，饮品相关差评断崖式下降。翻看用户原声，不再有人问\"为什么没有咖啡\"。\n\n从数据里听用户声音，到一线验证，推动资源落地。问题解决，闭环结束。","votes":0,"img":null,"images":[],"comments":[],"id":2},{"title":"不负四月长等待，百里上门终圆满","author":"刘祥琪","avatar":"刘","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"2025年11月，临沂交付中心。宋先生等了四个月的YU7，终于到了。终检的时候，我蹲下来看了一眼底盘，心一沉。淡红色","body":"2025年11月，临沂交付中心。宋先生等了四个月的YU7，终于到了。\n\n终检的时候，我蹲下来看了一眼底盘，心一沉。淡红色的液体，渗出很小一摊，不仔细看根本注意不到。我拿手电筒照了照，知道这是防冻液。保障的同事过来复检，仪表盘上没跳出任何故障码。售后也来了，几个人围着车看了半天，建议先试一天车，跑跑看漏点在哪。\n\n但宋先生已经到了。他是从外地赶来的。\n\n我脑子里转得很快。跟他说实话，这趟就白跑了，四个月的期待落在一个坏消息上。不说，也不能让他把车提走。我得拖住他，给自己争取时间想办法。\n\n我跟他说合格证信息还没走完，临牌暂时打不出来。先把提车仪式做了，该拍的照片拍了，功能讲解也过了一遍。中午给他安排了午饭，我说您先回去，有进展我第一时间通知。他什么都没多想，还挺高兴。\n\n他走之后，我只有一个念头：今天必须给他弄一辆没问题的车。\n\n晚上八点，售后和中台确认了，防冻液渗漏，得返厂。短期内交不了车。我打电话给店长，从烟台交付中心锁了一台同配置的现车。板车连夜发运，我一晚上看了好几次物流轨迹。\n\n第二天一早，我给宋先生去了个电话。我说票证那边暂时没有解决预期，特殊协调给您换一辆车，考虑到您异地不方便，新车到了我给您送过去。\n\n新车到店是下午。我陪保障加急做完PDI，同步帮他把保险买了、临牌打印好。下午两点，我跟板车师傅上车，开了两个小时，200多公里，把车送到宋先生家门口。\n\n他看见车的时候愣了一下，绕着车转了一圈，拍了拍车头，说：“还真能送车上门啊。”\n\n我说，您等了四个月，开回去的必须是辆好车。","votes":0,"img":"assets/story_3_cover.png","images":["assets/story_3_0.png","assets/story_3_1.png"],"comments":[],"id":3},{"title":"以真诚消解用户顾虑，贴心服务实现交付增值双赢","author":"吴峻坤","avatar":"吴","line":"delivery","tag":"support","date":"2026-08-31","excerpt":"刘女士那台车的左后三角窗玻璃上，有一道2到3厘米的划痕。PDI检查发现的。肉眼可见，属于B类内部告知质损项。我接到通","body":"刘女士那台车的左后三角窗玻璃上，有一道2到3厘米的划痕。\n\nPDI检查发现的。肉眼可见，属于B类内部告知质损项。我接到通知的时候，车已经入库，用户还没见到实车。\n\n问题卡在——告不告诉她？怎么告诉她？说了之后她会不会直接退单？\n\n我决定先去车间看一眼。划痕在左后三角窗，2到3厘米，不算深，但位置显眼，站在车侧一眼就能看到。没法装作没看见。我在车间站了几分钟，脑子里过了一遍可能的补偿方案，然后拨了刘女士的电话。\n\n电话里我没绕弯子，直接告诉她什么位置、什么瑕疵、多大程度，然后邀她到店实地看。我说，您来看了我们再谈，现场给您一个解决方案。\n\n7月15日上午9点，她来了，还带了一个第三方验车师。刚开始她根本不跟我说话，所有问题都通过验车师转达。我就陪着，全程跟着他们验车，整整一个半小时。验到车底的时候，我主动拿手机帮着拍底盘细节照片，他们要看哪个点位我就配合打开哪个点位。慢慢地，她开始直接问我问题了。\n\n洽谈的时候，我没急着推补偿方案。先聊她平时用车场景，停在哪儿、跑不跑高速、有没有小孩。聊着聊着，我顺带讲了3M车衣能防这种小划痕，小米无忧包对她这种用车频率很实用。她听完，问了我一句：“那你觉得我该买哪个？”\n\n最后的补偿方案在合规范围内敲定，她没再提换车的事。\n\n交车送别的时候，她递给我一杯奶茶，说：“今天提车非常满意，峻坤辛苦了。”我接过奶茶，车钥匙交到她手里。\n\n零纠纷，零投诉。车交付了，增值产品也落地了。\n\n一杯奶茶不值多少钱，但我知道这背后是什么——一个带着验车师来的用户，从进门不看我一眼，到愿意坐下来问我“你觉得我该买哪个”。信任不是靠说出来的，是一点点做出来的。","votes":0,"img":"assets/story_4_cover.png","images":["assets/story_4_0.png","assets/story_4_1.png"],"comments":[],"id":4},{"title":"天王老子来了，修车也得找他们","author":"周新","avatar":"周","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"六月末，武汉已经热起来了。一位川A车主走进门店，满脸不安。他之前在上海、成都两地跑，现在因为工作调动定居武汉，但车辆的辅","body":"六月末，武汉已经热起来了。一位川A车主走进门店，满脸不安。他之前在上海、成都两地跑，现在因为工作调动定居武汉，但车辆的辅助驾驶渲染延时一直没解决。他说这事的时候，语气里带着一股说不清是焦虑还是怀疑的东西。\n\n我们马上做了路试和全面检测。结论很快出来了，是特定环境下建模延时导致的异常，不是质量问题。我把这个结果告诉他，他不接受。不是那种“我考虑考虑”的不接受，是完全不信。沟通一下子僵住了。\n\n我是技术主管。这种情况，我知道光讲技术没用。我拉上了技术、质量、智驾研发几个部门的人，跟客户商量把车留场，做深度检测。我跟团队说了一句话：“客户不信，我们就做到他信为止。”\n\n那一周，我们每天从早上干到夜里十一二点。不是坐在那儿等结果，是反复模拟各类场景试车，一组数据一组数据地复盘，一个方案推翻了再换下一个。区域技术老师也一直跟着我们跑。检测车间晚上灯亮着，那个状态说不上什么“坚定”，就是较真，不把问题拆明白不罢休。\n\n中间我做了一件事。我让团队把检测过程全部透明化，客户晚上打开APP就能看到车辆动态和测试进度。他能看见我们深夜还在车间里来回跑，能看见每一项检测记录的细节。我没多解释什么，但他开始看，天天看。\n\n服务顾问和体验专家每天跟他同步进度，一个一个疑问掰开揉碎了讲。他一开始不怎么回消息，后来开始回复，再后来会主动问一些技术细节。眉头慢慢松开了。\n\n复测那天，我和团队陪他一起去了那个特殊场景。测试结果和之前一样，我们的判断没有错。他站在那儿沉默了一会儿，然后说，明白了，是环境适配差异，不是车的问题。他握住我的手，用力摇了摇。没说什么煽情的话，但那种力道，我知道什么意思。\n\n后来他送来一面锦旗，上面写着：“天王老子来了，修车也得找他们！”\n\n这话挺糙的，但我知道，这是他信了。","votes":0,"img":"assets/story_5_cover.png","images":["assets/story_5_0.png"],"comments":[],"id":5},{"title":"车是好车，不用反反复复黑了","author":"周涛","avatar":"周","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"4月17日傍晚6点，南昌高新服务中心的电话响了。邹女士的SU7被一辆满载大货车从侧面撞上，车才买了三天，牌照刚上。电","body":"4月17日傍晚6点，南昌高新服务中心的电话响了。\n\n邹女士的SU7被一辆满载大货车从侧面撞上，车才买了三天，牌照刚上。电话那头声音发抖，说不清具体位置。\n\n服务顾问倪凯接到消息，扭头看了眼技术主管王建辉。两个人没多说，拿了钥匙就往外走。18点，南昌晚高峰刚开始，他们从服务中心出发，一路穿城。\n\n一个小时后，他们到了。\n\n邹女士站在路边，看着自己面目全非的新车，眼眶是红的。倪凯先走过去看人，确认她没受伤，才转身去看车。王建辉已经蹲在车旁，打着手电一点一点排查损伤情况。横向碰撞导致路面上散落了不少碎件和杂物，天色暗下来，后面的车开始打喇叭。王建辉起身，没说话，自己动手把路面的碎片清理干净。\n\n车损严重，但这会儿雨还没下，他们得赶在天气变化之前把车护好。倪凯跟邹女士沟通了两句，征得同意后，两个人迅速给车罩上了车衣，把受损部位全部裹紧。\n\n然后倪凯开始讲流程。没有术语，没有套话，一步一步告诉邹女士接下来会发生什么，需要她做什么，不需要她操心的部分由谁来处理。邹女士听着，点头，签字，授权。等她坐上回家的车，倪凯看了下时间，从他们到现场算起，刚好两小时，现场撤完了。\n\n第二天邹女士来店里确认车损。新车，一周，撞成这样，换了谁都心疼。但她在店里转了一圈，跟零售那边聊了聊，当天下午就下了新订单，同款，SU7 Max。\n\n“车好，安全，售后好，这就是理由。”她说。\n\n后来网上有些关于小米汽车的不实说法，邹女士自己发了条抖音，把事故经过讲了一遍，结尾是这么写的：“车是好车，不用反反复复黑了，小米汽车售后真的很好。”\n\n被人撞了第三天，她复购了同一辆车。这个决定，比任何解释都直接。","votes":0,"img":null,"images":[],"comments":[],"id":6},{"title":"抵触到信任，这份认可源于全力以赴","author":"常怡龙","avatar":"常","line":"service","tag":"rescue","date":"2026-08-30","excerpt":"车机升级完，音响反倒出了问题。如何化解用户“信任危机”？","body":"车机升级完，音响反倒出了问题。2026年6月，刘先生把车开到成都三圣乡服务中心时，情绪不小。\n\n“升级完反而出问题了？”他坐在休息区，语气里全是质疑。\n\n故障是偶发性的。行驶途中，冷不丁一声刺耳异响，但毫无规律。常规短途路试根本捕捉不到。刘先生不愿意配合长时间检测，觉得这是在浪费他的时间。\n\n卡住了。技术上，偶发异响的排查必须反复路试、采集大量数据对比，没有捷径。沟通上，车主已经对品牌产生了不信任，光是解释没用，得让他看到我们在做什么。\n\n团队决定夜间上门。车主白天忙，那就晚上来。维修技师带着诊断设备，按约定时间赶到刘先生那边。城市道路、高架桥、颠簸路段，一趟一趟跑。切换车机功能，变换车速，调整驾驶状态，边开边录音频数据。\n\n服务经理也没闲着。每跑完一轮路试，就蹲在车旁边跟刘先生讲刚才排查了什么、排除了哪些可能、下一步怎么查。不是汇报，是让他参与进来。\n\n刘先生起初站在旁边看着，不怎么说话。后来开始主动上车跟着跑，实时反馈他听到的异常，跟技师讲他平时用车的感觉，什么时候觉得声音不对劲，哪个路段更容易复现。态度是从那些夜晚的反复路试里一点一点松动的。\n\n几轮下来，数据比对有了结果。异响来自车机音响系统，在特定信号干扰下偶发反馈异常。找到根源后，团队连夜做了软件修复和整车检测。\n\n刘先生自己开了一圈，确认没问题。回来的时候终于笑了，“之前是我心急了。你们这较真劲儿，我服气。”\n\n几天后，他在车主群里把这事儿说了，给三圣乡团队点了个赞。\n\n技术问题就用技术手段解决，人心问题靠诚意。这两件事，我们这次都做到了。","votes":0,"img":null,"images":[],"comments":[],"id":7},{"title":"没有套路，也能得用户的心","author":"张攀攀","avatar":"张","line":"service","tag":"support","date":"2026-08-31","excerpt":"成都那晚下着雨。张攀攀接到电话时，一位小米SU7车主的声音从听筒里传来，语气焦急。雨天夜间行车发生剐蹭，智驾摄像头、","body":"成都那晚下着雨。\n\n张攀攀接到电话时，一位小米SU7车主的声音从听筒里传来，语气焦急。雨天夜间行车发生剐蹭，智驾摄像头、原厂轮胎多处受损。车主对保险报案、定损理赔的流程一头雾水，工作又忙，实在无暇分身处理维修和保险对接的事。\n\n“先生，您别着急，先撤离到安全的地方，后续事宜我们来协助您。”\n\n电话那头，车主情绪明显安定了许多。那会儿已是半夜，张攀攀远程指引用户一步步报保险、联系拖车，全程保持联系，直到事故处理完毕，车辆顺利上了拖车。\n\n考虑到车主日常工作繁忙，无暇到店，张攀攀主动建立专属沟通群，每天抽出休息时间同步配件物流、车间拆解实拍、保险审核进度。每一项维修工序、更换配件的质保规则，都逐条告知。哪怕下班时段，也及时回复车主疑问。保险理赔过程中，资料反复补录、赔付细则出现争议，他连续多日主动与理赔专员对接协商，反复提交车辆检测凭证，替车主省去了大量沟通和奔波。\n\n车辆检测时，张攀攀凭借扎实的新能源维修经验，精细化检测车辆隐形损伤，出具透明详细的定损清单，明确原厂配件项目与官方质保标准，杜绝隐形消费，用真诚打消了车主的顾虑。\n\n提车当天，张攀攀还贴心调试了车机功能，检测全车车况，才把钥匙交到车主手里。\n\n全程透明高效、暖心省心的服务，让车主倍感温暖。提车时，车主专程送来锦旗致谢。一份锦旗，是认可，更是信任。","votes":0,"img":null,"images":[],"comments":[],"id":8},{"title":"\"我们的关系早就不只是修车那点事了\"","author":"张洲航","avatar":"张","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"林先生是YU7车主，4月25日那天进店，脸上带着点拿不准的表情。他的工作地在一条嘈杂路段，午休时习惯在车里开小憩模式","body":"林先生是YU7车主，4月25日那天进店，脸上带着点拿不准的表情。\n\n他的工作地在一条嘈杂路段，午休时习惯在车里开小憩模式。YU7的静谧性一直让他很满意，能安安静静睡个午觉。但最近总觉得静音效果不如从前，又怀疑是自己神经过敏——毕竟天天待在同一条路上，说不准是真变了还是自己听习惯了。这种不确定感磨了他好一阵子，最后还是决定来找我。\n\n“可能就是我想多了。”他跟我说这话的时候，语气明显不自信。\n\n我让他别着急，有疑虑我们就查，查出来没问题也能放心。他听了稍微松口气。\n\n我先确认了一件事：车辆没有拆装维修记录。排除了装配因素后，我借来一台分贝仪。想法很简单，既然他觉得安静程度下降了，那就用数据说话。我选了同一首歌、同一音量，在车外固定位置播放，然后拉着他一起记录车内读数。为了有个参照，又借了一台试驾车，用同样的方法测了一遍。\n\n几轮数据下来，他的车平均高出15到20分贝。\n\n林先生看着对比数字，整个人松弛下来，说了一句：“原来我的感觉是对的。”当时我挺能理解他的，被一件事悬着很久，终于有人帮你证实了，那种感觉比解决问题本身还让人踏实。\n\n接下来就是找原因。我和师傅挨个排查，最后发现是密封条脏污，导致玻璃间隙比正常状态大了些。问题本身不复杂，但藏得深，不较真去量，根本发现不了。拿清洁剂把密封条擦拭干净，重新复测，数据掉回到正常范围。\n\n林先生后来感叹：“没想到这么小的问题，你们真的用心帮我找到了。”\n\n从那以后，他每次到店都点名找我。微信上聊过几次，他发过几句话我印象很深：“还是感觉你的服务更贴心”“你的服务值得肯定”。一来二去，我们的关系早就不只是修车那点事了。\n\n这事让我想明白一个道理：用户的一些“感觉”，有时候听着像主观臆测，但底下可能真藏着问题。不敷衍、不否定，拿数据验证，拿办法兜底，人家才愿意一直信你。","votes":0,"img":"assets/story_9_cover.png","images":["assets/story_9_0.png","assets/story_9_1.png"],"comments":[],"id":9},{"title":"一次远程托付，一份全力以赴","author":"徐彬","avatar":"徐","line":"delivery","tag":"support","date":"2026-08-31","excerpt":"4月6号那天，同事在行前电话里注意到一个细节。姜女士的男朋友要来店里布置车，订单界面上的身份证号显示，4月8号是她的生日","body":"4月6号那天，同事在行前电话里注意到一个细节。姜女士的男朋友要来店里布置车，订单界面上的身份证号显示，4月8号是她的生日。这台车应该是她给自己的生日礼物。清明假期最后一天，她专门请了7号的假来提车。\n\n7号上午，男朋友请的布展师傅来了，把车布置得很漂亮。\n\n中午11点50，世超接到姜女士和她父母。因为名下没旧车，想申领置换补贴，车牌登记的是姜叔叔的名字。手续办得顺利，首付、保险一会儿就弄完了，她还买了些我推荐的新款香氛和车周边。本来打算回徐州找熟人贴车衣，不买无忧包，聊了几句后还是办了。我给她详细讲了车辆功能，拍了很多照片，中午安排了客餐。那段交付时间挺愉快的。吃完饭，她带着父母去车管所办牌。\n\n问题出在购置税上。她是去年8月订的车，有购置税兜底减免权益。但去办牌的路上，她发现要交11292.39元的税。电话打过来，情绪很激动，问我为什么兜底了还要交钱。那通电话打了12分钟，我才搞清楚原委。这个订单之前在其他城市，4月刚转到洛阳现车交付，线上没给她说清楚兜底减免的是车价。她只准备了首付和保险的钱，剩下的不够交税。\n\n我在电话里算了一遍金额，她还是觉得这是门店的问题，说早知道要准备这笔钱，可能就不提小米了。\n\n世超第一时间接住了她的情绪。虽然她来店前我没联系过她，但客诉风险摆在那儿，我请她回交付中心坐坐。倒了水，道歉，又解释了一遍来由。她听懂了，但她父母不认可，说这是诈骗，多收钱，连身份证也不愿留给办牌。姜女士也开始提退周边的事，我马上帮问，商城那边的退款得线上操作。后来她情绪平复了，没再退。我们商量好，等她20号发工资再交税上牌。\n\n临走前我加了她微信，方便她后面找我。\n\n晚上想起她计划当晚回徐州，第二天还要上班，就提醒了一句，把智能驾驶学一下，高速上能轻松点。\n\n8号一早，她微信上问交税的事。通了电话，说钱到位了，很着急要铁牌。她在徐州的小区，没铁牌车进不了地库，她爱惜车，不想停室外。我赶紧帮她推进。昨天在车管所已经验过车，正常流程是交完税，在12123上办铁牌自取，车务同事就能邮寄。\n\n结果车管所系统升级，线上办不了号牌登记，缴费也不行。线下交又需要她父亲的身份证原件。她人在徐州，要上班，实在抽不开身，只能托我试试。\n\n我找了店长徐彬老师，说了一下情况。他支持我自己跑一趟。开车去姜叔叔家，离交付中心35公里。雨很大，姜叔叔腿脚不太方便，身份证还是不愿给我，只能带上阿姨一起去车管所。路上聊起来，才知道姜女士去年研究生刚毕业，8月入职第一个月就定了这台YU7。上班快一年攒了6万块，全拿来支持小米了。父母其实不赞成，老实本分的人，觉得女儿太冲动，但架不住她喜欢。那笔购置税的钱，也是老两口头天晚上消了气，给她添上的。\n\n办完牌，把阿姨送回家。雨还没停，姜叔叔下车的时候说了一句，麻烦你了。\n\n回去路上，手机亮了一下，姜女士发来消息，说谢谢。","votes":0,"img":"assets/story_10_cover.png","images":["assets/story_10_0.png","assets/story_10_1.png","assets/story_10_2.png"],"comments":[],"id":10},{"title":"\"穿着可爱，跑起来像野兽\"","author":"徐美琳","avatar":"徐","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"他把自己的经历发到Instagram上，让埃及的朋友，让更多人看到。","body":"Karim从埃及来中国旅游，车坏了。他赶到成都三圣乡门店的时候，行程已经排得很紧。语言不通，时间又急，他只想尽快把车修好。\n\n徐美琳主动接下了这个用户。得知Karim的行程紧张，她立刻联系城市端申请紧急备件，硬是把维修周期压缩到了他自己都没想到的程度。拿车那天，Karim愣了一下。\n\n他没说出口的意外，还不止这一件。\n\n修车期间，徐美琳随口问他要不要吃点东西。他摆摆手，说有辆车就行。但到了饭点，团队还是把热饭菜端到了他面前。异国他乡，一个人，一顿中餐，他低头吃了好一会儿没说话。\n\n后来取车时，他发现车被里里外外清洗过，每个细节都收拾得妥帖。Karim在好几个国家待过，小鹏他也去过，他说从没在哪家店被这样对待过。聊起自己的车，他忍不住笑，说它“穿着可爱，跑起来像野兽”。\n\n临走前，他主动提出要正式向小米致谢，还打算把自己的经历发到Instagram上，让埃及的朋友，让更多人看到。\n\n他说，中国山川壮丽，他早知道了。但这样的服务，他没想过。","votes":0,"img":"assets/story_11_cover.png","images":["assets/story_11_0.png"],"comments":[],"id":11},{"title":"爱会传递","author":"成都龙潭寺小米售后服务中心","avatar":"成","line":"service","tag":"warm","date":"2026-08-31","excerpt":"周四早上，张女士在地库听到车底有动静。细碎的猫叫，很小。她趴下去看，一只小奶猫缩在底盘最深处，瞪着眼睛，一动不动。她","body":"周四早上，张女士在地库听到车底有动静。细碎的猫叫，很小。\n\n她趴下去看，一只小奶猫缩在底盘最深处，瞪着眼睛，一动不动。她试着叫它，用最轻的声音，拿吃的引它，都不管用。小猫把自己塞进那个死角，怎么都不肯出来。\n\n车没法开。硬开可能会伤到它，也怕它受惊乱窜。张女士蹲在车边，实在不知道怎么办了。\n\n她给成都龙潭寺小米售后打了电话。\n\n门店师傅来得很快。几个人趴下去看了看，也犯了难。车底空间太窄，小猫又怕人，人一靠近它就往里躲。师傅们不敢硬拽，怕伤着它，也不敢弄出大动静吓它。就那么半趴着，一点点探手，试探着找位置，慢慢把它往外引。折腾了很久，才把那只小东西从车底安全托出来。\n\n小猫被托出来的时候还在发抖，手掌那么大，缩在师傅手心里。\n\n张女士松了口气，但紧跟着又犯了愁。这么小的流浪猫，没人管根本活不了。她正不知道怎么办，旁边一位来做保养的车主走过来，看了一眼，蹲下身，轻轻把小猫从师傅手里接了过去。\n\n他姓石。动作很轻，像是怕惊着它。\n\n“要不，我养吧。”\n\n就这一句。小猫被他拢在掌心里，暖了一会儿，慢慢不抖了。几秒钟前还在车底瑟瑟发抖的小东西，就这么被另一双手稳稳接住了。\n\n从一台小米车底脱困，被一群耐心的人救出来，最后被另一个小米车主带回了家。救它的人和收留它的人，在这一天之前互不相识，只是因为一只猫，接上了。","votes":0,"img":"assets/story_12_cover.png","images":["assets/story_12_0.png","assets/story_12_1.png"],"comments":[],"id":12},{"title":"2小时48分的对话","author":"李冰","avatar":"李","line":"service","tag":"warm","date":"2026-08-30","excerpt":"压着火气的客户，在生活比喻解释下，两小时慢慢消气","body":"电话接过来的时候，前面已经转了好几手了。\n\n杨先生给父母买了台小米YU7，续航835公里的长续航版。老人一辈子开油车，对电动车完全没概念。儿子不在身边，想远程帮父母问清楚，结果来回转接了好几次，不同客服给出的答复也不一致，有的说续航835，有的说820。技术老师回了一句“正常浅充浅放就行”就完了。杨先生不认可，再升级，再转接，最后转到我这儿。\n\n我拿起电话，他那边声音是压着火的。\n\n开头几句，他问的都是很具体的问题：电池怎么充电、能量回收是什么意思、哨兵模式费不费电、蓝牙钥匙多远能开、停车拍照在哪儿看、高温天停外面有没有事、冬天要不要防冻、前备箱怎么开、除锈模式怎么用、挂钩位置在哪儿……零零碎碎几十个问题，有些反复问了两三遍。他说着说着会打断我，追问刚才讲过的某个点，我重新解释一遍，他又绕回去再确认一次。\n\n我没催他。两个半小时，就这么一个问题一个问题地过。\n\n有些东西太专业，我说“磷酸铁锂满充校正”，他那边沉默了。我换了个说法：“你想象家里有个电表，用久了读数会偏一点，电池里的电流传感器也一样。不充满的话，它显示90%，实际可能只有85%，所以偶尔要充满一次，让它自己校准一下。”他“哦”了一声，说这个懂了。\n\n讲能量回收，我说：“你松开油门，车子减速的时候，那股劲不是浪费掉，是反过来给电池充电了。”蓝牙钥匙，我说：“20米内车就能感应到你的手机，但真正解锁要走到1米5以内，防止你路过的时候车自己开了。”他问80%的电能放多久，我算了算，说如果哨兵开着，大概20天，跟他说这个数字不是绝对的，跟天气、设置都有关系，但大致心里有个数。\n\n他特别在意父母不会用智能手机这件事。我跟他讲，长期停放保持80%电量就行，10天左右看一次，别让电掉太低。又提醒他，如果父母不常用手机，干脆把蓝牙关了，用实体钥匙卡片，不然车老是感应到手机，反复唤醒也耗电。他说好，记下了。\n\n中间他提到之前几次沟通不太顺畅，说“续航数字都能说错”“层层拦着不让联系技术”。我没推，说确实很抱歉，让你反复折腾了。他提了好几条建议，蓝牙钥匙距离能不能自己设置、停车拍照的弧形遮挡能不能裁剪掉、车外语音音量能不能调、车外语音的状态灯能不能关。我一条一条记下来，跟他确认措辞，说会原样反馈给研发那边。\n\n之前有客服把835公里说成820公里，他到现在还糊涂着。我告诉他，20寸光环轮毂的CLTC续航就是835，那个820是错误信息。他又问，那为什么车机上显示预估续航只有615？我说那个615是根据你实际用车习惯、路况、空调、速度这些实时算出来的，跟CLTC是两码事。CLTC是实验室标准工况，现实中都会打折，615反而是更真实的数字。他那头顿了一下，说这回彻底明白了。\n\n挂了电话之前，他说了一句：“基本上你都帮我解答掉了。”语气松下来了，跟刚接电话那会儿完全是两个人。又说：“行啊，就正常充电，其他没有要问的了。”\n\n临了还补了一句：“情绪价值拉满，买这个车还是挺好看的，各方面都不错。”\n\n我笑了。他说会把今天这些东西一样一样教给父母，让他们放心开。\n\n挂了电话，我把那几条建议整理好提交上去。两个半小时的通话，说长也长，但他最后能说一句“各方面都不错”，这事儿就值了。","votes":0,"img":"assets/story_13_cover.png","images":[],"comments":[],"id":13},{"title":"手写信，最纯粹的感谢","author":"李雪颖","avatar":"李","line":"delivery","tag":"warm","date":"2026-08-31","excerpt":"2月初，用户潘先生临时接到出差通知。家里长辈要用车，但老人从没碰过电车。他在外地，电话里怎么讲都讲不清楚，潘先生着急，老","body":"2月初，用户潘先生临时接到出差通知。家里长辈要用车，但老人从没碰过电车。他在外地，电话里怎么讲都讲不清楚，潘先生着急，老人也急。\n\n他想起了交付专员雪颖。\n\n电话打过去时，雪颖在家休息。潘先生住得不远，她听完，说了一句：“别担心，我马上过来。”\n\n简单收拾了一下，她就出门了。\n\n到了潘先生家，雪颖从启动、换挡，到充电、驻车，一项一项来。讲完一项，让老人自己操作一遍，确认能独立完成了，才往下走。中间拍了段小视频发给潘先生，告诉他进度，让他别急。老人学得认真，但手上紧张，按错键的时候会不好意思地抬头看她。雪颖就笑一下，说“没事，再来一次”。\n\n整个过程没什么特别的。一个人站在车旁边，另一个人坐在驾驶座上，慢慢地把每个按钮都摸一遍。\n\n确认老人可以安全上路了，雪颖才走。\n\n潘先生后来在电话里说了很多次谢谢。雪颖觉得，这不算什么，恰好住得近，恰好能帮上。\n\n她出门的时候，老人已经坐进驾驶座，准备开出去转一圈了。","votes":0,"img":"assets/story_14_cover.png","images":[],"comments":[],"id":14},{"title":"投诉不是终点，是新关系的起点。","author":"杨燕","avatar":"杨","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"2024年5月，我接到一个工单。L先生，国内知名足球评论员，因为交付周期不明确，打了数通400投诉，拨了12345，要求","body":"2024年5月，我接到一个工单。L先生，国内知名足球评论员，因为交付周期不明确，打了数通400投诉，拨了12345，要求积分补偿，还在车主群里说要把负面评价持续扩散。\n\n当时舆论环境紧张，一个有公众影响力的用户不满，随时可能出事。\n\n我没有急着灭火。第一通电话打了整整半小时，我没给方案，就听他说完所有的不满。加微信之后，我给自己定了个规矩：不等他来问，我主动说。不回避问题，不敷衍情绪，不把他当成一个需要搞定的投诉工单。\n\n当成一个需要被认真对待的人。\n\n当天下午，他截了一张微信家庭群的聊天记录发给我。里面写着：我还是比较爱小米，我要多给他们一些机会。\n\n然后他主动拨了12345，撤销了投诉。\n\n后来他跟我说了一句话，我记到现在。他说，我是资深米粉，我可以给小米反馈问题，但不能给小米制造麻烦。他知道投诉升级到经信委可能导致整个上海区域被停牌，所以选择撤诉。\n\n那一刻我心里咯噔了一下。他已经不只是一个被服务态度安抚住的投诉用户了，他把自己放在了小米这一边。\n\n从那以后，这段关系没断过。\n\nL先生入选了我们的车主达人，深度参与车主调研。每次活动收到邀请，第一时间截图发给我。提车后他反馈SU7音响震动问题，语气不是投诉，是那种“这个问题你们得重视”的口吻。\n\n2024年10月，他主动推荐朋友买了SU7。2025年6月，他置换车辆时发现二手车部门的服务瑕疵，没有对外发帖，私信我，希望我内部推动改进。今年4月，他预约保养排不上，第一个找的人还是我。\n\n回头看这一年多，我做的其实就一件事：让一个人从“我要给你们差评”变成“我不能给小米制造麻烦”。不是靠话术，不是靠积分补偿，靠的是每一次主动回应、每一句“我帮你跟进”、每一个兑现的承诺。\n\n日积月累，信任是这么拉出来的。\n\nL先生不是个例。在上海交付中心，我前前后后处理了不下20个投诉用户。每一个，我都当成第一个来对待。不套模板回复，不逃避服务上的瑕疵，就是认真去听他们在气什么、要什么。\n\n投诉不是终点。是关系的起点。\n\n用户愿意投诉你，说明他对你还有期待。而我要做的，就是不辜负这个期待。","votes":0,"img":"assets/story_15_cover.png","images":["assets/story_15_0.png","assets/story_15_1.png"],"comments":[],"id":15},{"title":"一面锦旗，从\"顺路\"到\"有家\"","author":"林浩","avatar":"林","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"一些“旧卡子”，一个“家”的感觉","body":"王先生来的时候，手里攥着一把车钥匙，脸上的表情有点茫然。\n\n外地车牌，二手车，功能还没摸熟。他说就顺路做个保养。\n\n林浩接过车钥匙，查了系统，发现车辆还没完成车主转移。他没说“你先去办手续”，而是掏出手机，凑过去，一个界面一个界面指给王先生看。APP绑定、车主认证、车况查看，每一步都走到王先生自己能点开为止。\n\n“这个远程控制是干嘛的？”王先生问。\n\n林浩就打开演示，说夏天可以提前开空调，冬天能提前热车。王先生点点头，笑了。\n\n车上了举升机，林浩探头一看，机舱里好几个卡子没了。库房刚好没现货，订货要等。他没说什么，转身去了车间角落，翻那几个旧件盒。有些卡子沾了灰，他用布擦了擦，对着型号一个个试。找齐了，装上去，不松不紧，刚刚好。\n\n王先生站在旁边看了一会儿，没说话。\n\n后来结账的时候，他说了一句话：“在郑州，我一个外地人，头一回觉得有了家的感觉。”\n\n几天后，一面锦旗从外地寄到店里。红底金字，没多重。\n\n拆开的时候，林浩愣了一下。他大概没想到，几个卡子、一次讲解，能让一个人记这么久。\n\n有人在用心。","votes":0,"img":"assets/story_16_cover.png","images":[],"comments":[],"id":16},{"title":"首例外籍客户车衣服务","author":"梁业辉","avatar":"梁","line":"delivery","tag":"warm","date":"2026-08-31","excerpt":"店里来了第一位外籍车主，沙特人。他提车那天带着中国朋友一块儿来，全程围着SU7转了好几圈，看得出来是真的爱惜这辆车。","body":"店里来了第一位外籍车主，沙特人。\n\n他提车那天带着中国朋友一块儿来，全程围着SU7转了好几圈，看得出来是真的爱惜这辆车。问了很多维护和使用的细节，交付同事觉得他对车衣可能有需求，拉我进群给他介绍。\n\n聊的过程不太顺。\n\n他对车衣产品基本零认知，我们发资料、发演示视频，他看完觉得我们在吹牛。但他又没直接拒绝，挺纠结的——想保护好车，又不信这东西真有那么神。\n\n我们商量了一下，决定不继续在群里说服他了。直接帮他预约了工位，跟他说，来店里看实物的效果，信得过就当场下单施工，信不过也没关系。\n\n他答应了。\n\n到店那天，我和3M驻店的同事提前在园区门口等着。下载好了翻译软件，备了矿泉水，测试工具也准备好了。领他到休息区坐下，倒了茶，然后当面演示车衣的抗穿刺、自修复、疏水这几项能力。我现场揪起一角车衣，拿钥匙使劲划了几下，热风枪一吹，痕迹慢慢就没了。他凑近看了又看，然后抬头冲我们竖了个大拇指。\n\n那个瞬间我们知道，他信了。\n\n他当场下单，选了8999那款高端车衣，直接把车交给我们施工。语言不通，但服务不需要太多话。施工师傅全程精细处理每一处收边和包角，我陪在旁边，随时用翻译软件跟他同步进度。施工结束带他逐面检查效果，讲了质保权益，也聊了小米汽车本身的科技功能。我们还准备了一份小礼品袋，最后大家一起合了张影。\n\n聊天的时候他提到，可能会把车运回沙特。我们挺高兴，说那太好了，回去让家人朋友也看看小米的智能电动车。\n\n没过多久，他发来消息，说车已经运回沙特了。","votes":0,"img":"assets/story_17_cover.png","images":[],"comments":[],"id":17},{"title":"用一次真诚沟通，换一场双向奔赴","author":"王磊","avatar":"王","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"那句话是邓女士自己说的：“车上坐着朋友，感觉好没面子。本来小米就比较受争议。”我是王磊，线上技术专家。她打来电话时，","body":"那句话是邓女士自己说的：“车上坐着朋友，感觉好没面子。本来小米就比较受争议。”\n\n我是王磊，线上技术专家。她打来电话时，已经攒了四个月的火。CarPlay 短信弹窗、高速上突然跳出泊车提示、小爱反应迟钝、方控切歌卡顿、车内异响，一堆问题。她之前通过 APP 和车机提交过日志，石沉大海。这次打电话来，情绪彻底爆发了。\n\n我听她说完，没有打断。\n\n这些故障横跨座舱、辅助驾驶、车身硬件好几个模块，严格来说不全归我管。但我不想说“这个您得转其他同事”。她已经被转过太多次了，再转一次，她只会更确信一件事：小米不上心。\n\n所以我决定全接住。\n\nCarPlay 短信隐私，其实是苹果系统底层的逻辑，跟车没关系，她听完愣了一下，说之前没人跟她解释过。泊车弹窗、小爱延迟、切歌卡顿，我如实告诉她这是软件待优化的点，不影响安全，OTA 会逐步修。车内异响，这种情况必须到店复现排查，我教她怎么提前记录故障场景，什么路况、什么速度下会响，抓准规律，到店检修效率能高很多。\n\n这些解释没什么神奇的，就是说得清楚，不绕。\n\n但我能感觉到，她真正在意的不是这些技术问题本身。她反复提到“朋友在车上”这个场景。新车，朋友坐进来，结果 CarPlay 弹出一条短信预览，气氛瞬间尴尬。你没法跟朋友解释这是苹果的锅还是小米的锅，朋友只会觉得，这车怎么这样。\n\n她要的是情绪价值。产品在社交场合掉链子，丢的是她的人。我明白这个，所以不辩解，也不敷衍。我说，换我我也尴尬，您吐槽的这些，我完全理解。\n\n她语气软下来一些。\n\n然后她提到管家群回复效率的问题，我认真记下来，告诉她我会内部对接整改。小米汽车还在快速成长阶段，有些体验确实不够完善，OTA 节奏我跟她说了，没夸大，也没回避。\n\n挂电话前，她说了句话，让我觉得这通电话没白打。\n\n她说：“选择成长中的品牌，遇到问题也需要陪品牌成长。”\n\n从“好没面子”到“陪品牌成长”，这个转变不是我靠什么话术聊出来的，就是老老实实把她的问题当回事，把她当朋友，不转单、不推诿、不跟她讲大道理。\n\n技术上的问题，有些当下能解决，有些得等 OTA，有些需要她去店里。但信任这件事，一通电话里就能修回来。","votes":0,"img":"assets/story_18_cover.png","images":["assets/story_18_0.png","assets/story_18_1.png"],"comments":[],"id":18},{"title":"销售和交付的双向奔赴","author":"王莹莹","avatar":"王","line":"delivery","tag":"support","date":"2026-08-31","excerpt":"6月21日晚上，交付门店的灯已经熄了一半。大家收拾东西准备走人，钥匙拿在手里，包都背上了。销售那边突然来了个电话。","body":"6月21日晚上，交付门店的灯已经熄了一半。大家收拾东西准备走人，钥匙拿在手里，包都背上了。\n\n销售那边突然来了个电话。\n\n用户临时决定到店看实车，要现场验车锁单。人已经在路上了，20点56分能到。销售问，能配合一下吗？\n\n没人犹豫。交付团队把包放下，重新打开系统，跑回展厅。有人去整理车辆状态，有人核对资料，有人把车况从头到尾调试了一遍。没有谁问“这算加班吗”，也没有人推给别的组。用户还没到，一切已经准备妥当了。\n\n20点56分，用户准时进门。销售在旁边全程陪着，讲配置、答疑问，用户问得非常细，他们把每个点都拆开揉碎了讲清楚。交付这边守着自己的环节，验车流程一项一项过，标准没因为时间晚而少走一步。两个部门之间几乎不用多余的话，该谁上谁上，衔接得很紧。\n\n大概一个小时后，用户验完车，锁了单。走的时候说了句，没想到这么晚还能这么顺。\n\n第二天，销售团队给交付同事每人送了一杯饮品。不是什么贵重的东西，就是一份心意，说昨晚辛苦了。\n\n一杯饮料，一次深夜配合，就这么简单。但那种“你喊一声我就上”的默契，在小米是很自然的一件事。","votes":0,"img":"assets/story_19_cover.png","images":["assets/story_19_0.png"],"comments":[],"id":19},{"title":"三个小时，等一条验证码，等一个回家的信号","author":"石含嘉","avatar":"石","line":"delivery","tag":"warm","date":"2026-08-31","excerpt":"周五下午最后一台预约，阳光斜斜地打在交付大厅，有点空旷。一位女士带着两个孩子走进来，车主是她父亲，人在海外。隔着时差","body":"周五下午最后一台预约，阳光斜斜地打在交付大厅，有点空旷。\n\n一位女士带着两个孩子走进来，车主是她父亲，人在海外。隔着时差，隔着年龄差，沟通从一开始就磕磕绊绊。金融签约必须先完成，才能放款，才能交车。可老人家的手机迟迟收不到验证短信。\n\n两个孩子很快坐不住了，开始一遍遍问：“什么时候能回家？”\n\n声音不大，但在安静的交付大厅里，焦虑被放大了。\n\n我先把孩子们带到车旁，打开车门，让小爱播故事。他们坐进后排，慢慢安静下来。趁这个空档，我跑回交付区，帮那位女士布置气球和鲜花，把交车背景板摆好，举着手机帮她拍了几张照片。她低头翻看照片的时候，嘴角终于松了松，说“这张可以发朋友圈”。\n\n然后我们回到车旁，蹲下来，开始解决最棘手的事。\n\n我左手用自己的手机拨中国移动客服，右手用她手机微信语音，一步步教她父亲操作。老人家在电话那头手忙脚乱，我这边查到攻略，再拨号，再同步进展，几个来回下来，声音都有点哑了。那位女士就蹲在旁边，偶尔帮我跟父亲解释几句，眼睛一直盯着手机屏幕。\n\n等待验证码的那几分钟，我们俩都没说话，就那么并肩蹲着，像两个守着什么的战友。\n\n然后手机亮了。\n\n她一把搂住我的手臂，我条件反射地跳起来，两个人击掌，转身对车里的孩子们喊：“可以回家啦！”\n\n孩子们在车里欢呼起来，那位女士搂着我胳膊的手还没松开，笑得直喘气。\n\n从下午四点半到晚上七点半，所有手续办完，车辆顺利交付。她临走时反复说：“今天真的谢谢你。”\n\n说得我有点不好意思。其实我只是蹲下来了而已。\n\n那天后来我收拾交付区的时候想，所谓“和用户交朋友”，大概就是这样——不是一套标准话术，不是流程化的微笑，而是在她最焦头烂额的时候，你能蹲到她旁边，跟她一起盯着那部迟迟不亮的手机，一起等，一起熬，一起在那个瞬间跳起来击掌。\n\n三个小时，我们蹲在车旁，等一条验证码，等一个回家的信号。这些褶皱，我陪她一起抚平了。","votes":0,"img":"assets/story_20_cover.png","images":["assets/story_20_0.png"],"comments":[],"id":20},{"title":"等待的日子虽然漫长，但我心里很踏实","author":"苏丹","avatar":"苏","line":"delivery","tag":"warm","date":"2026-08-31","excerpt":"洪先生每天都会在交付群里发消息。“苏丹，车到哪了？”“下线了吗？”“能赶上生日吗？”GT发布后等车周期长，他几乎","body":"洪先生每天都会在交付群里发消息。\n\n“苏丹，车到哪了？”“下线了吗？”“能赶上生日吗？”\n\nGT发布后等车周期长，他几乎天天来打卡。我每次都回，有时候一天要重复回答好几遍。同事问我不会烦吗，我说他着急啊，生日快到了，想开新车回去，这种心情太正常了。\n\n其实我做的就是告诉他真实进度，车到了哪个环节，大概还要多久。如果延迟了，也直接说原因，不绕弯子。他问一百遍，我就回一百遍。不是套话术那种回，就像朋友问你“到哪了”那样回。\n\n最后车还是没赶上生日前下线。我心里挺过意不去的，跟他说了好几遍不好意思。提车那天又出了岔子，车管所系统异常，临时牌照办不下来。洪先生坐在展厅里等，倒是没催，自己刷手机。我一会儿跑过去跟他说下进度，一会儿给他倒杯水，两个人就这么耗了整个下午。\n\n后来他终于把车开走了。我收拾工位的时候，同事递过来一个包裹，说是洪先生寄的。打开一看，一盒曲奇，一盒巧克力。没有纸条。\n\n我在微信上谢他。他说了句话，我记到现在：“等待的日子虽然漫长，但每次问你问题，你都特别耐心，从来不会不耐烦，让我心里特别踏实。”\n\n踏实。这个词比什么都好。\n\n那盒巧克力我放在工位上，偶尔吃一颗。交付这工作，说到底不是把车交出去就完了，是让一个人等了好久之后，见到车的那一刻，心里是暖的。","votes":0,"img":"assets/story_21_cover.png","images":["assets/story_21_0.png"],"comments":[],"id":21},{"title":"手写信，最纯粹的感谢","author":"荆子豪","avatar":"荆","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"客户是位小学老师。她订车后，每天打车往返学校，早晚高峰叫不到车，站在路边干着急。车费一天天攒下来，她心疼。刷小红书，","body":"客户是位小学老师。\n\n她订车后，每天打车往返学校，早晚高峰叫不到车，站在路边干着急。车费一天天攒下来，她心疼。刷小红书，看到同时间订车的人都提车了，她更急了，电话里说要投诉我们的配车机制。\n\n我解释同城同配的规则，她听进去了，但第二天还是会来问进度。\n\n说实话，我理解她。换我每天打车上下班，我也会急。所以她的消息，我什么时候看到什么时候回。午休吃饭时回，晚上十一二点也回。不是敷衍一句“好的我帮您查查”，是真去系统里查生产进度，看物流到了哪一站，截图发给她。有时候一天更新好几次，她不用问，我主动说。\n\n排单那边我也没闲着。找主管问能不能加急，能催就催，催到了立刻截图告诉她。交车流程和验车注意事项，我提前好几天就发给她了，让她不用临时抱佛脚，心里有个底。\n\n就这样一天天跟下来，她慢慢不催了。偶尔还会发个表情包，说“辛苦你了”。\n\n提车那天，她来了。不是一个人来的，手里还拿着东西，一面锦旗，红底黄字写着“服务热情，细致周到”，还有一封手写信。信纸叠得整整齐齐，字迹工整，一看就是认真写的。她在信里说起等待时的忐忑，说起每天收到我消息时那种踏实的感觉。\n\n锦旗我挂工位旁边了，信收在抽屉里。\n\n有时候觉得，做交付做的就是这些小事。别人着急的时候，你让她知道有人在替她盯着，就够了。","votes":0,"img":"assets/story_22_cover.png","images":["assets/story_22_0.png"],"comments":[],"id":22},{"title":"深夜鼠患，小米来了","author":"袁凯杰","avatar":"袁","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"深夜拆座椅救出蜜袋鼯，车主焦虑变感激","body":"深夜23:11，线上弹出一条消息：副驾驶座椅靠背能不能打开，跑进去一只老鼠，辛苦门店联系。\n\n袁凯杰看到时已经快到凌晨。他立刻拨通车主电话，那头的声音又急又累。车主养的一只蜜袋鼯钻进了副驾驶座椅夹层，怎么都弄不出来，自己折腾了两个小时，毫无办法。他怕小东西在里头缺氧，更怕它乱啃线束，埋下隐患。\n\n袁凯杰没犹豫。他开车赶回商都路门店，路上又绕去接了一位技师。到店后两人直接上手拆解排查，车主站在旁边，袁凯杰一边操作一边跟他聊天，让他别急。\n\n座椅一层层拆开，最后在夹层深处找到了那只蜜袋鼯。小家伙缩成一团，还活着。袁凯杰小心把它托出来，交到车主手里。\n\n凌晨1点19分，线上系统收到一条进线表扬：“感谢店长和这个师傅，这么热的天气，还这么晚，专门从家里跑过来帮我解决问题，小米的服务真是顶。”\n\n车修好了，宠物没事，车主终于能回家了。\n\n在袁凯杰眼里，用户的急就是自己的急。不管几点，不管什么事，先把人从焦虑里捞出来，其他的都往后放。","votes":0,"img":"assets/story_23_cover.png","images":["assets/story_23_0.png"],"comments":[],"id":23},{"title":"脚底下的“一箱水”","author":"赵花平","avatar":"赵","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"赵花平的工位正对着客休区。那天一位妈妈开车来店里做保养，大概要等两个小时。她坐在硬椅子上，一只手抱着熟睡的宝宝，一只","body":"赵花平的工位正对着客休区。\n\n那天一位妈妈开车来店里做保养，大概要等两个小时。她坐在硬椅子上，一只手抱着熟睡的宝宝，一只手刷手机。\n\n这家店建得早，客休区只有圆桌和椅子，没有沙发。赵花平自己也是妈妈，三岁小孩睡着了有多沉，单手抱两个小时胳膊会怎样，她太清楚了。\n\n她走过去：“我们有救援车停在店里，后排座椅能放平，要不让宝宝躺那儿休息一下？”\n\n妈妈摇了摇头。车停在雨棚外面，离客休区只有几米，但她不想让孩子离开自己的视线。\n\n赵花平回去搬了两把椅子，拼到妈妈面前，又拿了一条店里备着的毛毯，第二次走过去：“要不让孩子睡这儿？毯子给你垫上。”\n\n妈妈看了看，手动了动，还是没有放下孩子。“他容易出汗，这个有点厚了。”她停了一下，“算了，我还是抱着吧。”\n\n赵花平后来说：“能感觉到她有一点防备，不是不领情，就是那种比较内敛的人。”\n\n这时候店员周康走了过来。他看见拼好的椅子、铺好的毯子，还有仍然坐在原位抱着孩子的妈妈。他没多说什么，转身搬了一箱矿泉水，放到妈妈脚下。\n\n“您垫个脚，抱着能轻松点。”\n\n妈妈把脚搁了上去，说了一声“谢谢”。\n\n两个小时后孩子醒了，妈妈就离开了。赵花平是刷朋友圈的时候才知道的——这位用户发了一条动态：“来小米汽车服务中心保养，工作人员看我抱着熟睡中的娃，帮我拿小毯子铺了个临时小床，我说宝宝很会出汗，这个有点厚了，又帮忙搬来了一箱水给我垫脚，为贴心服务点赞！”\n\n赵花平挺诧异。他们提了三个方案，她一个都没真正接受，他们以为她不太在意这事。没想到她会发朋友圈。\n\n“我们只是觉得，这样抱两个小时，会累。无论是她，还是她的孩子，都是我们的用户。”","votes":0,"img":"assets/story_24_cover.png","images":["assets/story_24_0.png"],"comments":[],"id":24},{"title":"用一个月的时间，换回来一句\"满分好评\"","author":"邢世超","avatar":"邢","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"12月27日，10:40。客户到店，那天B岗就我一个人。11点做完PDI，11:08客户付完全款，我核对完车牌信息发","body":"12月27日，10:40。\n\n客户到店，那天B岗就我一个人。11点做完PDI，11:08客户付完全款，我核对完车牌信息发起开票，11:11发票就开出来了。一切都很顺。\n\n11:28客户办完保险，临牌也打印好了。客户提前在电子税务局预缴了610块购置税，挺上心的，怕第二年政策变了多花钱。11:33我带客户去临牌窗口，系统提示：查无此票。\n\n出不了临牌。\n\n财税群11:25就炸了，全省乐企开票系统大面积故障，好几家交付中心都踩了坑。我立刻同步店长徐彬，他直接拉起总部税务对接人，全市故障订单怎么处置、客户安抚怎么说、两种方案各有什么利弊，他全程跟我一起捋，一条一条对。\n\n中午12点系统还没恢复，店长安排客户先在店里吃饭，两个人在等，车架号尾号5242。1点客户吃完饭，我带他们熟悉车辆功能，想着能拖一点是一点。到2点发票还是查不到，客户说必须回西工区取护照，下午还有别的安排。店长调了门店的车，安排专人送他们回去，跟他们说我们会持续跟进，系统一好马上通知。\n\n下午4点问税务老师，答复是：流转时效说不准。\n\n6点下班，车管所系统还是没数据。店长陪我一起打电话给客户，同步进度，道歉。\n\n晚上9:29，总部胡玉娇老师拉了专项会议，店长带着我上会，把情况说清楚。难点就一个：客户已经预缴了购置税，如果冲红重开就得退税，跨年了国库封库，次年重缴要多花15000块。客户不可能接受。\n\n12月30号，发票还是查不到。9:23我打给税务局，确认了那个风险，15000块。店长陪着我反复跟税务窗口、总部税务老师三方通话，退税时限、封库节点、跨年税费差异，一个个确认，然后整理成话术同步客户。\n\n12月31号，早上8:55，发票依然查无此票。\n\n9点我刚交付完当天第一组客户，看到交付群里客户发了消息，说今天必须提车去郑州跨年。店长放下手头的事，跟我一起对接税务线上专员，问系统修复进度。10:17我打电话给客户同步进展，店长在旁边给我递思路。之后我发起电子委托，店长陪着我带上全套车辆资料，直接去车管所现场尝试开临牌。\n\n12:07，车管所系统还是没数据。\n\n中午1:42，店长说，走，我陪你去税务局。我们去了洛龙区税务局政务大厅，面对面问窗口专员。答复是：系统故障没有修复时间，强行冲红的话节后办退税，流程没有成熟案例。店长全程记录，一条条梳理风险点。\n\n下午2点，客户说今天必须开走。店长跟我再次对接总部税务胡玉娇老师，确认冲红重开没有卡票风险，临牌可以正常办。确认可行后，我们马上跟客户沟通方案。3:49，客户同意冲红重开，临牌成功开出。我通知客户到店，客户说已经出发跨年了，当天来不了。店长担心第二天系统升级又出问题，让我提前把临牌打印出来留着。\n\n当天下午，店长又陪我去车购税窗口，把次年退税要的材料清单、办理流程全部问清楚，同步给客户，临牌提前打印好。\n\n1月1号，客户到店提车。店长帮我协调用章申请，整理客户退税需要的全套纸质材料，还把退税代办方案一并告知客户，让他们少跑几趟政务大厅。\n\n1月4号复工，我打电话问退税代办要求，店长帮我梳理代办材料清单。1月6号我去税务局代办退税，到了窗口说缺合格证原件，折回门店取了再跑一趟。窗口又说业务归属分局有争议，店长远程帮我协调跨分局对接和税务线上客服，直到基础流程办结。之后我持续同步客户退税进度。\n\n1月11号到15号，退税流程走得慢，客户临牌快到期了，焦虑了好几次。店长一直给我沟通思路，让我分阶段同步进度，疏导客户情绪。\n\n1月19号我轮休。下午4:35税务局来电，说材料要补交到经开区发票属地分局。那天大雪，我正想着怎么跑，店长在线上帮我协调确认了材料要求，说直接去。我开车冒雪去税务局补交了全套资料，5:30同步店长窗口答复，一起整理信息发给客户，告诉他们审核周期。\n\n晚上6点客户说APP发票显示异常。店长指导我对接总部税务后台，核实是展示bug，我解释给客户听。第二天客户男友投诉APP发票信息不符，情侣间信息传递出了偏差。店长让我分层沟通，先打给客户男友，把全流程故障、冲红重开、退税进度全部复盘一遍，耐心解释。对方听完，表示理解，说后续有问题直接找我。当天下午购置税也流转完成了，客户正常上牌。\n\n整个过程将近一个月。店长没有把问题丢给我一个人，工作日陪我跑税务局、车管所，休息日线上跟进，风险点一条条跟我对，沟通话术一句句帮我捋。我一个新人，第一次碰上这种规模的系统故障，他从头跟到尾。\n\n后来车主主动联系我，预约了门店车衣服务，说会给门店填满分好评。\n\n一个月的折腾，换回来一句\"满分好评\"。但说实话，这一个月里店长带着我做的那些事——大雪天跑税务局、跨年当天蹲在车管所、为一万五的税费风险反复跟三方确认——客户可能永远不知道有多折腾。不过也不需要知道。客户最后能放心把车衣交给我们，这事本身就说明了一切。","votes":0,"img":"assets/story_25_cover.png","images":["assets/story_25_0.png","assets/story_25_1.png","assets/story_25_2.png","assets/story_25_3.png"],"comments":[],"id":25},{"title":"丝带蒙眼的浪漫求婚时刻","author":"郭心蕊","avatar":"郭","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"7月22号，用户跟我聊第二天提车的事，聊着聊着，他说想借着交车给相恋六年的女朋友求个婚。从那天上午10点开始，我反反","body":"7月22号，用户跟我聊第二天提车的事，聊着聊着，他说想借着交车给相恋六年的女朋友求个婚。\n\n从那天上午10点开始，我反反复复跟他确认流程。他想到一点，我记一点，他又有新想法，我再调整。断断续续一直沟通到晚上8点，总算把大框架定下来。\n\n提车当天早上9点58分，我挨个找人。布置场地的、摆花的、专业摄影的、帮拍纪实照的，一个一个对。场地怎么摆，灯打在哪里，花往哪个方向，都反复确认。我还偷偷拉了他女朋友的妹妹和朋友进来，同步完整流程，让她们帮忙稳住女方那边。每准备好一步，我就拍张照片或者录段视频发给用户，让他知道进度，让他安心。\n\n下午1点40分，用户和女朋友到店。我陪女生在休息区闲聊，有一搭没一搭地聊着，让她没空去想男生去哪儿了。等所有环节就绪，我拿出一条丝巾，蒙住她的眼睛，牵着她慢慢往新车那边走。\n\n丝巾摘下来的时候，满车的鲜花和那句\"嫁给我\"映入眼帘。男生单膝跪下，深情告白，她说了\"我愿意\"。在SU7旁边，两个人相恋六年最珍贵的瞬间，就这么定格了。\n\n整场服务一直持续到下午4点，用户圆满结束交付和求婚仪式，安心离店。两天的坚守，到这里才算真正落幕。\n\n交付这件事，从来不只是把车钥匙递过去。把用户当朋友，看见他心里的期待，愿意花时间替他扛下那些琐碎繁杂的准备工作，让他人生的重要时刻不留遗憾——这大概就是我们这份工作最值得的地方。","votes":0,"img":"assets/story_26_cover.png","images":["assets/story_26_0.png","assets/story_26_1.png","assets/story_26_2.png","assets/story_26_3.png"],"comments":[],"id":26},{"title":"深夜暖心相助，践行小米服务初心","author":"陈如习","avatar":"assets/avatar_27.png","line":"service","tag":"rescue","date":"2026-08-30","excerpt":"小米售后夜归遇车祸，帮车主处理事故，深夜守候拖车","body":"3月21日，周六，晚上8点多。\n\n我下班回家，正路过瓯海区卧云南苑路口。一辆小米YU7和水泥罐车撞上了。右侧车门挤得不成样子，车主一个人站在路边，慌得不知道该怎么办。\n\n夜晚路上车多，他连保险怎么报都不清楚，拖车更是一头雾水。\n\n我把车靠边，走过去。\n\n“我是小米售后的，别急，我帮你弄。”\n\n先让他把现场照片拍全。车身受损的每个角度，路况，牌照，一张张告诉他怎么拍。然后陪他打保险报案电话，那边问什么，我就在旁边一句句解释。定损的事，也一条条给他讲清楚。\n\n拖车来了。夜间调度麻烦，操作也急不得。我从八点多一直守到十点多，盯着他们把车固定好，上板的时候特别注意，不能再给车添新伤。拖车发动前，我拨通门店值班同事的电话，把工位预留好，事故细节同步过去，让他们第二天一早就能上手检修。\n\n十点多，车安全拖回滨海服务中心。全程没让车主自己跑一个手续，打一个电话。他站在路边，反复跟我说谢谢。\n\n我拍拍身上的灰，骑上车回家。后面的车一辆辆开过去，没人注意到刚才发生了什么。\n\n第二天维修班组提前开工，车主等车的功夫省了一大截。后来他专门打电话到门店，点名表扬。\n\n服务哪有什么上下班，不过是有人在需要的时候，恰好伸出了手。","votes":0,"img":"assets/story_27_cover.png","images":["assets/story_27_0.png","assets/story_27_1.png"],"comments":[],"id":27},{"title":"“不是亲人胜似亲人”","author":"马云飞","avatar":"马","line":"service","tag":"rescue","date":"2026-08-31","excerpt":"以车相借，尽显小米大爱；真诚待客，不是亲人胜似亲人。","body":"6月10号那天，邱先生和朋友自驾来济南玩，本来挺开心的，返程前车机突然跳出故障码。\n\n他开进济南凤歧路小米售后。检查完，车得留下修。\n\n“车肯定要修，可我们怎么回去啊？”邱先生声音都蔫了。他们要回河北清河县，一个没有高铁、没有直达火车的地方。\n\n顾问李凯第一反应是调代步车，但门店唯一那辆正被别的用户用着。他把情况报给了体验专家马云飞。云飞自己开一辆YU7，可能正因为自己也当车主，她一下就懂了那种困在异地的感觉，没请示来请示去，当场拍板：“用户体验优先！李凯，开我的车，送用户回家。”\n\n晚上7点出发。李凯提前备了满满一袋零食和饮用水，塞给邱先生他们路上吃。然后三个人钻进车里，朝河北清河县扎进夜色。\n\n来回400公里，5个小时。\n\n把邱先生和朋友送到家门口，已经晚上9点多了。李凯没歇，调头又往回赶，回到门店是凌晨。\n\n6月15号，邱先生寄来一面锦旗，写着：“以车相借，尽显小米大爱；真诚待客，不是亲人胜似亲人。”\n\n我猜邱先生那天坐进李凯开的车时，一定愣了一下。他本来只是来修个车，没想到连人带车被送回了家。","votes":0,"img":null,"images":[],"comments":[],"id":28},{"title":"真诚相助，暖心同行","author":"马兴源","avatar":"马","line":"delivery","tag":"rescue","date":"2026-08-31","excerpt":"三月底，洛阳小米交付中心接到一单紧急交付。客户提车时间定死了，一天都耽误不起。车在高速上往洛阳走，走到济源段，前面出","body":"三月底，洛阳小米交付中心接到一单紧急交付。客户提车时间定死了，一天都耽误不起。\n\n车在高速上往洛阳走，走到济源段，前面出了严重交通事故，高速全线封了。运车的大板车被交警引导下高速，麻烦就出在这儿——板车超重，下高速之后，再也上不去了。\n\n距离门店只剩三十多公里。三十多公里，平时一脚油门的事，现在卡住了。\n\n我打电话给板车司机的时候，他已经在路边停了快一个小时，又急又烦。我跟他说，别急，咱们一起想办法。司机说，不是我不想送，是真上不去。我说我知道，我想想。\n\n挂了电话，我盘算了一下。一台大板车拉好几台新车，车重超限上不了高速，唯一的办法是把车卸下来，换小板车，一台一台分批转运。但这里面有个问题——临时调两台小板车，费用谁出？\n\n我又打过去，跟司机商量。说实话，他完全可以不配合，把车停在路边等高速解封，等多久谁也不知道。我跟他讲这边的交付压力，客户等着提车，承诺的时间就摆在那儿。聊了好一会儿，他说，行，我找两台小板车过来，费用我自己出。\n\n中午过后，小板车到了。从那一刻起，我全程盯着，转运路线、车辆信息，一台一台核对，怕中间再出岔子。\n\n这事从中午一直折腾到傍晚六点多，车才陆续到店。板车司机连口水都没顾上喝，到了之后又接着干，卸车卸到晚上八点多。一整天下来，他整个人累得说不出话，坐在那儿，情绪很低。\n\n我看着他，心里挺不是滋味的。他本来可以不这样，但他答应了。\n\n交付任务结束后，我去买了些吃的喝的，把他带到门店休息区，让他歇一会儿。也没多说什么，就是陪他坐了坐。他吃了几口饭，慢慢缓过来了，跟我说，没事，车送到了就行。\n\n这件事让我记住的，不是那三十公里的转运，也不是最终按时交付，而是那个司机坐在路边疲惫的样子。困境里的体谅，比什么都重。","votes":0,"img":"assets/story_29_cover.png","images":["assets/story_29_0.png","assets/story_29_1.png","assets/story_29_2.png","assets/story_29_3.png"],"comments":[],"id":29}];
+
+// ========== STATE ==========
+let stories=[...sampleStories];
+let currentFilterTag='';
+let searchQuery='';
+const DATA_VERSION='v5_fullbody';
+if(localStorage.getItem('dataVersion')!==DATA_VERSION){
+localStorage.removeItem('userStories');
+localStorage.removeItem('likedIds');
+localStorage.removeItem('viewedIds');
+localStorage.setItem('dataVersion',DATA_VERSION);
+}
+let likedIds=JSON.parse(localStorage.getItem('likedIds')||'[]');
+let viewedIds=JSON.parse(localStorage.getItem('viewedIds')||'[]');
+let userStories=JSON.parse(localStorage.getItem('userStories')||'[]');
+stories=[...userStories,...sampleStories];
+let uploadedImage=null,uploadedVideo=null;
+let currentDetailStoryId=null;
+let currentDetailList=[];
+const gradientColors=['linear-gradient(135deg,#c8372e,#e04940)','linear-gradient(135deg,#f57c2e,#ff9a4d)','linear-gradient(135deg,#d4a843,#e8c060)','linear-gradient(135deg,#2e8b57,#3cb371)'];
+
+function getComments(id){const s=JSON.parse(localStorage.getItem('comments_'+id)||'[]');const st=stories.find(x=>x.id===id);return[...s,...(st?.comments||[])]}
+function saveComment(id,c){const s=JSON.parse(localStorage.getItem('comments_'+id)||'[]');s.push(c);localStorage.setItem('comments_'+id,JSON.stringify(s))}
+
+// ========== RANDOM SHUFFLE ==========
+function shuffleArray(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function getDisplayStories(){
+let filtered=stories.filter(s=>{
+if(currentFilterTag&&s.tag!==currentFilterTag)return false;
+if(searchQuery&&!s.title.toLowerCase().includes(searchQuery.toLowerCase())&&!s.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))return false;
+return true});
+const unread=filtered.filter(s=>!viewedIds.includes(s.id));
+const read=filtered.filter(s=>viewedIds.includes(s.id));
+const shuffledUnread=shuffleArray(unread);
+const shuffledRead=shuffleArray(read);
+const newStories=shuffledUnread.filter(s=>s.isNew);
+const oldUnread=shuffledUnread.filter(s=>!s.isNew);
+return[...newStories,...shuffleArray(oldUnread),...shuffledRead];
+}
+
+function markAsViewed(id){if(!viewedIds.includes(id)){viewedIds.push(id);localStorage.setItem('viewedIds',JSON.stringify(viewedIds))}}
+
+function shuffleStories(){renderMasonry();showToast('已重新洗牌','未读故事优先出现','success')}
+
+// ========== HERO PARTICLES (15, edge positions, not overlapping center) ==========
+const PARTICLE_POSITIONS=[
+{l:3,t:8,dir:'bottom'},{l:12,t:4,dir:'bottom'},{l:28,t:6,dir:'bottom'},{l:48,t:3,dir:'bottom'},{l:68,t:6,dir:'bottom'},{l:85,t:4,dir:'bottom'},{l:93,t:18,dir:'bottom'},
+{l:95,t:42,dir:'bottom'},{l:93,t:65,dir:'bottom'},{l:88,t:82,dir:'top'},{l:68,t:90,dir:'top'},{l:48,t:94,dir:'top'},{l:28,t:90,dir:'top'},{l:10,t:84,dir:'top'},{l:4,t:42,dir:'bottom'}
+];
+
+function createHeroParticles(){
+const c=document.getElementById('heroParticles');if(!c)return;c.innerHTML='';
+const particleStories=shuffleArray(stories).slice(0,15);
+particleStories.forEach((s,i)=>{
+const pos=PARTICLE_POSITIONS[i]||PARTICLE_POSITIONS[i%15];
+const w=document.createElement('div');w.className='hero-particle-wrap'+(pos.dir==='top'?' pb-bottom':'');
+w.style.left=pos.l+'%';w.style.top=pos.t+'%';
+w.style.setProperty('--float-dur',(16+Math.random()*12)+'s');
+w.style.setProperty('--float-delay',(-Math.random()*20)+'s');
+const p=document.createElement('div');p.className='hero-particle';
+if(s.img){p.style.backgroundImage=`url("${s.img}")`}
+else{const tag=TAGS[s.tag];p.style.background=gradientColors[i%4];const t=document.createElement('span');t.className='particle-text';t.textContent=s.avatar;p.appendChild(t)}
+const pv=document.createElement('div');pv.className='particle-preview';
+const tag=TAGS[s.tag]||{name:'',color:'var(--orange)'};
+let h='';
+if(s.img)h+=`<div class="particle-preview-img" style="background-image:url('${s.img}')"></div>`;
+h+=`<div class="particle-preview-body"><div class="particle-preview-cat" style="color:${tag.color}">${tag.name}</div><div class="particle-preview-title">${s.title}</div><div class="particle-preview-excerpt">${s.excerpt.substring(0,50)}...</div><div class="particle-preview-author" style="color:${tag.color}">${s.author}</div></div>`;
+pv.innerHTML=h;p.appendChild(pv);
+p.onclick=(e)=>{e.stopPropagation();openStoryDetail(s.id)};
+w.appendChild(p);c.appendChild(w)
+})
+}
+
+// ========== NAV ==========
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);updateActiveNav()});
+function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='hero';ss.forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetTop<=window.scrollY+200)a=id});document.querySelectorAll('.nav-links a[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===a))}
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});closeMobileMenu()}
+function toggleMobileMenu(){document.getElementById('navLinks').classList.toggle('open');document.getElementById('mobileMenuBtn').classList.toggle('open')}
+function closeMobileMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileMenuBtn').classList.remove('open')}
+
+// ========== RENDER MASONRY (show all) ==========
+function renderMasonry(){
+const grid=document.getElementById('masonryGrid');
+const display=getDisplayStories();
+currentDetailList=getDisplayStories();
+grid.innerHTML='';
+display.forEach((s,idx)=>{
+const card=document.createElement('div');
+card.className='card';
+if(likedIds.includes(s.id))card.classList.add('voted');
+const tag=TAGS[s.tag]||{name:'',color:'#f57c2e',bg:'#fff5ed'};
+card.classList.add('tag-'+s.tag);
+card.dataset.id=s.id;
+card.onclick=()=>{markAsViewed(s.id);openStoryDetail(s.id)};
+const isNew=s.isNew&&!viewedIds.includes(s.id);
+const cc=getComments(s.id).length;
+const hasV=!!s.video;const allImgs=s.img?[s.img,...(s.images||[]).filter(x=>x!==s.img)]:(s.images||[]);const hasI=allImgs.length>0;
+let h='';
+if(isNew)h+='<div class="card-new-badge">NEW</div>';
+h+=`<div class="card-tag-badge">${tag.name}</div>`;
+if(hasI){
+h+=`<div class="card-img" data-story-id="${s.id}">`;
+allImgs.forEach((src,i)=>{
+h+=`<img src="${src}" alt="${s.title}" loading="lazy" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none'">`;
+});
+if(allImgs.length>1){
+h+=`<button class="card-gallery-nav card-gallery-prev" onclick="cardGalleryNav(event,${s.id},-1)">‹</button>`;
+h+=`<button class="card-gallery-nav card-gallery-next" onclick="cardGalleryNav(event,${s.id},1)">›</button>`;
+h+=`<span class="card-gallery-count" id="gc${s.id}">1/${allImgs.length}</span>`;
+}
+h+=`</div>`;
+if(hasV)h+=`<div class="card-media-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>含视频</div>`;
+}
+else if(hasV){h+=`<div class="card-img" style="background:linear-gradient(135deg,#1a1a1a,#4a4a4a);height:160px;display:flex;align-items:center;justify-content:center"><div class="card-video-overlay">▶</div></div>`}
+else{h+=`<div class="card-gradient" style="background:${gradientColors[idx%4]}"></div>`}
+h+=`<div class="card-zoom-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>点击查看</div>`;
+h+=`<div class="card-body"><h3 class="card-title">${s.title}</h3><p class="card-excerpt">${s.excerpt}</p><div class="card-footer"><div class="card-author"><div class="author-avatar">${s.avatar&&s.avatar.startsWith('data:')?`<img src="${s.avatar}" alt="${s.author}">`:s.avatar}</div><div class="author-info"><span class="author-name">${s.author}</span><span class="author-date">${{service:'服务线',delivery:'交付线',sales:'零售线'}[s.line]||s.line||''}</span></div></div><div class="card-footer-right">${cc>0?`<span class="card-comment-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${cc}</span>`:''}<button class="like-btn ${likedIds.includes(s.id)?'voted':''}" onclick="event.stopPropagation();toggleLike(${s.id},this)"><svg class="heart-icon" viewBox="0 0 24 24" fill="${likedIds.includes(s.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>赞</span></button></div></div></div>`;
+card.innerHTML=h;
+grid.appendChild(card);
+});
+observeCards();
+}
+
+function formatDate(s){const d=new Date(s);const n=new Date();const df=Math.floor((n-d)/(1000*60*60*24));if(df===0)return'今天';if(df===1)return'昨天';if(df<7)return df+'天前';return(d.getMonth()+1)+'月'+d.getDate()+'日'}
+
+const cardObserver=new IntersectionObserver((entries)=>{entries.forEach((entry,i)=>{if(entry.isIntersecting){setTimeout(()=>entry.target.classList.add('visible'),i*60);cardObserver.unobserve(entry.target)}})},{threshold:.1});
+function observeCards(){document.querySelectorAll('.card:not(.visible)').forEach(card=>cardObserver.observe(card))}
+
+// ========== CARD GALLERY ==========
+function cardGalleryNav(e,sid,dir){
+e.stopPropagation();
+const card=document.querySelector('.card[data-id="'+sid+'"]');
+if(!card)return;
+const imgs=card.querySelectorAll('.card-img img');
+if(imgs.length<=1)return;
+let cur=0;
+imgs.forEach((img,i)=>{if(img.style.display!=='none')cur=i});
+imgs[cur].style.display='none';
+cur=(cur+dir+imgs.length)%imgs.length;
+imgs[cur].style.display='block';
+const gc=document.getElementById('gc'+sid);
+if(gc)gc.textContent=(cur+1)+'/'+imgs.length;
+}
+
+// ========== IMAGE VIEWER (FULLSCREEN) ==========
+let viewerImages=[];let viewerIdx=0;
+function openImageViewer(sid){
+const s=stories.find(x=>x.id===sid);if(!s)return;
+const imgs=s.images||(s.img?[s.img]:[]);
+if(imgs.length===0)return;
+viewerImages=imgs;viewerIdx=0;
+const v=document.getElementById('imageViewer');
+const img=document.getElementById('viewerImg');
+img.src=viewerImages[0];
+document.getElementById('viewerCount').textContent=(viewerIdx+1)+'/'+viewerImages.length;
+document.getElementById('viewerPrev').style.display=viewerImages.length>1?'flex':'none';
+document.getElementById('viewerNext').style.display=viewerImages.length>1?'flex':'none';
+v.classList.add('show');
+}
+function viewerNav(dir){
+if(viewerImages.length<=1)return;
+viewerIdx=(viewerIdx+dir+viewerImages.length)%viewerImages.length;
+document.getElementById('viewerImg').src=viewerImages[viewerIdx];
+document.getElementById('viewerCount').textContent=(viewerIdx+1)+'/'+viewerImages.length;
+}
+function closeImageViewer(){document.getElementById('imageViewer').classList.remove('show')}
+function detailGalleryNav(dir){
+const g=document.getElementById('detailGallery');if(!g)return;
+const imgs=g.querySelectorAll('.detail-media');
+if(imgs.length<=1)return;
+let cur=0;
+imgs.forEach((img,i)=>{if(img.style.display!=='none')cur=i});
+imgs[cur].style.display='none';
+cur=(cur+dir+imgs.length)%imgs.length;
+imgs[cur].style.display='block';
+const c=document.getElementById('detailGalleryCount');
+if(c)c.textContent=(cur+1)+'/'+imgs.length;
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImageViewer();if(e.key==='ArrowLeft'&&document.getElementById('imageViewer').classList.contains('show'))viewerNav(-1);if(e.key==='ArrowRight'&&document.getElementById('imageViewer').classList.contains('show'))viewerNav(1)});
+
+// ========== SUPABASE ==========
+const SUPA_URL='https://mvgqbipgqcyysxuwtcen.supabase.co';
+const SUPA_KEY='sb_publishable_LYHVLxm6py1iTajGEK6o8A_WR_Yd8_M';
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+
+// anonymous user token
+let userToken=localStorage.getItem('youyi_user_token');
+if(!userToken){userToken=crypto.randomUUID?crypto.randomUUID():'ut_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('youyi_user_token',userToken)}
+
+// load real like counts from supabase into stories.votes, also sync own likes
+async function loadVoteCounts(){
+try{
+const{data}=await supa.from('likes').select('story_id,user_token');
+if(!data)return;
+const counts={};
+data.forEach(r=>{counts[r.story_id]=(counts[r.story_id]||0)+1});
+stories.forEach(s=>{if(counts[s.id]!=null)s.votes=counts[s.id]});
+// sync own likes
+const myLikes=data.filter(r=>r.user_token===userToken).map(r=>r.story_id);
+if(myLikes.length){likedIds=[...new Set([...likedIds,...myLikes])];localStorage.setItem('likedIds',JSON.stringify(likedIds))}
+updateStats();renderMasonry();
+}catch(e){console.warn('loadVoteCounts',e)}
+}
+
+// ========== LIKE ==========
+async function toggleLike(id,btn){
+const s=stories.find(x=>x.id===id);if(!s)return;
+const i=likedIds.indexOf(id);
+if(i>-1){
+likedIds.splice(i,1);s.votes--;btn.classList.remove('voted');btn.querySelector('svg').setAttribute('fill','none');showToast('已取消点赞','','normal');
+try{await supa.from('likes').delete().eq('story_id',id).eq('user_token',userToken)}catch(e){}
+}else{
+likedIds.push(id);s.votes++;btn.classList.add('voted');btn.querySelector('svg').setAttribute('fill','currentColor');showToast('点赞成功！','感谢你认可这个故事的光芒','success');launchConfetti(btn);addActivity('你',s.title);
+try{await supa.from('likes').insert({story_id:id,user_token:userToken})}catch(e){}
+}
+localStorage.setItem('likedIds',JSON.stringify(likedIds));
+if(currentDetailStoryId===id)updateDetailLike(s);
+renderMasonry();updateStats();
+}
+
+function updateDetailLike(s){const b=document.querySelector('#storyDetailContent .like-btn-large');if(!b)return;const v=likedIds.includes(s.id);b.classList.toggle('voted',v);b.querySelector('svg').setAttribute('fill',v?'currentColor':'none')}
+
+// ========== CONFETTI ==========
+function launchConfetti(el){const r=el.getBoundingClientRect();const cx=r.left+r.width/2;const cy=r.top+r.height/2;const cs=['#f57c2e','#ff9a4d','#ffb380','#d9620e','#c8372e'];for(let i=0;i<12;i++){const p=document.createElement('div');p.className='confetti-piece';p.style.left=cx+'px';p.style.top=cy+'px';p.style.background=cs[Math.floor(Math.random()*cs.length)];p.style.borderRadius=Math.random()>.5?'50%':'2px';const a=(Math.PI*2*i)/12;const d=60+Math.random()*40;p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`;document.body.appendChild(p);setTimeout(()=>p.remove(),1000)}}
+
+// ========== TOAST ==========
+function showToast(t,d,type){const c=document.getElementById('toastContainer');const el=document.createElement('div');el.className='toast'+(type==='success'?' success':'');el.innerHTML=`<span class="toast-icon">${type==='success'?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'}</span><span>${t}${d?' · '+d:''}</span>`;c.appendChild(el);setTimeout(()=>{el.style.animation='toastOut .4s forwards';setTimeout(()=>el.remove(),400)},3000)}
+
+// ========== FILTER ==========
+document.getElementById('filterTabs').addEventListener('click',e=>{if(e.target.classList.contains('filter-tab')||e.target.closest('.filter-tab')){const tab=e.target.closest('.filter-tab');document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');currentFilterTag=tab.dataset.tag;renderMasonry()}});
+document.getElementById('searchInput').addEventListener('input',e=>{searchQuery=e.target.value;renderMasonry()});
+
+// ========== ACTIVITY ==========
+let activities=[];
+function renderActivity(){document.getElementById('activityList').innerHTML=activities.length?activities.map(a=>`<div class="activity-item"><div class="activity-avatar">${(a.name||'?').charAt(0)}</div><div class="activity-text"><span>${a.name}</span> 赞了 <span class="vote-target">${a.target}</span></div><span class="activity-time">${a.time}</span></div>`).join(''):'<div class="activity-item" style="opacity:.5;font-size:13px">暂无点赞动态</div>'}
+function addActivity(n,t){activities.unshift({name:n,target:t,time:'刚刚'});if(activities.length>6)activities.pop();renderActivity()}
+function fmtTime(iso){const d=new Date(iso);const diff=Math.round((Date.now()-d)/1000);if(diff<60)return'刚刚';if(diff<3600)return Math.floor(diff/60)+'分钟前';if(diff<86400)return Math.floor(diff/3600)+'小时前';return Math.floor(diff/86400)+'天前'}
+async function pollActivities(){
+try{
+const{data}=await supa.from('likes').select('story_id,created_at').order('created_at',{ascending:false}).limit(6);
+if(!data)return;
+const acts=data.map(r=>{const s=stories.find(x=>x.id===r.story_id);return{name:'匿名用户',target:s?s.title:'某故事',time:fmtTime(r.created_at)}});
+if(acts.length)activities=acts;
+renderActivity();
+}catch(e){console.warn('pollActivities',e)}
+}
+
+// ========== COMMENTS ==========
+let comments=[];
+function renderComments(){document.getElementById('commentList').innerHTML=comments.length?comments.map(c=>`<div class="activity-item"><div class="activity-avatar">${(c.name||'?').charAt(0)}</div><div class="activity-text"><span>${c.name}</span> 在 <span class="vote-target">${c.story}</span> 写下：${c.text}</div><span class="activity-time">${c.time}</span></div>`).join(''):'<div class="activity-item" style="opacity:.5;font-size:13px">暂无评论</div>'}
+function addComment(n,t,tx){comments.unshift({name:n,story:t,text:tx,time:'刚刚'});if(comments.length>6)comments.pop();renderComments()}
+async function pollComments(){
+try{
+const{data}=await supa.from('comments').select('story_id,author,text,created_at').order('created_at',{ascending:false}).limit(6);
+if(!data)return;
+const cms=data.map(r=>{const s=stories.find(x=>x.id===r.story_id);return{name:r.author,story:s?s.title.slice(0,10)+'…':'某故事',text:r.text,time:fmtTime(r.created_at)}});
+if(cms.length)comments=cms;
+renderComments();
+}catch(e){console.warn('pollComments',e)}
+}
+renderComments();
+
+// ========== STATS ==========
+function updateStats(){
+const tv=stories.reduce((s,x)=>s+x.votes,0);
+const _s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+_s('totalVotes',tv.toLocaleString());_s('heroStatVotes',tv.toLocaleString());
+_s('heroStatStories',stories.length);_s('totalStories',stories.length);
+const au=new Set(stories.map(s=>s.author)).size;
+_s('heroStatAuthors',au);_s('totalAuthors',au);
+}
+
+// ========== WRITE MODAL ==========
+function openWriteModal(){document.getElementById('writeModal').classList.add('active');document.body.style.overflow='hidden';closeMobileMenu()}
+function closeWriteModal(){document.getElementById('writeModal').classList.remove('active');document.body.style.overflow='';document.getElementById('storyForm').reset();document.getElementById('titleCount').textContent='0';document.getElementById('contentCount').textContent='0';uploadedImage=null;uploadedVideo=null;resetUploadArea('imageUploadArea','image');resetUploadArea('videoUploadArea','video')}
+document.getElementById('writeModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeWriteModal()});
+document.getElementById('storyDetailModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeStoryDetail()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeWriteModal();closeStoryDetail()}if(currentDetailStoryId!==null){if(e.key==='ArrowLeft')navigateDetail(-1);if(e.key==='ArrowRight')navigateDetail(1)}});
+document.getElementById('storyTitle').addEventListener('input',e=>{document.getElementById('titleCount').textContent=e.target.value.length});
+function updateCharCount(){document.getElementById('contentCount').textContent=document.getElementById('storyContent').value.length}
+
+// ========== MEDIA UPLOAD ==========
+function handleImageUpload(input){const f=input.files[0];if(!f)return;if(f.size>5*1024*1024){showToast('图片太大','请上传小于5MB的图片','normal');return}const r=new FileReader();r.onload=e=>{uploadedImage=e.target.result;const a=document.getElementById('imageUploadArea');a.classList.add('has-file');a.innerHTML=`<div class="upload-preview"><img src="${uploadedImage}" alt="预览"><button type="button" class="upload-remove" onclick="event.stopPropagation();removeMedia('image')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`};r.readAsDataURL(f)}
+function handleVideoUpload(input){const f=input.files[0];if(!f)return;if(f.size>50*1024*1024){showToast('视频太大','请上传小于50MB的视频','normal');return}const r=new FileReader();r.onload=e=>{uploadedVideo=e.target.result;const a=document.getElementById('videoUploadArea');a.classList.add('has-file');a.innerHTML=`<div class="upload-preview"><video src="${uploadedVideo}" controls></video><button type="button" class="upload-remove" onclick="event.stopPropagation();removeMedia('video')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`};r.readAsDataURL(f)}
+function removeMedia(t){if(t==='image'){uploadedImage=null;resetUploadArea('imageUploadArea','image')}else{uploadedVideo=null;resetUploadArea('videoUploadArea','video')}}
+function resetUploadArea(id,t){const a=document.getElementById(id);a.classList.remove('has-file');const l=t==='image'?'点击上传图片':'点击上传视频';const ic=t==='image'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>';a.innerHTML=`<div class="upload-placeholder">${ic}${l}</div>`}
+
+// ========== SUBMIT STORY ==========
+function submitStory(e){
+e.preventDefault();
+const title=document.getElementById('storyTitle').value.trim();
+const tag=document.getElementById('storyTag').value;
+const author=document.getElementById('storyAuthor').value.trim();
+const content=document.getElementById('storyContent').value.trim();
+const ns={id:Date.now(),title,excerpt:content,author,avatar:author.charAt(0),tag,isNew:true,date:new Date().toISOString().split('T')[0],votes:0,comments:[],image:uploadedImage||null,video:uploadedVideo||null,img:uploadedImage||null};
+stories.unshift(ns);
+const fs={...ns};if(fs.video)delete fs.video;if(fs.image&&fs.image.length>1e5)delete fs.image;
+userStories.unshift(fs);localStorage.setItem('userStories',JSON.stringify(userStories));
+closeWriteModal();renderMasonry();updateStats();createHeroParticles();
+showToast('故事已发布！','你的故事正在被看见','success');
+setTimeout(()=>scrollToSection('diaries'),500);
+}
+
+// ========== STORY DETAIL ==========
+function openStoryDetail(id){
+const s=stories.find(x=>x.id===id);if(!s)return;
+currentDetailStoryId=id;
+currentDetailList=getDisplayStories();
+const comments=getComments(id);
+const isLiked=likedIds.includes(id);
+const tag=TAGS[s.tag]||{name:'',color:'#f57c2e',bg:'#fff5ed',category:'',desc:''};
+const hasV=!!s.video;const allImgs=s.img?[s.img,...(s.images||[]).filter(x=>x!==s.img)]:(s.images||[]);const hasI=allImgs.length>0;
+let mh='';
+if(hasV)mh=`<video class="detail-media" src="${s.video}" controls poster="${allImgs[0]||''}"></video>`;
+else if(hasI){
+if(allImgs.length===1){mh=`<img class="detail-media" src="${allImgs[0]}" alt="${s.title}" onclick="openImageViewer(${s.id})" style="cursor:zoom-in">`}
+else{
+mh=`<div class="detail-gallery" id="detailGallery">`;
+allImgs.forEach((src,i)=>{
+mh+=`<img class="detail-media" src="${src}" alt="${s.title} ${i+1}" data-idx="${i}" style="display:${i===0?'block':'none'};cursor:zoom-in" onclick="openImageViewer(${s.id})">`;
+});
+mh+=`<button class="card-gallery-nav card-gallery-prev" onclick="detailGalleryNav(-1)">‹</button>`;
+mh+=`<button class="card-gallery-nav card-gallery-next" onclick="detailGalleryNav(1)">›</button>`;
+mh+=`<span class="card-gallery-count" id="detailGalleryCount">1/${allImgs.length}</span>`;
+mh+=`</div>`;
+}
+}
+let ch='';
+if(comments.length>0)ch=comments.map(c=>`<div class="comment-item"><div class="comment-avatar">${c.avatar}</div><div class="comment-body"><div class="comment-header"><span class="comment-author">${c.author}</span><span class="comment-time">${c.time||'刚刚'}</span></div><p class="comment-text">${c.text}</p></div></div>`).join('');
+else ch='<p class="comment-empty">还没有留言，成为第一个留言的人吧</p>';
+document.getElementById('storyDetailContent').innerHTML=`
+<div class="detail-tag-badge" style="color:${tag.color};background:${tag.bg};border:1px solid ${tag.color}">${tag.name} · ${tag.category}</div>
+<h2 class="detail-title">${s.title}</h2>
+<div class="detail-meta"><div class="author-avatar">${s.avatar&&s.avatar.startsWith('data:')?`<img src="${s.avatar}" alt="${s.author}">`:s.avatar}</div><div class="author-info"><span class="author-name">${s.author}</span><span class="author-date">${formatDate(s.date)}</span></div></div>
+${mh}
+<div class="detail-text" id="detailBody"></div>
+<div class="detail-actions">
+<button class="like-btn-large ${isLiked?'voted':''}" onclick="toggleLikeFromDetail(${s.id},this)"><svg viewBox="0 0 24 24" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${isLiked?'已赞':'点赞'}</button>
+<span class="detail-comment-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${comments.length} 条留言</span>
+</div>
+<div class="comments-section">
+<h3 class="comments-title">留言 <span class="comment-count-badge">${comments.length}</span></h3>
+<div class="comment-list">${ch}</div>
+<form class="comment-form" onsubmit="submitComment(event,${s.id})">
+<input type="text" placeholder="你的名字..." required maxlength="20">
+<textarea placeholder="写下你的留言，分享你的感受..." required maxlength="200"></textarea>
+<button type="submit" class="btn-primary comment-submit-btn">发布留言</button>
+</form>
+</div>`;
+document.getElementById('storyDetailModal').classList.add('active');
+document.body.style.overflow='hidden';
+// Format and display full body text
+const bodyDiv=document.getElementById('detailBody');
+if(bodyDiv){
+let bodyText=s.body||s.excerpt||'';
+// Convert markdown images to HTML img tags
+bodyText=bodyText.replace(/!\[([^\]]*)\]\(media\/([^)]+)\)(\{[^}]*\})?/g,function(m,alt,imgName){
+return '<img src="assets/'+imgName+'" alt="'+alt+'" style="width:100%;border-radius:8px;margin:12px 0" loading="lazy" onerror="this.style.display=\'none\'">';
+});
+// Convert **bold** to <strong>
+bodyText=bodyText.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+// Convert \n\n to paragraph breaks
+const paragraphs=bodyText.split(/\n\n+/);
+bodyDiv.innerHTML=paragraphs.map(p=>{p=p.trim();if(!p)return'';if(p.startsWith('<img'))return p;return '<p>'+p.replace(/\n/g,'<br>')+'</p>'}).join('');
+}
+}
+
+function closeStoryDetail(){document.getElementById('storyDetailModal').classList.remove('active');document.body.style.overflow='';currentDetailStoryId=null}
+
+function navigateDetail(dir){
+const idx=currentDetailList.findIndex(s=>s.id===currentDetailStoryId);
+if(idx===-1)return;
+const ni=(idx+dir+currentDetailList.length)%currentDetailList.length;
+markAsViewed(currentDetailList[ni].id);
+openStoryDetail(currentDetailList[ni].id);
+}
+
+let detailStartX=0;
+document.getElementById('storyDetailModal').addEventListener('touchstart',e=>{detailStartX=e.touches[0].clientX},{passive:true});
+document.getElementById('storyDetailModal').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-detailStartX;if(Math.abs(dx)>60){if(dx>0)navigateDetail(-1);else navigateDetail(1)}});
+
+async function toggleLikeFromDetail(id,btn){
+const s=stories.find(x=>x.id===id);if(!s)return;
+const i=likedIds.indexOf(id);
+if(i>-1){
+likedIds.splice(i,1);s.votes--;btn.classList.remove('voted');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>点赞';showToast('已取消点赞','','normal');
+try{await supa.from('likes').delete().eq('story_id',id).eq('user_token',userToken)}catch(e){}
+}else{
+likedIds.push(id);s.votes++;btn.classList.add('voted');btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>已赞';showToast('点赞成功！','感谢你认可这个故事的光芒','success');launchConfetti(btn);addActivity('你',s.title);
+try{await supa.from('likes').insert({story_id:id,user_token:userToken})}catch(e){}
+}
+localStorage.setItem('likedIds',JSON.stringify(likedIds));
+renderMasonry();updateStats();
+}
+
+async function submitComment(e,storyId){
+e.preventDefault();
+const f=e.target;const name=f.querySelector('input').value.trim();const text=f.querySelector('textarea').value.trim();
+if(!name||!text)return;
+const c={author:name,avatar:name.charAt(0),text,time:'刚刚'};
+saveComment(storyId,c);
+const s=stories.find(x=>x.id===storyId);if(s){if(!s.comments)s.comments=[];s.comments.push(c)}
+const st=stories.find(x=>x.id===storyId);if(st){comments.unshift({name,story:st.title.slice(0,10)+'…',text,time:'刚刚'});if(comments.length>6)comments.pop();renderComments()}
+try{await supa.from('comments').insert({story_id:storyId,author:name,text})}catch(e2){console.warn('submitComment supa',e2)}
+showToast('留言已发布！','','success');
+openStoryDetail(storyId);
+renderMasonry();
+}
+
+// ========== DATA REFRESH ==========
+setInterval(()=>{renderMasonry();updateStats();createHeroParticles()},1800000);
+// poll supabase every 5s
+setInterval(()=>{pollActivities();pollComments()},5000);
+
+// ========== HERO STARS ==========
+(function(){
+const c=document.getElementById('heroStars');if(!c)return;
+for(let i=0;i<50;i++){
+const s=document.createElement('div');s.className='hero-star';
+s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+s.style.animationDelay=Math.random()*3+'s';
+s.style.animationDuration=(2+Math.random()*4)+'s';
+s.style.width=s.style.height=(1+Math.random()*1.5)+'px';
+c.appendChild(s);
+}})();
+
+// ========== INIT ==========
+createHeroParticles();
+buildHeroAvatars();
+renderMasonry();
+renderActivity();
+renderComments();
+updateStats();
+// load real data from supabase
+loadVoteCounts();
+pollActivities();
+pollComments();
+
+function animateNumber(el,target,duration){
+const startTime=performance.now();
+function update(now){const p=Math.min((now-startTime)/duration,1);const e=1-Math.pow(1-p,3);el.textContent=Math.floor(target*e).toLocaleString();if(p<1)requestAnimationFrame(update)}
+requestAnimationFrame(update);
+}
+setTimeout(()=>{
+const _tv=document.getElementById('totalVotes');if(_tv)animateNumber(_tv,stories.reduce((s,x)=>s+x.votes,0),1500);
+const _ts=document.getElementById('totalStories');if(_ts)animateNumber(_ts,stories.length,1500);
+const _ta=document.getElementById('totalAuthors');if(_ta)animateNumber(_ta,new Set(stories.map(s=>s.author)).size,1500);
+},500);
+
+// Medal spotlight reveal (cursor-following)
+(function(){
+const container=document.getElementById('medalReveal');
+const top=document.getElementById('medalTop');
+const canvas=document.getElementById('medalCanvas');
+if(!container||!top||!canvas)return;
+const ctx=canvas.getContext('2d');
+const RADIUS=140;
+let mouse={x:-999,y:-999},smooth={x:-999,y:-999},raf;
+
+function resize(){
+canvas.width=container.offsetWidth;
+canvas.height=container.offsetHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+
+container.addEventListener('pointermove',e=>{
+const r=container.getBoundingClientRect();
+mouse.x=e.clientX-r.left;
+mouse.y=e.clientY-r.top;
+});
+container.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999;});
+
+function loop(){
+smooth.x+=(mouse.x-smooth.x)*0.12;
+smooth.y+=(mouse.y-smooth.y)*0.12;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+if(smooth.x>-500){
+const grad=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,RADIUS);
+grad.addColorStop(0,'rgba(255,255,255,1)');
+grad.addColorStop(0.4,'rgba(255,255,255,1)');
+grad.addColorStop(0.6,'rgba(255,255,255,0.75)');
+grad.addColorStop(0.75,'rgba(255,255,255,0.4)');
+grad.addColorStop(0.88,'rgba(255,255,255,0.12)');
+grad.addColorStop(1,'rgba(255,255,255,0)');
+ctx.fillStyle=grad;
+ctx.beginPath();
+ctx.arc(smooth.x,smooth.y,RADIUS,0,Math.PI*2);
+ctx.fill();
+}
+const mask=canvas.toDataURL();
+top.style.webkitMaskImage='url('+mask+')';
+top.style.maskImage='url('+mask+')';
+raf=requestAnimationFrame(loop);
+}
+loop();
+})();
+
+// Spring animation engine
+const springs=[];
+function springAnimate(el,prop,target,opts={}){
+const{stiffness=180,damping=22}=opts;
+let current=parseFloat(el.style[prop])||0,velocity=0;
+function tick(){
+const force=(target-current)*stiffness/1000;
+velocity=(velocity+force)*(1-damping/1000);
+current+=velocity;
+if(Math.abs(velocity)<0.01&&Math.abs(target-current)<0.01){current=target;el.style[prop]=current+(prop==='opacity'?'':'px');return;}
+el.style[prop]=current+(prop==='opacity'?'':'px');
+requestAnimationFrame(tick);
+}
+tick();
+}
+</script>
+
+<!-- IMAGE VIEWER -->
+<div id="imageViewer" onclick="closeImageViewer()">
+<button id="viewerClose" onclick="closeImageViewer()">✕</button>
+<button class="viewer-nav" id="viewerPrev" onclick="event.stopPropagation();viewerNav(-1)">‹</button>
+<img id="viewerImg" src="" alt="" onclick="event.stopPropagation()">
+<button class="viewer-nav" id="viewerNext" onclick="event.stopPropagation();viewerNav(1)">›</button>
+<span id="viewerCount"></span>
+</div>
+<script>
+// Section headers & timeline scroll-in
+(function(){
+  const headers=document.querySelectorAll('.section-header');
+  headers.forEach(h=>{h.style.opacity='0';h.style.transform='translateY(12px)';h.style.transition='opacity .5s var(--ease-out),transform .5s var(--ease-out)'});
+  const tlNodes=document.querySelectorAll('#timeline .timeline-h > div:not([style*="position:absolute"])');
+  tlNodes.forEach((n,i)=>{n.style.opacity='0';n.style.transform='translateY(12px)';n.style.transition=`opacity .4s ${i*40}ms var(--ease-out),transform .4s ${i*40}ms var(--ease-out)`});
+  const tlLine=document.querySelector('#timeline .timeline-h > div:first-child');
+  if(tlLine){tlLine.style.transformOrigin='left';tlLine.style.transform='scaleX(0)';tlLine.style.transition='transform .8s var(--ease-out)'}
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.opacity='1';e.target.style.transform='translateY(0)';
+        if(e.target===tlLine)e.target.style.transform='scaleX(1)';
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:0.15,rootMargin:'-40px'});
+  headers.forEach(h=>io.observe(h));
+  tlNodes.forEach(n=>io.observe(n));
+  if(tlLine)io.observe(tlLine);
+})();
+</script>
+</body>
+</html>
