@@ -451,8 +451,20 @@ img{max-width:100%;height:auto}
 .scroll-indicator .arrow{width:1px;height:32px;background:var(--orange);position:relative;overflow:hidden}
 .scroll-indicator .arrow::after{content:'';position:absolute;top:-32px;left:0;width:1px;height:32px;background:var(--orange-deep);animation:h5-scrollDown 2s infinite}
 @keyframes h5-scrollDown{0%{top:-32px}100%{top:32px}}
-@media(max-width:1024px){.hero-flex{flex-direction:column;padding:40px 32px}.hero-heading-5200{font-size:48px;line-height:52px}.circles-container-5200{transform:scale(.6)!important}}
-@media(max-width:768px){.hero-heading-5200{font-size:36px;line-height:40px}.circles-container-5200{transform:scale(.45)!important}}
+@media(max-width:1024px){
+  .hero-flex{flex-direction:column;padding:60px 32px 40px;align-items:center;text-align:left}
+  .hero-left-5200{flex:none;width:100%;max-width:520px}
+  .hero-heading-5200{font-size:48px;line-height:52px}
+  .circles-container-5200{transform:scale(.55)!important;margin-top:-80px}
+}
+@media(max-width:768px){
+  #hero{overflow:hidden;padding:0 24px}
+  .hero-flex{flex-direction:column;padding:80px 0 0;gap:0}
+  .hero-left-5200{width:100%;padding-top:0;text-align:left}
+  .hero-heading-5200{font-size:40px;line-height:44px}
+  .hero-right-5200{display:none}
+  .hero-cta-5200{margin-top:28px}
+}
 </style>
 
 <div class="hero-flex">
