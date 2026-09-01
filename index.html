@@ -109,6 +109,10 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 /* DIARIES */
 #diaries{background:transparent}
 .diary-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
+.votes-remaining{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange-deep);background:var(--orange-tint);border:1px solid rgba(232,98,42,.15);padding:5px 14px;border-radius:9999px;white-space:nowrap;transition:background .2s,color .2s}
+.votes-remaining.empty{color:var(--text-muted);background:rgba(0,0,0,.04);border-color:transparent}
+.votes-remaining .vr-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0;transition:background .2s}
+.votes-remaining.empty .vr-dot{background:var(--text-muted)}
 .filter-tabs{display:flex;gap:6px;flex-wrap:wrap}
 .filter-tab{padding:7px 16px;border:1px solid rgba(0,0,0,.07);border-radius:9999px;background:rgba(255,255,255,.7);backdrop-filter:blur(8px);font-size:12px;color:var(--text-soft);cursor:pointer;transition:border-color .2s ease,color .2s ease,background .2s ease;font-family:var(--sans);font-weight:500}
 .filter-tab:hover{border-color:var(--orange);color:var(--orange)}
@@ -329,6 +333,8 @@ footer{background:rgba(26,35,50,.94);backdrop-filter:blur(20px);color:#fff;paddi
 .mobile-menu-btn{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px}
 .mobile-menu-btn span{width:22px;height:2px;background:var(--text);transition:transform .25s var(--ease-out),opacity .25s var(--ease-out)}
 @media(max-width:768px){
+.diary-tools-right{flex-wrap:wrap;gap:8px}
+.votes-remaining{order:-1;width:100%}
 nav{padding:14px 20px}nav.scrolled{padding:10px 20px}
 .nav-logo{margin-left:0}.nav-links{margin-right:0}
 .nav-links{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;flex-direction:column;padding:80px 30px 30px;gap:20px;transition:right .4s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 20px rgba(0,0,0,.1)}
@@ -626,6 +632,7 @@ if(!isMobile){
 <div class="filter-tab tag-shine" data-category="" data-tag="shine">超越预期</div>
 </div>
 <div class="diary-tools-right">
+<div id="votesRemaining" class="votes-remaining"><span class="vr-dot"></span><span id="votesRemainingText">今日剩余 5 票</span></div>
 <div class="search-box">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
 <input type="text" placeholder="搜索故事..." id="searchInput">
@@ -834,7 +841,9 @@ localStorage.setItem('dataVersion',DATA_VERSION);
 let likedIds=JSON.parse(localStorage.getItem('likedIds')||'[]');
 let viewedIds=JSON.parse(localStorage.getItem('viewedIds')||'[]');
 const DAILY_LIMIT=5;
-const todayKey='youyi_daily_'+new Date().toISOString().slice(0,10);
+// 用本地时间生成日期 key，确保跟随用户所在时区的零点清零
+function localDateStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+const todayKey='youyi_daily_'+localDateStr();
 let dailyVotes=JSON.parse(localStorage.getItem(todayKey)||'[]');
 // 清理旧日期的 key
 Object.keys(localStorage).filter(k=>k.startsWith('youyi_daily_')&&k!==todayKey).forEach(k=>localStorage.removeItem(k));
@@ -1055,10 +1064,25 @@ try{await supa.from('likes').insert({story_id:id,user_token:userToken})}catch(e)
 }
 localStorage.setItem('likedIds',JSON.stringify(likedIds));
 if(currentDetailStoryId===id)updateDetailLike(s);
+updateVotesRemaining();
 renderMasonry();updateStats();
 }
 
 function updateDetailLike(s){const b=document.querySelector('#storyDetailContent .like-btn-large');if(!b)return;const v=likedIds.includes(s.id);b.classList.toggle('voted',v);b.querySelector('svg').setAttribute('fill',v?'currentColor':'none')}
+
+function updateVotesRemaining(){
+  const remaining=DAILY_LIMIT-dailyVotes.length;
+  const el=document.getElementById('votesRemaining');
+  const txt=document.getElementById('votesRemainingText');
+  if(!el||!txt)return;
+  if(remaining<=0){
+    el.className='votes-remaining empty';
+    txt.textContent='今日票数已用完';
+  }else{
+    el.className='votes-remaining';
+    txt.textContent=`今日剩余 ${remaining} 票`;
+  }
+}
 
 // ========== CONFETTI ==========
 function launchConfetti(el){const r=el.getBoundingClientRect();const cx=r.left+r.width/2;const cy=r.top+r.height/2;const cs=['#f57c2e','#ff9a4d','#ffb380','#d9620e','#c8372e'];for(let i=0;i<12;i++){const p=document.createElement('div');p.className='confetti-piece';p.style.left=cx+'px';p.style.top=cy+'px';p.style.background=cs[Math.floor(Math.random()*cs.length)];p.style.borderRadius=Math.random()>.5?'50%':'2px';const a=(Math.PI*2*i)/12;const d=60+Math.random()*40;p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`;document.body.appendChild(p);setTimeout(()=>p.remove(),1000)}}
@@ -1226,6 +1250,7 @@ if(i>-1){
 likedIds.splice(i,1);s.votes--;btn.classList.remove('voted');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>点赞';showToast('已取消点赞','','normal');
 const di=dailyVotes.indexOf(id);if(di>-1){dailyVotes.splice(di,1);localStorage.setItem(todayKey,JSON.stringify(dailyVotes))}
 try{await supa.from('likes').delete().eq('story_id',id).eq('user_token',userToken)}catch(e){}
+updateVotesRemaining();
 }else{
 if(dailyVotes.length>=DAILY_LIMIT){showToast('今日票数已用完','每人每天5票，明天再来','normal');return}
 likedIds.push(id);s.votes++;btn.classList.add('voted');btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>已赞';
@@ -1234,6 +1259,7 @@ const remaining=DAILY_LIMIT-dailyVotes.length;
 showToast('点赞成功！',remaining>0?`今日还剩 ${remaining} 票`:'今日票数已全部投出','success');
 launchConfetti(btn);addActivity('你',s.title);
 try{await supa.from('likes').insert({story_id:id,user_token:userToken})}catch(e){}
+updateVotesRemaining();
 }
 localStorage.setItem('likedIds',JSON.stringify(likedIds));
 renderMasonry();updateStats();
@@ -1273,6 +1299,7 @@ c.appendChild(s);
 // ========== INIT ==========
 createHeroParticles();
 buildHeroAvatars();
+updateVotesRemaining();
 renderMasonry();
 renderActivity();
 renderComments();
