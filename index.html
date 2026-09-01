@@ -14,6 +14,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F6 50%,#B8C3E8 100%);background-attachment:fixed;min-height:100vh;color:var(--text);line-height:1.7;overflow-x:hidden}
+@media(max-width:1024px){body{background-attachment:scroll}}
 ::selection{background:var(--orange);color:#fff}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:var(--bg)}
@@ -373,6 +374,7 @@ button:focus-visible,a:focus-visible{outline-offset:3px}
 .modal-content{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 img{max-width:100%;height:auto}
 @media(prefers-reduced-motion:reduce){*,.card,.modal,.toast,.h5-orbit,.h5-avatar,.circles-container-5200{animation:none!important;transition-duration:.15s!important}.card.visible{opacity:1;transform:none}}
+@media(max-width:768px){.filter-tab,.search-box input,.activity-feed,.voting-stat{backdrop-filter:none;-webkit-backdrop-filter:none}}
 @media(hover:hover)and (pointer:fine){.card:hover .card-img img{transform:scale(1.04)}}
 
 </style>
@@ -434,8 +436,8 @@ img{max-width:100%;height:auto}
 @keyframes h5-ringPulse{0%,100%{opacity:.4}50%{opacity:.65}}
 @keyframes h5-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .h5-orbit-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}
-.h5-medal-reveal{position:relative;width:390px;height:390px;cursor:default;filter:drop-shadow(0 0 60px rgba(255,120,50,.25)) drop-shadow(0 0 120px rgba(200,80,30,.12));animation:h5-breathe 3.5s ease-in-out infinite}
-@keyframes h5-breathe{0%,100%{transform:scale(1);filter:drop-shadow(0 0 60px rgba(255,120,50,.25)) drop-shadow(0 0 120px rgba(200,80,30,.12))}50%{transform:scale(1.04);filter:drop-shadow(0 0 80px rgba(255,120,50,.4)) drop-shadow(0 0 140px rgba(200,80,30,.2))}}
+.h5-medal-reveal{position:relative;width:390px;height:390px;cursor:default;filter:drop-shadow(0 0 60px rgba(255,120,50,.25));animation:h5-breathe 3.5s ease-in-out infinite;will-change:transform}
+@keyframes h5-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 .h5-medal-base,.h5-medal-top{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat}
 .h5-medal-top{z-index:2;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .h5-avatar{position:absolute;top:50%;left:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;opacity:0;animation:h5-flyIn .8s cubic-bezier(.22,1,.36,1) forwards,h5-float var(--float-dur,4s) var(--float-delay,0s) ease-in-out infinite;transition:transform .3s var(--ease-out),border-color .2s,box-shadow .3s}
@@ -534,48 +536,37 @@ setTimeout(()=>{
 
 
 
-// Medal glow effect
-const mc=document.getElementById('h5MedalReveal');
-const mt=document.getElementById('h5MedalTop');
-const cv=document.getElementById('h5MedalCanvas');
-if(mc&&mt&&cv){
-  const ctx=cv.getContext('2d');
-  let mouse={x:-999,y:-999},smooth={x:-999,y:-999};
-  let idle=true,t=0;
-  function resize(){cv.width=mc.offsetWidth;cv.height=mc.offsetHeight}
-  resize();window.addEventListener('resize',resize);
-  mc.addEventListener('pointermove',e=>{const r=mc.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;idle=false});
-  mc.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999;idle=true});
-  (function loop(){
-    t+=.015;
-    if(idle){
-      const cx=cv.width/2+Math.cos(t)*cv.width*.3;
-      const cy=cv.height/2+Math.sin(t*.7)*cv.height*.25;
-      smooth.x+=(cx-smooth.x)*.03;smooth.y+=(cy-smooth.y)*.03;
-    }else{
-      smooth.x+=(mouse.x-smooth.x)*.12;smooth.y+=(mouse.y-smooth.y)*.12;
-    }
-    ctx.clearRect(0,0,cv.width,cv.height);
-    if(smooth.x>-500){const g=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,140);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.4,'rgba(255,255,255,1)');g.addColorStop(.6,'rgba(255,255,255,.75)');g.addColorStop(.75,'rgba(255,255,255,.4)');g.addColorStop(.88,'rgba(255,255,255,.12)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(smooth.x,smooth.y,140,0,Math.PI*2);ctx.fill()}
-    const mask=cv.toDataURL();mt.style.webkitMaskImage='url('+mask+')';mt.style.maskImage='url('+mask+')';
-    requestAnimationFrame(loop);
-  })();
+// Medal glow — desktop only (canvas toDataURL is expensive on mobile)
+const isMobile=window.matchMedia('(max-width:1024px)').matches||('ontouchstart' in window);
+if(!isMobile){
+  const mc=document.getElementById('h5MedalReveal');
+  const mt=document.getElementById('h5MedalTop');
+  const cv=document.getElementById('h5MedalCanvas');
+  if(mc&&mt&&cv){
+    const ctx=cv.getContext('2d');
+    let mouse={x:-999,y:-999},smooth={x:-999,y:-999},idle=true,t=0;
+    function resize(){cv.width=mc.offsetWidth;cv.height=mc.offsetHeight}
+    resize();window.addEventListener('resize',resize);
+    mc.addEventListener('pointermove',e=>{const r=mc.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;idle=false});
+    mc.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999;idle=true});
+    (function loop(){
+      t+=.015;
+      if(idle){smooth.x+=(cv.width/2+Math.cos(t)*cv.width*.3-smooth.x)*.03;smooth.y+=(cv.height/2+Math.sin(t*.7)*cv.height*.25-smooth.y)*.03}
+      else{smooth.x+=(mouse.x-smooth.x)*.12;smooth.y+=(mouse.y-smooth.y)*.12}
+      ctx.clearRect(0,0,cv.width,cv.height);
+      if(smooth.x>-500){const g=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,140);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.4,'rgba(255,255,255,1)');g.addColorStop(.6,'rgba(255,255,255,.75)');g.addColorStop(.75,'rgba(255,255,255,.4)');g.addColorStop(.88,'rgba(255,255,255,.12)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(smooth.x,smooth.y,140,0,Math.PI*2);ctx.fill()}
+      const mask=cv.toDataURL();mt.style.webkitMaskImage='url('+mask+')';mt.style.maskImage='url('+mask+')';
+      requestAnimationFrame(loop);
+    })();
+  }
+  // Parallax — desktop only
+  const hero=document.getElementById('hero');
+  const circles=document.querySelector('.circles-container-5200');
+  let px=0,py=0,spx=0,spy=0;
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();px=((e.clientX-r.left)/r.width-.5)*-16;py=((e.clientY-r.top)/r.height-.5)*-12});
+  hero.addEventListener('pointerleave',()=>{px=0;py=0});
+  (function pLoop(){spx+=(px-spx)*.04;spy+=(py-spy)*.04;circles.style.transform=`translate3d(${spx}px,${spy}px,0) scale(.9)`;requestAnimationFrame(pLoop)})();
 }
-// Parallax on circles
-const hero=document.getElementById('hero');
-const circles=document.querySelector('.circles-container-5200');
-let px=0,py=0,spx=0,spy=0;
-hero.addEventListener('pointermove',e=>{
-  const r=hero.getBoundingClientRect();
-  px=((e.clientX-r.left)/r.width-.5)*-16;
-  py=((e.clientY-r.top)/r.height-.5)*-12;
-});
-hero.addEventListener('pointerleave',()=>{px=0;py=0});
-(function pLoop(){
-  spx+=(px-spx)*.04;spy+=(py-spy)*.04;
-  circles.style.transform=`translate3d(${spx}px,${spy}px,0) scale(.9)`;
-  requestAnimationFrame(pLoop);
-})();
 })();
 </script>
 </section>
@@ -1301,54 +1292,27 @@ const _ts=document.getElementById('totalStories');if(_ts)animateNumber(_ts,stori
 const _ta=document.getElementById('totalAuthors');if(_ta)animateNumber(_ta,new Set(stories.map(s=>s.author)).size,1500);
 },500);
 
-// Medal spotlight reveal (cursor-following)
-(function(){
+// Medal spotlight reveal — desktop only
+if(!isMobile){(function(){
 const container=document.getElementById('medalReveal');
 const top=document.getElementById('medalTop');
 const canvas=document.getElementById('medalCanvas');
 if(!container||!top||!canvas)return;
 const ctx=canvas.getContext('2d');
 const RADIUS=140;
-let mouse={x:-999,y:-999},smooth={x:-999,y:-999},raf;
-
-function resize(){
-canvas.width=container.offsetWidth;
-canvas.height=container.offsetHeight;
-}
-resize();
-window.addEventListener('resize',resize);
-
-container.addEventListener('pointermove',e=>{
-const r=container.getBoundingClientRect();
-mouse.x=e.clientX-r.left;
-mouse.y=e.clientY-r.top;
-});
-container.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999;});
-
-function loop(){
-smooth.x+=(mouse.x-smooth.x)*0.12;
-smooth.y+=(mouse.y-smooth.y)*0.12;
+let mouse={x:-999,y:-999},smooth={x:-999,y:-999};
+function resize(){canvas.width=container.offsetWidth;canvas.height=container.offsetHeight}
+resize();window.addEventListener('resize',resize);
+container.addEventListener('pointermove',e=>{const r=container.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
+container.addEventListener('pointerleave',()=>{mouse.x=-999;mouse.y=-999});
+(function loop(){
+smooth.x+=(mouse.x-smooth.x)*.12;smooth.y+=(mouse.y-smooth.y)*.12;
 ctx.clearRect(0,0,canvas.width,canvas.height);
-if(smooth.x>-500){
-const grad=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,RADIUS);
-grad.addColorStop(0,'rgba(255,255,255,1)');
-grad.addColorStop(0.4,'rgba(255,255,255,1)');
-grad.addColorStop(0.6,'rgba(255,255,255,0.75)');
-grad.addColorStop(0.75,'rgba(255,255,255,0.4)');
-grad.addColorStop(0.88,'rgba(255,255,255,0.12)');
-grad.addColorStop(1,'rgba(255,255,255,0)');
-ctx.fillStyle=grad;
-ctx.beginPath();
-ctx.arc(smooth.x,smooth.y,RADIUS,0,Math.PI*2);
-ctx.fill();
-}
-const mask=canvas.toDataURL();
-top.style.webkitMaskImage='url('+mask+')';
-top.style.maskImage='url('+mask+')';
-raf=requestAnimationFrame(loop);
-}
-loop();
+if(smooth.x>-500){const g=ctx.createRadialGradient(smooth.x,smooth.y,0,smooth.x,smooth.y,RADIUS);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.4,'rgba(255,255,255,1)');g.addColorStop(.6,'rgba(255,255,255,.75)');g.addColorStop(.75,'rgba(255,255,255,.4)');g.addColorStop(.88,'rgba(255,255,255,.12)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(smooth.x,smooth.y,RADIUS,0,Math.PI*2);ctx.fill()}
+const mask=canvas.toDataURL();top.style.webkitMaskImage='url('+mask+')';top.style.maskImage='url('+mask+')';
+requestAnimationFrame(loop);
 })();
+})();}
 
 // Spring animation engine
 const springs=[];
