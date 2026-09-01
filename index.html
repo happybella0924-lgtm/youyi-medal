@@ -109,7 +109,7 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 /* DIARIES */
 #diaries{background:transparent}
 .diary-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
-.votes-remaining{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange-deep);background:var(--orange-tint);border:1px solid rgba(232,98,42,.15);padding:5px 14px;border-radius:9999px;white-space:nowrap;transition:background .2s,color .2s}
+.votes-remaining{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange-deep);background:var(--orange-tint);border:1px solid rgba(232,98,42,.15);padding:5px 14px;border-radius:9999px;white-space:nowrap;transition:background .2s,color .2s;margin-top:12px}
 .votes-remaining.empty{color:var(--text-muted);background:rgba(0,0,0,.04);border-color:transparent}
 .votes-remaining .vr-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0;transition:background .2s}
 .votes-remaining.empty .vr-dot{background:var(--text-muted)}
@@ -333,8 +333,6 @@ footer{background:rgba(26,35,50,.94);backdrop-filter:blur(20px);color:#fff;paddi
 .mobile-menu-btn{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px}
 .mobile-menu-btn span{width:22px;height:2px;background:var(--text);transition:transform .25s var(--ease-out),opacity .25s var(--ease-out)}
 @media(max-width:768px){
-.diary-tools-right{flex-wrap:wrap;gap:8px}
-.votes-remaining{order:-1;width:100%}
 nav{padding:14px 20px}nav.scrolled{padding:10px 20px}
 .nav-logo{margin-left:0}.nav-links{margin-right:0}
 .nav-links{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;flex-direction:column;padding:80px 30px 30px;gap:20px;transition:right .4s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 20px rgba(0,0,0,.1)}
@@ -619,9 +617,9 @@ if(!isMobile){
 <!-- DIARIES -->
 <section id="diaries">
 <div class="section-header">
-
 <h2 class="section-title">点亮他人</h2>
-<p class="section-subtitle">每人每天5票，选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
+<p class="section-subtitle">选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
+<div id="votesRemaining" class="votes-remaining"><span class="vr-dot"></span><span id="votesRemainingText">今日剩余 5 票</span></div>
 </div>
 <div class="diary-toolbar">
 <div class="filter-tabs" id="filterTabs">
@@ -632,7 +630,6 @@ if(!isMobile){
 <div class="filter-tab tag-shine" data-category="" data-tag="shine">超越预期</div>
 </div>
 <div class="diary-tools-right">
-<div id="votesRemaining" class="votes-remaining"><span class="vr-dot"></span><span id="votesRemainingText">今日剩余 5 票</span></div>
 <div class="search-box">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
 <input type="text" placeholder="搜索故事..." id="searchInput">
