@@ -735,6 +735,7 @@ const AVATARS=[
   {deg:320,radius:399,size:58,shape:'round',glow:'#c49a3a',delay:2.3}
 ];
 function buildHeroAvatars(){
+  if(window.innerWidth<=1024||'ontouchstart' in window)return;
   const wrapper=document.getElementById('h5CirclesWrapper');
   if(!wrapper)return;
   wrapper.querySelectorAll('.h5-avatar').forEach(el=>el.remove());
