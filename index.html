@@ -453,10 +453,17 @@ img{max-width:100%;height:auto}
 @keyframes h5-scrollDown{0%{top:-32px}100%{top:32px}}
 @media(max-width:1024px){
   #hero{overflow:hidden}
-  .hero-flex{flex-direction:column;padding:80px 32px 40px;align-items:flex-start;gap:0}
-  .hero-left-5200{flex:none;width:100%;max-width:100%}
-  .hero-heading-5200{font-size:48px;line-height:52px}
-  .hero-right-5200{display:none}
+  .hero-flex{flex-direction:column;padding:80px 32px 40px;align-items:center;gap:0}
+  .hero-left-5200{flex:none;width:100%;max-width:100%;text-align:center;order:2}
+  .hero-edition{justify-content:center}
+  .hero-heading-5200{font-size:48px;line-height:52px;text-align:center}
+  .hero-right-5200{display:flex;order:1;width:100%;justify-content:center;margin-left:0;margin-bottom:0}
+  .circles-container-5200{width:240px;height:240px;animation:none;opacity:1;transform:none!important}
+  .h5-orbit{display:none}
+  .h5-orbit-center{position:relative;top:auto;left:auto;transform:none;display:flex;justify-content:center}
+  .h5-medal-reveal{width:180px;height:180px}
+  .h5-avatar{display:none}
+  .hero-cta-5200{justify-content:center}
 }
 @media(max-width:768px){
   #hero{overflow:hidden;padding:0;min-height:auto;height:auto;padding-top:72px;padding-bottom:48px;display:flex;align-items:flex-start}
