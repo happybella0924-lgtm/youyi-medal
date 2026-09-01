@@ -741,7 +741,30 @@ function buildHeroAvatars(){
   const wrapper=document.getElementById('h5CirclesWrapper');
   if(!wrapper)return;
   wrapper.querySelectorAll('.h5-avatar').forEach(el=>el.remove());
-  const pool=[...stories].sort(()=>Math.random()-.5).slice(0,AVATARS.length);
+  // 按业务线分组取TOP3（截止昨天24点累积点赞）
+  // 并列时随机；某线全0时随机取该线故事
+  function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  function top3ForLine(line){
+    const lineStories=stories.filter(s=>s.line===line);
+    if(!lineStories.length)return[];
+    const maxVotes=Math.max(...lineStories.map(s=>s.votes||0));
+    if(maxVotes===0)return shuffle(lineStories).slice(0,3);
+    // 找出所有达到TOP3门槛的故事（处理并列）
+    const sorted=[...lineStories].sort((a,b)=>(b.votes||0)-(a.votes||0));
+    const threshold=sorted[Math.min(2,sorted.length-1)].votes||0;
+    const top=sorted.filter(s=>(s.votes||0)>=threshold);
+    return shuffle(top).slice(0,3);
+  }
+  const byLine=[
+    ...top3ForLine('delivery'),
+    ...top3ForLine('sales'),
+    ...top3ForLine('service'),
+  ];
+  // 不足9个时用随机故事补位
+  const used=new Set(byLine.map(s=>s.id));
+  const rest=shuffle(stories.filter(s=>!used.has(s.id)));
+  while(byLine.length<AVATARS.length&&rest.length)byLine.push(rest.shift());
+  const pool=shuffle(byLine).slice(0,AVATARS.length);
   AVATARS.forEach((av,i)=>{
     const s=pool[i];if(!s)return;
     const el=document.createElement('div');
@@ -992,7 +1015,10 @@ if(!userToken){userToken=crypto.randomUUID?crypto.randomUUID():'ut_'+Math.random
 // load real like counts from supabase into stories.votes, also sync own likes
 async function loadVoteCounts(){
 try{
-const{data}=await supa.from('likes').select('story_id,user_token');
+// 截止昨天24点（今天00:00:00）的累积点赞
+const today=new Date();today.setHours(0,0,0,0);
+const cutoff=today.toISOString();
+const{data}=await supa.from('likes').select('story_id,user_token').lt('created_at',cutoff);
 if(!data)return;
 const counts={};
 data.forEach(r=>{counts[r.story_id]=(counts[r.story_id]||0)+1});
@@ -1001,6 +1027,7 @@ stories.forEach(s=>{if(counts[s.id]!=null)s.votes=counts[s.id]});
 const myLikes=data.filter(r=>r.user_token===userToken).map(r=>r.story_id);
 if(myLikes.length){likedIds=[...new Set([...likedIds,...myLikes])];localStorage.setItem('likedIds',JSON.stringify(likedIds))}
 updateStats();renderMasonry();
+buildHeroAvatars();
 }catch(e){console.warn('loadVoteCounts',e)}
 }
 
