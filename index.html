@@ -1006,20 +1006,25 @@ const hasV=!!s.video;const allImgs=s.img?[s.img,...(s.images||[]).filter(x=>x!==
 const likeBtn=`<button class="like-btn ${likedIds.includes(s.id)?'voted':''}" onclick="event.stopPropagation();toggleLike(${s.id},this)"><svg class="heart-icon" viewBox="0 0 24 24" fill="${likedIds.includes(s.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="like-count">${(s.votes||0)>0?s.votes:''}</span></button>`;
 const cardBg=gradientColors[idx%4];
 const cardHt=[100,120,110,130][idx%4];
+// iOS Safari 对超大 base64 静默失败，超过 800KB 的 data URI 直接过滤掉
+const MAX_B64=800*1024;
+function isSafeImg(src){if(!src)return false;if(src.startsWith('data:')&&src.length>MAX_B64)return false;return true;}
+const safeImgs=allImgs.filter(isSafeImg);
+const hasISafe=safeImgs.length>0;
 let h='';
 h+=`<div class="card-img-wrap" style="background:${cardBg};min-height:${cardHt}px">`;
 if(isNew)h+='<div class="card-new-badge">NEW</div>';
-if(hasI){
+if(hasISafe){
 h+=`<div class="card-img" data-story-id="${s.id}" style="min-height:${cardHt}px">`;
-allImgs.forEach((src,i)=>{
+safeImgs.forEach((src,i)=>{
 h+=`<img src="${src}" alt="${s.title}" loading="${i===0?'eager':'lazy'}" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none'">`;
 });
-if(allImgs.length>1){h+=`<span class="card-gallery-count" id="gc${s.id}">1/${allImgs.length}</span>`;}
+if(safeImgs.length>1){h+=`<span class="card-gallery-count" id="gc${s.id}">1/${safeImgs.length}</span>`;}
 h+=`</div>`;
 if(hasV)h+=`<div class="card-media-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>含视频</div>`;
 }
 else if(hasV){h+=`<div class="card-img" style="background:linear-gradient(135deg,#1a1a1a,#4a4a4a);display:flex;align-items:center;justify-content:center"><div class="card-video-overlay">▶</div></div>`}
-else{const ht=[100,120,110,130][idx%4];h+=`<div style="height:${ht}px;background:${gradientColors[idx%4]}"></div>`}
+else{h+=`<div style="height:${cardHt}px;background:${cardBg}"></div>`}
 h+=likeBtn;
 h+=`</div>`;
 const isRead=viewedIds.includes(s.id);
