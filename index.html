@@ -35,6 +35,11 @@ nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturat
 .nav-links a:hover::after{width:100%}
 .nav-links a.active{color:var(--orange)}
 .nav-links a.active::after{width:100%}
+.nav-votes-remaining{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--orange-deep);background:var(--orange-tint);border:1px solid rgba(232,98,42,.15);padding:4px 12px;border-radius:9999px;white-space:nowrap;margin-left:auto}
+.nav-votes-remaining.empty{color:var(--text-muted);background:rgba(0,0,0,.04);border-color:transparent}
+.nav-votes-remaining .vr-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0}
+.nav-votes-remaining.empty .vr-dot{background:var(--text-muted)}
+@media(max-width:768px){.nav-votes-remaining{display:none}}
 .nav-cta{background:var(--orange);color:#fff!important;padding:8px 20px!important;border-radius:9999px;font-size:13px!important;font-weight:600;transition:transform .16s var(--ease-out),background .2s var(--ease-out),box-shadow .3s var(--ease-out);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .nav-cta:hover{background:var(--orange-deep);transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,98,42,.2)}
 .nav-cta:active{transform:scale(.97)}
@@ -406,11 +411,12 @@ img{max-width:100%;height:auto}
 <div class="nav-logo-text">友谊奖章<span class="sub">中国区「五奖」荣誉体系</span></div>
 </div>
 <div class="hero-tabs" id="stickyTabs">
-  <button class="htab active" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
+  <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
   <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
   <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
   <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
 </div>
+<div id="navVotesRemaining" class="nav-votes-remaining"><span class="vr-dot"></span><span id="navVotesText">今日剩余 5 票</span></div>
 </nav>
 
 <!-- HERO (5200 style) -->
@@ -1113,13 +1119,18 @@ function updateVotesRemaining(){
   const remaining=DAILY_LIMIT-dailyVotes.length;
   const el=document.getElementById('votesRemaining');
   const txt=document.getElementById('votesRemainingText');
-  if(!el||!txt)return;
+  const nel=document.getElementById('navVotesRemaining');
+  const ntxt=document.getElementById('navVotesText');
   if(remaining<=0){
-    el.className='votes-remaining empty';
-    txt.textContent='今日票数已用完';
+    if(el)el.className='votes-remaining empty';
+    if(txt)txt.textContent='今日票数已用完';
+    if(nel)nel.className='nav-votes-remaining empty';
+    if(ntxt)ntxt.textContent='今日票数已用完';
   }else{
-    el.className='votes-remaining';
-    txt.textContent=`今日剩余 ${remaining} 票`;
+    if(el)el.className='votes-remaining';
+    if(txt)txt.textContent=`今日剩余 ${remaining} 票`;
+    if(nel)nel.className='nav-votes-remaining';
+    if(ntxt)ntxt.textContent=`今日剩余 ${remaining} 票`;
   }
 }
 
