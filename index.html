@@ -152,9 +152,9 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .card:hover{box-shadow:0 8px 28px rgba(0,0,0,.12);transform:translateY(-3px)}
 .card:active{transform:scale(.98);transition-duration:.1s}
 .card.voted{outline:2px solid var(--orange)}
-.card-img-wrap{position:relative;margin:0;border-radius:18px 18px 0 0;overflow:hidden;background:#f0f0f0}
-.card-img{width:100%;overflow:hidden;position:relative;max-height:220px;min-height:80px;background:#f0f0f0}
-.card-img img{width:100%;height:auto;max-height:220px;object-fit:cover;display:block;transition:transform .35s var(--ease-out)}
+.card-img-wrap{position:relative;margin:0;border-radius:18px 18px 0 0;overflow:hidden;background:#f0f0f0;min-height:100px}
+.card-img{width:100%;overflow:hidden;position:relative;max-height:220px;min-height:100px;background:inherit}
+.card-img img{width:100%;height:auto;max-height:220px;object-fit:cover;display:block;transition:transform .35s var(--ease-out);min-height:100px}
 .card:hover .card-img img{transform:scale(1.04)}
 .card-gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:4;transition:background .3s}
 .card-gallery-nav:hover{background:rgba(245,124,46,.85)}
@@ -1004,13 +1004,15 @@ const isNew=s.isNew&&!viewedIds.includes(s.id);
 const cc=getComments(s.id).length;
 const hasV=!!s.video;const allImgs=s.img?[s.img,...(s.images||[]).filter(x=>x!==s.img)]:(s.images||[]);const hasI=allImgs.length>0;
 const likeBtn=`<button class="like-btn ${likedIds.includes(s.id)?'voted':''}" onclick="event.stopPropagation();toggleLike(${s.id},this)"><svg class="heart-icon" viewBox="0 0 24 24" fill="${likedIds.includes(s.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="like-count">${(s.votes||0)>0?s.votes:''}</span></button>`;
+const cardBg=gradientColors[idx%4];
+const cardHt=[100,120,110,130][idx%4];
 let h='';
-h+=`<div class="card-img-wrap">`;
+h+=`<div class="card-img-wrap" style="background:${cardBg};min-height:${cardHt}px">`;
 if(isNew)h+='<div class="card-new-badge">NEW</div>';
 if(hasI){
-h+=`<div class="card-img" data-story-id="${s.id}">`;
+h+=`<div class="card-img" data-story-id="${s.id}" style="min-height:${cardHt}px">`;
 allImgs.forEach((src,i)=>{
-h+=`<img src="${src}" alt="${s.title}" loading="${i===0?'eager':'lazy'}" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none';if(!this.parentNode.dataset.errHandled){this.parentNode.dataset.errHandled=1;this.parentNode.style.background='${gradientColors[idx%4]}';this.parentNode.style.minHeight='${[100,120,110,130][idx%4]}px'}">`;
+h+=`<img src="${src}" alt="${s.title}" loading="${i===0?'eager':'lazy'}" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none'">`;
 });
 if(allImgs.length>1){h+=`<span class="card-gallery-count" id="gc${s.id}">1/${allImgs.length}</span>`;}
 h+=`</div>`;
