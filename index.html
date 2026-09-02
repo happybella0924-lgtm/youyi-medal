@@ -136,9 +136,6 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 @media(max-width:400px){.htab{padding:8px 10px;font-size:12px}}
 
 /* SECTION TRANSITIONS */
-.tab-section{transition:opacity .22s var(--ease-out),transform .22s var(--ease-out)}
-.tab-section.tab-hiding{opacity:0;transform:translateY(4px);pointer-events:none}
-.tab-section.tab-entering{opacity:0;transform:translateY(6px)}
 
 /* MASONRY — CSS columns 真瀑布流 */
 .masonry{columns:4;column-gap:16px}
@@ -932,37 +929,16 @@ function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='h
 function scrollToSection(id){switchTab(id);window.scrollTo({top:0,behavior:'smooth'})}
 function toggleMobileMenu(){}
 
-// Tab switching — fade transition
+// Tab switching — instant
 const TAB_SECTIONS=['timeline','diaries','share','about','voting'];
 function switchTab(target,btnEl){
-  // update buttons
   document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
   const btn=btnEl||document.querySelector(`.htab[data-target="${target}"]`);
   if(btn)btn.classList.add('active');
   localStorage.setItem('activeTab',target);
-
   TAB_SECTIONS.forEach(id=>{
     const el=document.getElementById(id);
-    if(!el)return;
-    const show=(id===target||(target==='diaries'&&id==='voting'));
-    if(show){
-      // make visible, then trigger enter animation
-      el.style.display='';
-      el.classList.remove('tab-hiding');
-      el.classList.add('tab-entering');
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          el.classList.remove('tab-entering');
-        });
-      });
-    } else {
-      el.classList.add('tab-hiding');
-      el.addEventListener('transitionend',function hide(){
-        el.style.display='none';
-        el.classList.remove('tab-hiding');
-        el.removeEventListener('transitionend',hide);
-      },{once:true});
-    }
+    if(el)el.style.display=(id===target||(target==='diaries'&&id==='voting'))?'':'none';
   });
   window.scrollTo({top:document.getElementById('stickyTabs').offsetTop-70,behavior:'smooth'});
 }
