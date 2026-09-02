@@ -921,7 +921,7 @@ w.appendChild(p);c.appendChild(w)
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);updateActiveNav()});
 function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='hero';ss.forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetTop<=window.scrollY+200)a=id});document.querySelectorAll('.nav-links a[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===a))}
-function scrollToSection(id){switchTab(id);window.scrollTo({top:0,behavior:'smooth'})}
+function scrollToSection(id){switchTab(id);}
 function toggleMobileMenu(){}
 
 // Tab switching — instant
