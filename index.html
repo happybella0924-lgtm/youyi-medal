@@ -124,6 +124,17 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box input:focus{border-color:var(--orange);width:220px;box-shadow:0 0 0 3px rgba(232,98,42,.07);background:#fff}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
+/* HERO TABS */
+.hero-tabs-wrap{border-top:1px solid rgba(0,0,0,.1);padding:0 max(32px,calc((100% - 1200px)/2));background:transparent;position:relative;z-index:10}
+.hero-tabs{display:flex;gap:0}
+.htab{flex:0 0 auto;padding:18px 32px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .2s var(--ease-out);letter-spacing:.02em}
+.htab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transition:transform .25s var(--ease-out)}
+.htab:hover{color:var(--text)}
+.htab.active{color:var(--orange);font-weight:600}
+.htab.active::after{transform:scaleX(1)}
+@media(max-width:600px){.hero-tabs-wrap{padding:0 16px}.htab{padding:14px 16px;font-size:13px}}
+@media(max-width:400px){.htab{padding:12px 10px;font-size:12px}}
+
 /* MASONRY — CSS columns 真瀑布流 */
 .masonry{columns:4;column-gap:16px}
 @media(max-width:1100px){.masonry{columns:3}}
@@ -391,13 +402,7 @@ img{max-width:100%;height:auto}
 <img src="logo.png" alt="友谊奖章" class="nav-logo-img">
 <div class="nav-logo-text">友谊奖章<span class="sub">中国区「五奖」荣誉体系</span></div>
 </div>
-<div class="nav-links" id="navLinks">
-<a onclick="scrollToSection('timeline')" data-section="timeline">评选流程</a>
-<a onclick="scrollToSection('diaries')" data-section="diaries">点亮他人</a>
-<a onclick="scrollToSection('share')" data-section="share">分享自己</a>
-<a onclick="scrollToSection('about')" data-section="about">关于我们</a>
-</div>
-<div class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+<div class="mobile-menu-btn" id="mobileMenuBtn" style="display:none"></div>
 </nav>
 
 <!-- HERO (5200 style) -->
@@ -573,6 +578,16 @@ if(!isMobile){
 }
 })();
 </script>
+
+<!-- HERO TABS -->
+<div class="hero-tabs-wrap">
+  <div class="hero-tabs">
+    <button class="htab active" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
+    <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
+    <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
+    <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
+  </div>
+</div>
 </section>
 
 <!-- TIMELINE -->
@@ -908,8 +923,26 @@ w.appendChild(p);c.appendChild(w)
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);updateActiveNav()});
 function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='hero';ss.forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetTop<=window.scrollY+200)a=id});document.querySelectorAll('.nav-links a[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===a))}
-function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});closeMobileMenu()}
-function toggleMobileMenu(){document.getElementById('navLinks').classList.toggle('open');document.getElementById('mobileMenuBtn').classList.toggle('open')}
+function scrollToSection(id){switchTab(id);window.scrollTo({top:0,behavior:'smooth'})}
+function toggleMobileMenu(){}
+
+// Tab switching — show only target section + footer
+const TAB_SECTIONS=['timeline','diaries','share','about','voting'];
+function switchTab(target,btnEl){
+  TAB_SECTIONS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display=(id===target||(target==='diaries'&&id==='voting'))?'':'none';
+  });
+  document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
+  const btn=btnEl||document.querySelector(`.htab[data-target="${target}"]`);
+  if(btn)btn.classList.add('active');
+  localStorage.setItem('activeTab',target);
+}
+// Init: restore last tab or default to timeline
+(function initTabs(){
+  const saved=localStorage.getItem('activeTab')||'timeline';
+  switchTab(saved);
+})();
 function closeMobileMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileMenuBtn').classList.remove('open')}
 
 // ========== RENDER MASONRY (show all) ==========
