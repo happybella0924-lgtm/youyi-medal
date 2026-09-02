@@ -1010,7 +1010,7 @@ if(isNew)h+='<div class="card-new-badge">NEW</div>';
 if(hasI){
 h+=`<div class="card-img" data-story-id="${s.id}">`;
 allImgs.forEach((src,i)=>{
-h+=`<img src="${src}" alt="${s.title}" loading="lazy" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none';if(!this.parentNode.dataset.errHandled){this.parentNode.dataset.errHandled=1;this.parentNode.style.background='${gradientColors[idx%4]}';this.parentNode.style.minHeight='${[100,120,110,130][idx%4]}px'}">`;
+h+=`<img src="${src}" alt="${s.title}" loading="${i===0?'eager':'lazy'}" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none';if(!this.parentNode.dataset.errHandled){this.parentNode.dataset.errHandled=1;this.parentNode.style.background='${gradientColors[idx%4]}';this.parentNode.style.minHeight='${[100,120,110,130][idx%4]}px'}">`;
 });
 if(allImgs.length>1){h+=`<span class="card-gallery-count" id="gc${s.id}">1/${allImgs.length}</span>`;}
 h+=`</div>`;
