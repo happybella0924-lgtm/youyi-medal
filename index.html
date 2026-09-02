@@ -125,7 +125,7 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
 /* HERO TABS */
-.hero-tabs-wrap{border-top:1px solid rgba(0,0,0,.1);padding:0 max(32px,calc((100% - 1200px)/2));background:transparent;position:relative;z-index:10}
+.hero-tabs-wrap{width:100%;border-top:1px solid rgba(0,0,0,.1);padding:0 max(32px,calc((100% - 1200px)/2));background:transparent;position:relative;z-index:10;flex-shrink:0}
 .hero-tabs{display:flex;gap:0}
 .htab{flex:0 0 auto;padding:18px 32px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .2s var(--ease-out);letter-spacing:.02em}
 .htab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transition:transform .25s var(--ease-out)}
@@ -410,8 +410,8 @@ img{max-width:100%;height:auto}
 <style>
 /* Urbanist removed — unified to MiSans */
 @property --border-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
-#hero{min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
-.hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px}
+#hero{min-height:100vh;height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 0;max-width:none!important;margin:0!important}
+.hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px;flex:1;padding:0 32px}
 .hero-left-5200{flex:0 1 520px;padding-top:32px;opacity:0;animation:h5-fadeUp 1s .2s cubic-bezier(.22,1,.36,1) forwards;text-align:left}
 .hero-edition{font-size:15px;font-weight:500;color:rgba(30,30,30,.5);letter-spacing:1.5px;margin-bottom:24px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards;display:inline-flex;align-items:center;gap:8px;padding:0;background:none;border:none;border-radius:0}
 .hero-edition::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0;opacity:.8}
@@ -463,8 +463,8 @@ img{max-width:100%;height:auto}
 .scroll-indicator .arrow::after{content:'';position:absolute;top:-32px;left:0;width:1px;height:32px;background:var(--orange-deep);animation:h5-scrollDown 2s infinite}
 @keyframes h5-scrollDown{0%{top:-32px}100%{top:32px}}
 @media(max-width:1024px){
-  #hero{overflow:hidden}
-  .hero-flex{flex-direction:column;padding:80px 32px 40px;align-items:center;gap:0}
+  #hero{overflow:hidden;flex-direction:column;height:100dvh;min-height:100dvh}
+  .hero-flex{flex-direction:column;padding:80px 32px 0;align-items:center;gap:0;flex:1}
   .hero-left-5200{flex:none;width:100%;max-width:100%;text-align:center;order:2}
   .hero-edition{justify-content:center}
   .hero-heading-5200{font-size:48px;line-height:52px;text-align:center}
@@ -477,8 +477,8 @@ img{max-width:100%;height:auto}
   .hero-cta-5200{justify-content:center}
 }
 @media(max-width:768px){
-  #hero{overflow:hidden;padding:0;min-height:auto;height:auto;padding-top:72px;padding-bottom:48px;display:flex;align-items:flex-start}
-  .hero-flex{flex-direction:column;padding:0 24px;gap:0;align-items:center;width:100%}
+  #hero{overflow:hidden;padding:0;min-height:100dvh;height:100dvh;display:flex;flex-direction:column;align-items:center}
+  .hero-flex{flex-direction:column;padding:40px 24px 0;gap:0;align-items:center;width:100%;flex:1}
   .hero-left-5200{width:100%;padding-top:0;text-align:center;order:2}
   .hero-edition{justify-content:center;margin-bottom:16px}
   .hero-heading-5200{font-size:36px;line-height:40px;letter-spacing:-0.5px;text-align:center}
