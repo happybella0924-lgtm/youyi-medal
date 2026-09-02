@@ -130,7 +130,7 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .htab{flex:0 0 auto;padding:7px 16px;font-size:13px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .18s var(--ease-out),background .18s var(--ease-out);letter-spacing:.02em;border-radius:8px;white-space:nowrap}
 .htab:hover{color:var(--text);background:rgba(0,0,0,.05)}
 .htab:active{transform:scale(.96);transition-duration:.08s}
-.htab.active{color:var(--orange);font-weight:600;background:rgba(232,98,42,.08)}
+.htab.active{color:var(--orange);font-weight:600;background:transparent}
 .htab.active::after{content:'';position:absolute;bottom:-2px;left:16px;right:16px;height:2px;background:var(--orange);border-radius:2px}
 @media(max-width:768px){.hero-tabs{gap:0}.htab{padding:6px 10px;font-size:12px}}
 @media(max-width:480px){.htab{padding:6px 8px;font-size:11px}}
@@ -935,7 +935,9 @@ function switchTab(target,btnEl){
     const el=document.getElementById(id);
     if(el)el.style.display=(id===target||(target==='diaries'&&id==='voting'))?'':'none';
   });
-  window.scrollTo({top:0,behavior:'smooth'});
+  // 滚到 hero 下方，让对应 section 内容可见
+  const heroEl=document.getElementById('hero');
+  if(heroEl)window.scrollTo({top:heroEl.offsetTop+heroEl.offsetHeight,behavior:'smooth'});
 }
 // Init: restore last tab without animation
 (function initTabs(){
