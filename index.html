@@ -125,15 +125,20 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
 /* HERO TABS */
-.hero-tabs-wrap{width:100%;position:sticky;top:65px;z-index:900;background:rgba(245,245,242,.92);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.08);padding:0 max(32px,calc((100% - 1200px)/2));box-shadow:0 2px 12px rgba(0,0,0,.04)}
-.hero-tabs{display:flex;gap:0}
-.htab{flex:0 0 auto;padding:16px 28px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .2s var(--ease-out);letter-spacing:.02em}
-.htab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transition:transform .25s var(--ease-out)}
-.htab:hover{color:var(--text)}
-.htab.active{color:var(--orange);font-weight:600}
-.htab.active::after{transform:scaleX(1)}
-@media(max-width:600px){.hero-tabs-wrap{top:56px;padding:0 16px}.htab{padding:13px 16px;font-size:13px}}
-@media(max-width:400px){.htab{padding:12px 10px;font-size:12px}}
+.hero-tabs-wrap{width:100%;position:sticky;top:65px;z-index:900;background:rgba(245,245,242,.95);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.07);padding:0 max(32px,calc((100% - 1200px)/2));box-shadow:0 1px 0 rgba(0,0,0,.05)}
+.hero-tabs{display:flex;gap:4px;padding:6px 0}
+.htab{flex:0 0 auto;padding:9px 20px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .18s var(--ease-out),background .18s var(--ease-out);letter-spacing:.02em;border-radius:8px}
+.htab:hover{color:var(--text);background:rgba(0,0,0,.05)}
+.htab:active{transform:scale(.96);transition-duration:.08s}
+.htab.active{color:var(--orange);font-weight:600;background:rgba(232,98,42,.08)}
+.htab.active::after{content:'';position:absolute;bottom:-6px;left:20px;right:20px;height:2px;background:var(--orange);border-radius:2px}
+@media(max-width:600px){.hero-tabs-wrap{top:56px;padding:0 12px}.hero-tabs{gap:2px;padding:4px 0}.htab{padding:8px 14px;font-size:13px}}
+@media(max-width:400px){.htab{padding:8px 10px;font-size:12px}}
+
+/* SECTION TRANSITIONS */
+.tab-section{transition:opacity .22s var(--ease-out),transform .22s var(--ease-out)}
+.tab-section.tab-hiding{opacity:0;transform:translateY(4px);pointer-events:none}
+.tab-section.tab-entering{opacity:0;transform:translateY(6px)}
 
 /* MASONRY — CSS columns 真瀑布流 */
 .masonry{columns:4;column-gap:16px}
@@ -410,7 +415,7 @@ img{max-width:100%;height:auto}
 <style>
 /* Urbanist removed — unified to MiSans */
 @property --border-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
-#hero{min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
+#hero{min-height:calc(100vh - 56px);height:calc(100dvh - 56px);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
 .hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px}
 .hero-left-5200{flex:0 1 520px;padding-top:32px;opacity:0;animation:h5-fadeUp 1s .2s cubic-bezier(.22,1,.36,1) forwards;text-align:left}
 .hero-edition{font-size:15px;font-weight:500;color:rgba(30,30,30,.5);letter-spacing:1.5px;margin-bottom:24px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards;display:inline-flex;align-items:center;gap:8px;padding:0;background:none;border:none;border-radius:0}
@@ -477,7 +482,7 @@ img{max-width:100%;height:auto}
   .hero-cta-5200{justify-content:center}
 }
 @media(max-width:768px){
-  #hero{overflow:hidden;padding:0 20px;min-height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center}
+  #hero{overflow:hidden;padding:0 20px;min-height:calc(100vh - 56px);height:calc(100dvh - 56px);display:flex;align-items:center;justify-content:center}
   .hero-flex{flex-direction:column;padding:40px 0 0;gap:0;align-items:center;width:100%}
   .hero-left-5200{width:100%;padding-top:0;text-align:center;order:2}
   .hero-edition{justify-content:center;margin-bottom:16px}
@@ -592,7 +597,7 @@ if(!isMobile){
 </div>
 
 <!-- TIMELINE -->
-<section id="timeline">
+<section id="timeline" class="tab-section">
 <div class="section-header">
 <h2 class="section-title">评选流程</h2>
 </div>
@@ -631,7 +636,7 @@ if(!isMobile){
 </section>
 
 <!-- DIARIES -->
-<section id="diaries">
+<section id="diaries" class="tab-section">
 <div class="section-header">
 <h2 class="section-title">点亮他人</h2>
 <p class="section-subtitle">选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
@@ -656,7 +661,7 @@ if(!isMobile){
 </section>
 
 <!-- VOTING / STATS -->
-<section id="voting">
+<section id="voting" class="tab-section">
 <div class="section-header">
 
 <h2 class="section-title">实时动态</h2>
@@ -675,7 +680,7 @@ if(!isMobile){
 </section>
 
 <!-- SHARE -->
-<section id="share">
+<section id="share" class="tab-section">
 <div class="section-header">
 <h2 class="section-title">分享自己</h2>
 <p class="section-subtitle">下载投稿模版，写下你的故事，发送材料即可参与</p>
@@ -695,7 +700,7 @@ if(!isMobile){
 </section>
 
 <!-- ABOUT -->
-<section id="about">
+<section id="about" class="tab-section">
 <div class="section-header"><h2 class="section-title">关于我们</h2></div>
 <p style="text-align:center;font-size:15px;color:var(--text-soft);max-width:800px;margin:0 auto 20px;line-height:1.9">"和用户交朋友"本质上是指导所有小米人工作的价值原点，以平等、尊重的态度面对每一个内/外部用户，倾听真实声音，洞察真实需求，解决实际问题，不欺骗，不盲从，追求长期发展，与用户共同成长。<br><br>我们致力于挖掘践行"和用户交朋友"的价值观标杆，并对他/她说：<strong style="color:var(--orange);font-weight:600">"谢谢你，朋友"</strong></p>
 </section>
@@ -927,22 +932,51 @@ function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='h
 function scrollToSection(id){switchTab(id);window.scrollTo({top:0,behavior:'smooth'})}
 function toggleMobileMenu(){}
 
-// Tab switching — show only target section + footer
+// Tab switching — fade transition
 const TAB_SECTIONS=['timeline','diaries','share','about','voting'];
 function switchTab(target,btnEl){
-  TAB_SECTIONS.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.style.display=(id===target||(target==='diaries'&&id==='voting'))?'':'none';
-  });
+  // update buttons
   document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
   const btn=btnEl||document.querySelector(`.htab[data-target="${target}"]`);
   if(btn)btn.classList.add('active');
   localStorage.setItem('activeTab',target);
+
+  TAB_SECTIONS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const show=(id===target||(target==='diaries'&&id==='voting'));
+    if(show){
+      // make visible, then trigger enter animation
+      el.style.display='';
+      el.classList.remove('tab-hiding');
+      el.classList.add('tab-entering');
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          el.classList.remove('tab-entering');
+        });
+      });
+    } else {
+      el.classList.add('tab-hiding');
+      el.addEventListener('transitionend',function hide(){
+        el.style.display='none';
+        el.classList.remove('tab-hiding');
+        el.removeEventListener('transitionend',hide);
+      },{once:true});
+    }
+  });
+  window.scrollTo({top:document.getElementById('stickyTabs').offsetTop-70,behavior:'smooth'});
 }
-// Init: restore last tab or default to timeline
+// Init: restore last tab without animation
 (function initTabs(){
   const saved=localStorage.getItem('activeTab')||'timeline';
-  switchTab(saved);
+  TAB_SECTIONS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const show=(id===saved||(saved==='diaries'&&id==='voting'));
+    el.style.display=show?'':'none';
+  });
+  const btn=document.querySelector(`.htab[data-target="${saved}"]`);
+  if(btn)btn.classList.add('active');
 })();
 function closeMobileMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileMenuBtn').classList.remove('open')}
 
