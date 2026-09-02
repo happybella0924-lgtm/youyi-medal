@@ -153,7 +153,7 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .card:active{transform:scale(.98);transition-duration:.1s}
 .card.voted .card-img-wrap{outline:2px solid var(--orange)}
 .card-img-wrap{position:relative;margin:0;border-radius:18px 18px 0 0;overflow:hidden;background:#f0f0f0}
-.card-img{width:100%;overflow:hidden;position:relative;max-height:220px}
+.card-img{width:100%;overflow:hidden;position:relative;max-height:220px;min-height:80px;background:#f0f0f0}
 .card-img img{width:100%;height:auto;max-height:220px;object-fit:cover;display:block;transition:transform .35s var(--ease-out)}
 .card:hover .card-img img{transform:scale(1.04)}
 .card-gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:4;transition:background .3s}
@@ -1010,7 +1010,7 @@ if(isNew)h+='<div class="card-new-badge">NEW</div>';
 if(hasI){
 h+=`<div class="card-img" data-story-id="${s.id}">`;
 allImgs.forEach((src,i)=>{
-h+=`<img src="${src}" alt="${s.title}" loading="lazy" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none'">`;
+h+=`<img src="${src}" alt="${s.title}" loading="lazy" data-idx="${i}" style="display:${i===0?'block':'none'}" onclick="openImageViewer(${s.id})" onerror="this.style.display='none';if(!this.parentNode.dataset.errHandled){this.parentNode.dataset.errHandled=1;this.parentNode.style.background='${gradientColors[idx%4]}';this.parentNode.style.minHeight='${[100,120,110,130][idx%4]}px'}">`;
 });
 if(allImgs.length>1){h+=`<span class="card-gallery-count" id="gc${s.id}">1/${allImgs.length}</span>`;}
 h+=`</div>`;
