@@ -124,19 +124,19 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box input:focus{border-color:var(--orange);width:220px;box-shadow:0 0 0 3px rgba(232,98,42,.07);background:#fff}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
-/* MASONRY */
-.masonry{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-@media(max-width:1100px){.masonry{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.masonry{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.masonry{grid-template-columns:repeat(2,1fr);gap:10px}}
-.card{background:#fff;border-radius:18px;overflow:visible;border:none;box-shadow:0 2px 12px rgba(0,0,0,.07);transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out),opacity .4s var(--ease-out);position:relative;opacity:0;transform:translateY(16px);cursor:pointer;display:flex;flex-direction:column}
+/* MASONRY — CSS columns 真瀑布流 */
+.masonry{columns:4;column-gap:16px}
+@media(max-width:1100px){.masonry{columns:3}}
+@media(max-width:768px){.masonry{columns:2;column-gap:12px}}
+@media(max-width:480px){.masonry{columns:2;column-gap:10px}.card{margin-bottom:10px}}
+.card{break-inside:avoid;display:block;margin-bottom:16px;background:#fff;border-radius:18px;overflow:visible;border:none;box-shadow:0 2px 12px rgba(0,0,0,.07);transition:transform 200ms var(--ease-out),box-shadow 200ms var(--ease-out),opacity .4s var(--ease-out);position:relative;opacity:0;transform:translateY(16px);cursor:pointer}
 .card.visible{opacity:1;transform:translateY(0)}
 .card:hover{box-shadow:0 8px 28px rgba(0,0,0,.12);transform:translateY(-3px)}
 .card:active{transform:scale(.98);transition-duration:.1s}
 .card.voted .card-img-wrap{outline:2px solid var(--orange)}
 .card-img-wrap{position:relative;margin:8px 8px 0 8px;border-radius:14px;overflow:hidden;background:#f0f0f0}
-.card-img{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative}
-.card-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .35s var(--ease-out)}
+.card-img{width:100%;overflow:hidden;position:relative}
+.card-img img{width:100%;height:auto;display:block;transition:transform .35s var(--ease-out)}
 .card:hover .card-img img{transform:scale(1.04)}
 .card-gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:4;transition:background .3s}
 .card-gallery-nav:hover{background:rgba(245,124,46,.85)}
@@ -943,7 +943,7 @@ h+=`</div>`;
 if(hasV)h+=`<div class="card-media-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>含视频</div>`;
 }
 else if(hasV){h+=`<div class="card-img" style="background:linear-gradient(135deg,#1a1a1a,#4a4a4a);display:flex;align-items:center;justify-content:center"><div class="card-video-overlay">▶</div></div>`}
-else{h+=`<div style="aspect-ratio:16/9;background:${gradientColors[idx%4]}"></div>`}
+else{const ht=[140,180,160,200][idx%4];h+=`<div style="height:${ht}px;background:${gradientColors[idx%4]}"></div>`}
 h+=likeBtn;
 h+=`</div>`;
 const isRead=viewedIds.includes(s.id);
