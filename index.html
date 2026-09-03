@@ -21,7 +21,8 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:center;align-items:center;background:rgba(250,250,248,.88);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);border-bottom:1px solid rgba(0,0,0,.05);box-shadow:0 1px 0 rgba(255,255,255,.6)}
+#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:center;align-items:center;background:transparent;transition:background .3s ease,border-color .3s ease,box-shadow .3s ease;border-bottom:1px solid transparent}
+#stickyTabs.scrolled{background:rgba(250,250,248,.85);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);border-bottom-color:rgba(0,0,0,.06);box-shadow:0 1px 0 rgba(255,255,255,.5)}
 .tabs-inner{display:flex;align-items:flex-end;gap:0;background:none;border-radius:0;padding:0}
 .tabs-pill{display:none}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
@@ -949,7 +950,13 @@ w.appendChild(p);c.appendChild(w)
 
 // ========== NAV ==========
 const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>60);updateActiveNav()});
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>60);
+  const hero=document.getElementById('hero');
+  const tabs=document.getElementById('stickyTabs');
+  if(tabs)tabs.classList.toggle('scrolled',hero?window.scrollY>hero.offsetHeight:window.scrollY>window.innerHeight);
+  updateActiveNav();
+});
 function updateActiveNav(){const ss=['hero','diaries','voting','about'];let a='hero';ss.forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetTop<=window.scrollY+200)a=id});document.querySelectorAll('.nav-links a[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===a))}
 function scrollToSection(id){switchTab(id);}
 function toggleMobileMenu(){}
