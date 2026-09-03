@@ -21,7 +21,7 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:sticky;top:56px;z-index:999;display:flex;justify-content:flex-start;align-items:center;padding:0 0 24px 0;background:transparent;box-sizing:border-box}
+#stickyTabs{position:absolute;bottom:24px;left:0;right:0;z-index:10;display:flex;justify-content:center;align-items:center}
 .tabs-inner{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,.07);border-radius:12px;padding:3px;position:relative}
 .tabs-pill{position:absolute;top:3px;height:calc(100% - 6px);background:#fff;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 0 0 0.5px rgba(0,0,0,.05);pointer-events:none;will-change:transform,width}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
@@ -424,7 +424,7 @@ img{max-width:100%;height:auto}
 <style>
 
 @property --border-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
-#hero{min-height:calc(100vh - 56px - 48px);height:calc(100dvh - 56px - 48px);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:0 32px;max-width:none!important;margin:0!important}
+#hero{min-height:calc(100vh - 56px);height:calc(100dvh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:clip;padding:0 32px 0;max-width:none!important;margin:0!important}
 .hero-flex{display:flex;align-items:center;max-width:1200px;margin:0 auto;width:100%;gap:32px}
 .hero-left-5200{flex:0 1 520px;padding-top:32px;opacity:0;animation:h5-fadeUp 1s .2s cubic-bezier(.22,1,.36,1) forwards;text-align:left}
 .hero-edition{font-size:15px;font-weight:500;color:rgba(30,30,30,.5);letter-spacing:1.5px;margin-bottom:24px;opacity:0;animation:h5-fadeUp .8s .1s cubic-bezier(.22,1,.36,1) forwards;display:inline-flex;align-items:center;gap:8px;padding:0;background:none;border:none;border-radius:0}
@@ -477,7 +477,7 @@ img{max-width:100%;height:auto}
 .scroll-indicator .arrow::after{content:'';position:absolute;top:-32px;left:0;width:1px;height:32px;background:var(--orange-deep);animation:h5-scrollDown 2s infinite}
 @keyframes h5-scrollDown{0%{top:-32px}100%{top:32px}}
 @media(max-width:1024px){
-  #hero{overflow:hidden}
+  #hero{overflow:clip}
   .hero-flex{flex-direction:column;padding:80px 32px 40px;align-items:center;gap:0}
   .hero-left-5200{flex:none;width:100%;max-width:100%;text-align:center;order:2}
   .hero-edition{justify-content:center}
@@ -491,7 +491,7 @@ img{max-width:100%;height:auto}
   .hero-cta-5200{justify-content:center}
 }
 @media(max-width:768px){
-  #hero{overflow:hidden;padding:0 20px;min-height:calc(100vh - 56px);height:calc(100dvh - 56px);display:flex;align-items:center;justify-content:center}
+  #hero{overflow:clip;padding:0 20px;min-height:calc(100vh - 56px);height:calc(100dvh - 56px);display:flex;align-items:center;justify-content:center}
   .hero-flex{flex-direction:column;padding:40px 0 0;gap:0;align-items:center;width:100%}
   .hero-left-5200{width:100%;padding-top:0;text-align:center;order:2}
   .hero-edition{justify-content:center;margin-bottom:16px}
@@ -595,11 +595,6 @@ if(!isMobile){
 
 
 
-</section>
-
-
-<section id="timeline" class="tab-section">
-<div class="section-header">
 <div id="stickyTabs">
   <div class="tabs-inner hero-tabs">
     <div class="tabs-pill" id="tabPill"></div>
@@ -609,7 +604,12 @@ if(!isMobile){
     <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
   </div>
 </div>
-</div>
+
+</section>
+
+
+<section id="timeline" class="tab-section">
+<div class="section-header">
 <div style="position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
 <div style="position:absolute;top:5px;left:10%;right:10%;height:1px;background:linear-gradient(to right,var(--orange),rgba(232,98,42,.15))"></div>
 <div style="flex:1;text-align:center;position:relative;padding-top:28px">
