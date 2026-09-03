@@ -21,7 +21,7 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:fixed;top:56px;left:0;right:0;width:100%;z-index:999;display:flex;justify-content:center;background:rgba(245,245,242,.88);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.06);padding:4px 0;box-sizing:border-box}
+#stickyTabs{position:fixed;top:56px;left:0;right:0;width:100%;z-index:999;display:flex;justify-content:flex-start;padding:4px 24px;background:rgba(245,245,242,.88);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.06);box-sizing:border-box}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
 .nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
@@ -118,7 +118,7 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
 .hero-tabs{display:flex;gap:2px;align-items:center}
-.htab{flex:0 0 auto;padding:7px 16px;font-size:13px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .18s var(--ease-out),background .18s var(--ease-out);letter-spacing:.02em;border-radius:8px;white-space:nowrap}
+.htab{flex:0 0 auto;padding:8px 18px;font-size:15px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .18s var(--ease-out),background .18s var(--ease-out);letter-spacing:.02em;border-radius:8px;white-space:nowrap}
 .htab:hover{color:var(--text);background:rgba(0,0,0,.05)}
 .htab:active{transform:scale(.96);transition-duration:.08s}
 .htab.active{color:var(--orange);font-weight:600;background:transparent}
