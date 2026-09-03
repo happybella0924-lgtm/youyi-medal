@@ -480,10 +480,11 @@ img{max-width:100%;height:auto}
 @keyframes h5-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 .h5-medal-base,.h5-medal-top{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-position:center;background-repeat:no-repeat}
 .h5-medal-top{z-index:2;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.h5-avatar{position:absolute;top:50%;left:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;opacity:0;animation:h5-flyIn .8s cubic-bezier(.22,1,.36,1) forwards,h5-float var(--float-dur,4s) var(--float-delay,0s) ease-in-out infinite;transition:transform .3s var(--ease-out),border-color .2s,box-shadow .3s}
-.h5-avatar img{width:100%;height:100%;object-fit:cover}
+.h5-avatar{position:absolute;top:50%;left:50%;border:2px solid rgba(255,255,255,.2);overflow:hidden;opacity:0;animation:h5-flyIn .8s cubic-bezier(.22,1,.36,1) forwards,h5-float var(--float-dur,4s) var(--float-delay,0s) ease-in-out infinite;transition:transform .3s var(--ease-out),border-color .25s ease}
+.h5-avatar::before{content:'';position:absolute;inset:-4px;border-radius:inherit;opacity:0;transition:opacity .3s ease;background:transparent;box-shadow:0 0 0 3px var(--orange),0 0 16px 6px rgba(232,98,42,.7),0 0 40px 10px rgba(232,98,42,.35);z-index:2;pointer-events:none}
+.h5-avatar img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
 @keyframes h5-float{0%,100%{translate:0 0}50%{translate:0 -5px}}
-@media(hover:hover)and(pointer:fine){.h5-avatar:hover{border-color:var(--orange);transform:translate(-50%,-50%) rotate(var(--av-deg)) translate(var(--av-radius)) rotate(calc(-1*var(--av-deg))) scale(1.2)!important;z-index:10;box-shadow:0 0 28px var(--orange),0 0 56px rgba(232,98,42,.2)!important}}
+@media(hover:hover)and(pointer:fine){.h5-avatar:hover{border-color:var(--orange);transform:translate(-50%,-50%) rotate(var(--av-deg)) translate(var(--av-radius)) rotate(calc(-1*var(--av-deg))) scale(1.15)!important;z-index:10}.h5-avatar:hover::before{opacity:1}}
 .h5-avatar.round{border-radius:50%}
 .h5-avatar.square{border-radius:20px}
 .h5-avatar.square-lg{border-radius:24px}
