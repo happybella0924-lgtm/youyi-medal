@@ -21,7 +21,7 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;padding:0 24px;background:rgba(245,245,242,.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.07);box-sizing:border-box;height:48px;align-items:center}
+#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;padding:0 24px;background:transparent;box-sizing:border-box;height:48px;align-items:center}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
 .nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
