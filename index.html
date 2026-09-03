@@ -21,7 +21,9 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;padding:0 24px;background:transparent;box-sizing:border-box;height:48px;align-items:center}
+#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;align-items:center;padding:10px 28px;background:transparent;box-sizing:border-box}
+.tabs-inner{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,.06);border-radius:12px;padding:3px;position:relative}
+.tabs-pill{position:absolute;top:3px;height:calc(100% - 6px);background:#fff;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.12),0 0 0 0.5px rgba(0,0,0,.06);transition:left .22s cubic-bezier(.34,1.26,.64,1),width .22s cubic-bezier(.34,1.26,.64,1);pointer-events:none;will-change:left,width}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
 .nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
@@ -117,13 +119,11 @@ section{padding:64px 32px;max-width:1080px;margin:0 auto}
 .search-box input:focus{border-color:var(--orange);width:220px;box-shadow:0 0 0 3px rgba(232,98,42,.07);background:#fff}
 .search-box svg{position:absolute;left:11px;width:14px;height:14px;color:var(--text-muted)}
 
-.hero-tabs{display:flex;gap:0;align-items:center;height:100%;position:relative}
-.htab{flex:0 0 auto;padding:0 20px;height:48px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;font-family:var(--sans);transition:color .2s var(--ease-out);letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center}
+.hero-tabs{display:flex;gap:0;align-items:center}
+.htab{flex:0 0 auto;padding:6px 18px;font-size:14px;font-weight:500;color:var(--text-soft);background:transparent;border:none;cursor:pointer;position:relative;z-index:1;font-family:var(--sans);transition:color .18s var(--ease-out);letter-spacing:.01em;white-space:nowrap;border-radius:9px;line-height:1}
 @media(hover:hover) and (pointer:fine){.htab:hover{color:var(--text)}}
-.htab:active{transform:scale(.97);transition:transform .08s var(--ease-out),color .2s var(--ease-out)}
-.htab.active{color:var(--orange);font-weight:600}
-.htab.active::after{content:'';position:absolute;bottom:0;left:12px;right:12px;height:2px;background:var(--orange);border-radius:2px 2px 0 0;transform-origin:center;animation:tabLineIn .22s var(--ease-out) forwards}
-@keyframes tabLineIn{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+.htab:active{transform:scale(.96);transition:transform .08s var(--ease-out),color .18s var(--ease-out)}
+.htab.active{color:var(--text);font-weight:600}
 
 
 
@@ -597,11 +597,14 @@ if(!isMobile){
 
 </section>
 
-<div class="hero-tabs" id="stickyTabs">
-  <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
-  <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
-  <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
-  <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
+<div id="stickyTabs">
+  <div class="tabs-inner hero-tabs">
+    <div class="tabs-pill" id="tabPill"></div>
+    <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
+    <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
+    <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
+    <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
+  </div>
 </div>
 
 <section id="timeline" class="tab-section">
@@ -941,16 +944,24 @@ function toggleMobileMenu(){}
 
 // Tab switching — instant
 const TAB_SECTIONS=['timeline','diaries','share','about','voting'];
+function movePill(btn){
+  const pill=document.getElementById('tabPill');
+  const inner=btn.closest('.tabs-inner');
+  if(!pill||!inner)return;
+  const ir=inner.getBoundingClientRect();
+  const br=btn.getBoundingClientRect();
+  pill.style.left=(br.left-ir.left)+'px';
+  pill.style.width=br.width+'px';
+}
 function switchTab(target,btnEl){
   document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
   const btn=btnEl||document.querySelector(`.htab[data-target="${target}"]`);
-  if(btn)btn.classList.add('active');
+  if(btn){btn.classList.add('active');movePill(btn);}
   localStorage.setItem('activeTab',target);
   TAB_SECTIONS.forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.style.display=(id===target||(target==='diaries'&&id==='voting'))?'':'none';
   });
-  // 滚到 hero 下方，让对应 section 内容可见
   const heroEl=document.getElementById('hero');
   if(heroEl)window.scrollTo({top:heroEl.offsetTop+heroEl.offsetHeight,behavior:'smooth'});
 }
@@ -964,7 +975,11 @@ function switchTab(target,btnEl){
     el.style.display=show?'':'none';
   });
   const btn=document.querySelector(`.htab[data-target="${saved}"]`);
-  if(btn)btn.classList.add('active');
+  if(btn){
+    btn.classList.add('active');
+    // pill needs layout, defer one frame
+    requestAnimationFrame(()=>movePill(btn));
+  }
 })();
 function closeMobileMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileMenuBtn').classList.remove('open')}
 
