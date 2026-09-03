@@ -21,9 +21,9 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;align-items:center;padding:10px 28px;background:transparent;box-sizing:border-box}
-.tabs-inner{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,.06);border-radius:12px;padding:3px;position:relative}
-.tabs-pill{position:absolute;top:3px;height:calc(100% - 6px);background:#fff;border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,.12),0 0 0 0.5px rgba(0,0,0,.06);transition:left .22s cubic-bezier(.34,1.26,.64,1),width .22s cubic-bezier(.34,1.26,.64,1);pointer-events:none;will-change:left,width}
+#stickyTabs{position:sticky;top:56px;left:0;right:0;z-index:999;display:flex;justify-content:flex-start;align-items:center;padding:10px 28px;background:rgba(250,250,248,.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid rgba(255,255,255,.6);border-bottom:1px solid rgba(0,0,0,.06);box-sizing:border-box}
+.tabs-inner{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,.07);border-radius:12px;padding:3px;position:relative}
+.tabs-pill{position:absolute;top:3px;height:calc(100% - 6px);background:#fff;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 0 0 0.5px rgba(0,0,0,.05);pointer-events:none;will-change:transform,width}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
 .nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
@@ -944,19 +944,41 @@ function toggleMobileMenu(){}
 
 // Tab switching — instant
 const TAB_SECTIONS=['timeline','diaries','share','about','voting'];
-function movePill(btn){
+function movePill(btn,animate){
   const pill=document.getElementById('tabPill');
   const inner=btn.closest('.tabs-inner');
   if(!pill||!inner)return;
   const ir=inner.getBoundingClientRect();
   const br=btn.getBoundingClientRect();
-  pill.style.left=(br.left-ir.left)+'px';
-  pill.style.width=br.width+'px';
+  const toLeft=br.left-ir.left;
+  const toWidth=br.width;
+  if(!animate){
+    // instant on init
+    pill.style.left=toLeft+'px';
+    pill.style.width=toWidth+'px';
+    return;
+  }
+  const fromLeft=parseFloat(pill.style.left)||toLeft;
+  const fromWidth=parseFloat(pill.style.width)||toWidth;
+  const goingRight=toLeft>fromLeft;
+  // Phase 1: stretch toward target (leading edge moves, trailing stays)
+  // Phase 2: contract to final width at final position
+  const ease='cubic-bezier(.25,1,.5,1)';
+  const stretchLeft=goingRight?fromLeft:toLeft;
+  const stretchWidth=(goingRight?(toLeft+toWidth):(fromLeft+fromWidth))-stretchLeft;
+  pill.animate([
+    {left:fromLeft+'px',width:fromWidth+'px'},
+    {left:stretchLeft+'px',width:stretchWidth+'px',offset:.45},
+    {left:toLeft+'px',width:toWidth+'px'}
+  ],{duration:320,easing:ease,fill:'forwards'}).onfinish=()=>{
+    pill.style.left=toLeft+'px';
+    pill.style.width=toWidth+'px';
+  };
 }
 function switchTab(target,btnEl){
   document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
   const btn=btnEl||document.querySelector(`.htab[data-target="${target}"]`);
-  if(btn){btn.classList.add('active');movePill(btn);}
+  if(btn){btn.classList.add('active');movePill(btn,true);}
   localStorage.setItem('activeTab',target);
   TAB_SECTIONS.forEach(id=>{
     const el=document.getElementById(id);
@@ -978,7 +1000,7 @@ function switchTab(target,btnEl){
   if(btn){
     btn.classList.add('active');
     // pill needs layout, defer one frame
-    requestAnimationFrame(()=>movePill(btn));
+    requestAnimationFrame(()=>movePill(btn,false));
   }
 })();
 function closeMobileMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileMenuBtn').classList.remove('open')}
