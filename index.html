@@ -21,7 +21,7 @@ body{font-family:var(--sans);background:linear-gradient(135deg,#F5B0A0 0%,#FAF8F
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px max(32px,calc((100% - 1200px)/2));display:flex;align-items:center;justify-content:space-between;transition:background .4s var(--ease-out),padding .4s var(--ease-out),border-color .4s var(--ease-out);background:transparent;border-bottom:1px solid transparent}
-#stickyTabs{position:absolute;left:50%;transform:translateX(-50%)}
+#stickyTabs{position:sticky;bottom:0;left:0;right:0;z-index:999;display:flex;justify-content:center;background:rgba(245,245,242,.88);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-top:1px solid rgba(0,0,0,.06);padding:4px 0}
 nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.04);padding:12px max(32px,calc((100% - 1200px)/2))}
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;margin-left:0}
 .nav-logo-img{width:42px;height:42px;filter:drop-shadow(0 4px 12px rgba(245,124,46,.25)) brightness(1.05) contrast(1.1)}
@@ -331,7 +331,7 @@ footer{background:rgba(26,35,50,.94);backdrop-filter:blur(20px);color:#fff;paddi
 nav{padding:10px 16px 0;flex-wrap:wrap;gap:0}
   nav.scrolled{padding:8px 16px 0}
   .nav-logo{flex:1;min-width:0}
-  #stickyTabs{position:static;transform:none;order:3;width:100%;display:flex;justify-content:center;padding:6px 0 4px;border-top:1px solid rgba(0,0,0,.05);margin-top:8px}
+  #stickyTabs{padding:3px 0}
   .nav-votes-remaining{display:inline-flex;margin-left:auto;font-size:11px;padding:3px 10px;order:2}
   .htab{padding:8px 10px;font-size:12px;letter-spacing:0}
 
@@ -414,12 +414,6 @@ img{max-width:100%;height:auto}
 <div class="nav-logo" onclick="scrollToSection('hero')">
 <img src="logo.png" alt="友谊奖章" class="nav-logo-img">
 <div class="nav-logo-text">友谊奖章<span class="sub">中国区「五奖」荣誉体系</span></div>
-</div>
-<div class="hero-tabs" id="stickyTabs">
-  <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
-  <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
-  <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
-  <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
 </div>
 <div id="navVotesRemaining" class="nav-votes-remaining"><span class="vr-dot"></span><span id="navVotesText">今日剩余 5 票</span></div>
 </nav>
@@ -597,6 +591,13 @@ if(!isMobile){
 }
 })();
 </script>
+
+<div class="hero-tabs" id="stickyTabs">
+  <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
+  <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">点亮他人</button>
+  <button class="htab" data-target="share" onclick="switchTab('share',this)">分享自己</button>
+  <button class="htab" data-target="about" onclick="switchTab('about',this)">关于我们</button>
+</div>
 
 </section>
 
