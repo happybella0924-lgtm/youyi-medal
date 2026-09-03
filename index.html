@@ -97,7 +97,7 @@ nav.scrolled{background:rgba(245,245,242,.72);backdrop-filter:blur(20px) saturat
 .tag-shine{--tag-c:#2e8b57;--tag-bg:#edf8f2}
 
 section{padding:64px 32px;max-width:1080px;margin:0 auto}
-.section-header{margin-bottom:40px;text-align:center}
+.section-header{margin-bottom:24px;text-align:center}.section-header:empty{margin-bottom:0}
 .section-label{font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;font-weight:600;margin-bottom:12px}
 .section-title{font-family:var(--serif);font-weight:700;font-size:clamp(24px,3vw,36px);color:var(--text);letter-spacing:-0.025em;line-height:1.2;margin-bottom:10px}
 .section-subtitle{font-size:14px;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.8}
@@ -647,7 +647,7 @@ if(!isMobile){
 </section>
 
 
-<section id="diaries" class="tab-section">
+<section id="diaries" class="tab-section" style="padding-top:32px">
 <div class="section-header">
 <p class="section-subtitle">选出你心中最会「和用户交朋友」的人，点亮他/她的故事</p>
 <div id="votesRemaining" class="votes-remaining" style="display:none"><span class="vr-dot"></span><span id="votesRemainingText">今日剩余 5 票</span></div>
@@ -690,7 +690,7 @@ if(!isMobile){
 </section>
 
 
-<section id="share" class="tab-section">
+<section id="share" class="tab-section" style="padding-top:32px">
 <div class="section-header">
 <p class="section-subtitle">下载投稿模版，写下你的故事，发送材料即可参与</p>
 </div>
@@ -709,8 +709,7 @@ if(!isMobile){
 </section>
 
 
-<section id="about" class="tab-section">
-<div class="section-header"></div>
+<section id="about" class="tab-section" style="padding-top:32px">
 <p style="text-align:center;font-size:15px;color:var(--text-soft);max-width:800px;margin:0 auto 20px;line-height:1.9">"和用户交朋友"本质上是指导所有小米人工作的价值原点，以平等、尊重的态度面对每一个内/外部用户，倾听真实声音，洞察真实需求，解决实际问题，不欺骗，不盲从，追求长期发展，与用户共同成长。<br><br>我们致力于挖掘践行"和用户交朋友"的价值观标杆，并对他/她说：<strong style="color:var(--orange);font-weight:600">"谢谢你，朋友"</strong></p>
 </section>
 
