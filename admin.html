@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>先锋奖章 · 数据看板</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root {
+    --orange: #f47920;
+    --bg: #f5f4f0;
+    --card: #fff;
+    --text: #1a1a1a;
+    --muted: #888;
+    --border: rgba(0,0,0,.08);
+    --radius: 14px;
+    --sans: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: .5px; }
+  .refresh-info { font-size: 12px; color: rgba(255,255,255,.5); }
+  .live-dot { display: inline-block; width: 7px; height: 7px; background: #4cd964; border-radius: 50%; margin-right: 6px; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  main { padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+
+  /* 顶部统计卡片 */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .stat-value { font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-value.orange { color: var(--orange); }
+  .stat-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* 业务线 */
+  .section-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+  .line-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .line-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+  }
+  .line-header {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .line-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-delivery { background: #5b8cff; }
+  .dot-service  { background: #ff6b6b; }
+  .dot-sales    { background: #4cd964; }
+  .rank-list { padding: 10px 0; }
+  .rank-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 18px;
+    gap: 10px;
+    transition: background .15s;
+  }
+  .rank-row:hover { background: #fafaf8; }
+  .rank-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+  .rank-num.top1 { background: #f5c518; color: #fff; }
+  .rank-num.top2 { background: #bbb; color: #fff; }
+  .rank-num.top3 { background: #c87533; color: #fff; }
+  .rank-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #eee;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .rank-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-title { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-votes { font-size: 14px; font-weight: 700; color: var(--orange); flex-shrink: 0; }
+
+  /* 全站 TOP10 */
+  .top10-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .top10-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px; }
+  .top10-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 60px 80px;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0,0,0,.04);
+    font-size: 13px;
+  }
+  .top10-row:last-child { border-bottom: none; }
+  .top10-row.head { background: #fafaf8; font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; padding-top: 8px; padding-bottom: 8px; }
+  .line-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .badge-delivery { background: #eef2ff; color: #5b8cff; }
+  .badge-service  { background: #fff0f0; color: #ff6b6b; }
+  .badge-sales    { background: #f0fff4; color: #27ae60; }
+
+  /* 访问统计 */
+  .views-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  /* 进度条 */
+  .bar-wrap { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .bar-bg { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; background: var(--orange); transition: width .6s ease; }
+  .bar-pct { font-size: 11px; color: var(--muted); width: 36px; text-align: right; }
+
+  .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
+  .error-msg { text-align: center; padding: 60px; color: #e74c3c; font-size: 14px; }
+
+  @media(max-width:900px) {
+    main { padding: 20px 16px; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .line-grid { grid-template-columns: 1fr; }
+    .top10-row { grid-template-columns: 36px 1fr 60px 50px 70px; }
+  }
+  @media(max-width:480px) {
+    header { padding: 14px 16px; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-value { font-size: 28px; }
+    .top10-row { grid-template-columns: 32px 1fr 50px; }
+    .top10-row .col-line, .top10-row .col-date { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>先锋奖章 · 数据看板</h1>
+  <div class="refresh-info"><span class="live-dot"></span><span id="refreshText">加载中…</span></div>
+</header>
+
+<main>
+  <div id="root"><div class="loading">数据加载中…</div></div>
+</main>
+
+<script>
+const SUPA_URL = 'https://mvgqbipgqcyysxuwtcen.supabase.co';
+const SUPA_KEY = 'sb_publishable_LYHVLxm6py1iTajGEK6o8A_WR_Yd8_M';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// 故事元数据（id → title/author/line/avatar）
+// 内联故事列表从主网页抓取，这里用 fetch 解析
+let storyMeta = {};  // id -> {title, author, line, avatar}
+
+const LINE_NAMES = { delivery: '交付线', service: '服务线', sales: '零售线' };
+const LINE_COLORS = { delivery: 'dot-delivery', service: 'dot-service', sales: 'dot-sales' };
+const BADGE_CLS = { delivery: 'badge-delivery', service: 'badge-service', sales: 'badge-sales' };
+
+async function loadStoryMeta() {
+  try {
+    const res = await fetch('index.html');
+    const text = await res.text();
+    const m = text.match(/const sampleStories=(\[[\s\S]*?\]);/);
+    if (!m) return;
+    const stories = JSON.parse(m[1]);
+    stories.forEach(s => {
+      storyMeta[s.id] = {
+        title: s.title,
+        author: s.author,
+        line: s.line,
+        avatar: s.avatar
+      };
+    });
+  } catch(e) {
+    console.warn('storyMeta load failed', e);
+  }
+}
+
+async function fetchData() {
+  // 1. 所有 likes
+  const { data: likes, error } = await supa
+    .from('likes')
+    .select('story_id, user_token, created_at');
+
+  if (error) throw error;
+
+  // 2. 评论数
+  const { count: commentCount } = await supa
+    .from('comments')
+    .select('id', { count: 'exact', head: true });
+
+  // 3. 页面访问（如果有 page_views 表）
+  let viewCount = null;
+  try {
+    const { count } = await supa
+      .from('page_views')
+      .select('id', { count: 'exact', head: true });
+    viewCount = count;
+  } catch(e) {}
+
+  return { likes: likes || [], commentCount: commentCount || 0, viewCount };
+}
+
+function buildStats(likes) {
+  const totalVotes = likes.length;
+  const voters = new Set(likes.map(l => l.user_token)).size;
+
+  // 每故事票数
+  const voteMap = {};
+  likes.forEach(l => {
+    voteMap[l.story_id] = (voteMap[l.story_id] || 0) + 1;
+  });
+
+  // 全站 TOP10
+  const top10 = Object.entries(voteMap)
+    .map(([id, v]) => ({ id: parseInt(id), votes: v, ...storyMeta[parseInt(id)] }))
+    .sort((a, b) => b.votes - a.votes)
+    .slice(0, 10);
+
+  // 各业务线 TOP5
+  const byLine = { delivery: [], service: [], sales: [] };
+  Object.entries(voteMap).forEach(([id, v]) => {
+    const meta = storyMeta[parseInt(id)];
+    if (meta && byLine[meta.line]) {
+      byLine[meta.line].push({ id: parseInt(id), votes: v, ...meta });
+    }
+  });
+  Object.keys(byLine).forEach(k => {
+    byLine[k].sort((a, b) => b.votes - a.votes);
+    byLine[k] = byLine[k].slice(0, 5);
+  });
+
+  // 最高票
+  const maxVotes = top10[0]?.votes || 1;
+
+  return { totalVotes, voters, voteMap, top10, byLine, maxVotes };
+}
+
+function avatarHTML(avatar, author) {
+  if (avatar && avatar.startsWith('data:')) {
+    return `<img src="${avatar}" alt="">`;
+  }
+  return (author || '?')[0];
+}
+
+function renderRankNum(i) {
+  const cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+  return `<div class="rank-num ${cls}">${i + 1}</div>`;
+}
+
+function render(stats, commentCount, viewCount) {
+  const { totalVotes, voters, top10, byLine, maxVotes } = stats;
+
+  const root = document.getElementById('root');
+  root.innerHTML = `
+    <!-- 顶部统计 -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">累计投票</div>
+        <div class="stat-value orange">${totalVotes.toLocaleString()}</div>
+        <div class="stat-sub">总票数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">参与人数</div>
+        <div class="stat-value">${voters.toLocaleString()}</div>
+        <div class="stat-sub">独立投票用户</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">评论数</div>
+        <div class="stat-value">${commentCount.toLocaleString()}</div>
+        <div class="stat-sub">累计留言</div>
+      </div>
+      ${viewCount !== null ? `
+      <div class="stat-card">
+        <div class="stat-label">页面访问</div>
+        <div class="stat-value">${viewCount.toLocaleString()}</div>
+        <div class="stat-sub">累计打开次数</div>
+      </div>` : `
+      <div class="stat-card">
+        <div class="stat-label">故事总数</div>
+        <div class="stat-value">45</div>
+        <div class="stat-sub">参选故事</div>
+      </div>`}
+    </div>
+
+    <!-- 业务线 TOP5 -->
+    <div class="section-title">各业务线 TOP 5</div>
+    <div class="line-grid">
+      ${['delivery','service','sales'].map(line => `
+        <div class="line-card">
+          <div class="line-header">
+            <div class="line-dot ${LINE_COLORS[line]}"></div>
+            ${LINE_NAMES[line]}
+          </div>
+          <div class="rank-list">
+            ${byLine[line].length === 0
+              ? '<div style="padding:16px 18px;font-size:12px;color:#bbb">暂无数据</div>'
+              : byLine[line].map((s, i) => `
+              <div class="rank-row">
+                ${renderRankNum(i)}
+                <div class="rank-avatar">${avatarHTML(s.avatar, s.author)}</div>
+                <div class="rank-info">
+                  <div class="rank-name">${s.author || '未知'}</div>
+                  <div class="rank-title">${s.title || ''}</div>
+                </div>
+                <div class="rank-votes">${s.votes}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- 全站 TOP10 -->
+    <div class="section-title">全站 TOP 10</div>
+    <div class="top10-card">
+      <div class="top10-row head">
+        <div>#</div>
+        <div>作者 / 故事</div>
+        <div class="col-line">业务线</div>
+        <div>票数</div>
+        <div class="col-date">占比</div>
+      </div>
+      ${top10.map((s, i) => `
+        <div class="top10-row">
+          <div>${renderRankNum(i)}</div>
+          <div>
+            <div style="font-weight:500;font-size:13px">${s.author || '—'}</div>
+            <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title || ''}</div>
+          </div>
+          <div class="col-line">
+            <span class="line-badge ${BADGE_CLS[s.line] || ''}">${LINE_NAMES[s.line] || s.line || '—'}</span>
+          </div>
+          <div style="font-weight:700;color:var(--orange)">${s.votes}</div>
+          <div class="col-date">
+            <div class="bar-wrap">
+              <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(s.votes/maxVotes*100)}%"></div></div>
+              <div class="bar-pct">${Math.round(s.votes/maxVotes*100)}%</div>
+            </div>
+          </div>
+        </div>`).join('')}
+      ${top10.length === 0 ? '<div class="loading" style="padding:32px">暂无投票数据</div>' : ''}
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);text-align:center;padding-bottom:32px">
+      数据每 30 秒自动刷新 · 排名实时统计
+    </div>
+  `;
+}
+
+async function refresh() {
+  try {
+    const { likes, commentCount, viewCount } = await fetchData();
+    const stats = buildStats(likes);
+    render(stats, commentCount, viewCount);
+    const now = new Date();
+    const t = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+    document.getElementById('refreshText').textContent = `上次更新 ${t}`;
+  } catch(e) {
+    document.getElementById('root').innerHTML = `<div class="error-msg">数据加载失败：${e.message}</div>`;
+  }
+}
+
+async function init() {
+  await loadStoryMeta();
+  await refresh();
+  setInterval(refresh, 30000);
+}
+
+init();
+</script>
+</body>
+</html>
