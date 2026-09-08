@@ -1201,20 +1201,56 @@ renderComments();
 }
 renderComments();
 const _lbPrev={};let _lbInited=false;
+function pickTop3WithTieBreak(group){
+  // 取出有票数的，按票数排序
+  const withVotes=group.filter(s=>(s.votes||0)>0).sort((a,b)=>(b.votes||0)-(a.votes||0));
+  if(!withVotes.length)return[];
+  // 找出第3名的票数，收集所有并列者
+  const result=[];
+  let rank=1;
+  let i=0;
+  while(i<withVotes.length&&rank<=3){
+    const curVotes=withVotes[i].votes||0;
+    // 找出所有同票数的人
+    const tied=withVotes.filter(s=>(s.votes||0)===curVotes);
+    if(rank===3||tied.length===1){
+      // 从并列中随机选一个
+      result.push(tied[Math.floor(Math.random()*tied.length)]);
+      rank++;
+      i+=tied.length;
+    } else {
+      // rank 1 或 2 且唯一，直接放入
+      result.push(withVotes[i]);
+      rank++;
+      i++;
+    }
+  }
+  return result.slice(0,3);
+}
 function renderLeaderboard(){
   const el=document.getElementById('lbContent');
-  if(!el)return;
+  const block=document.getElementById('leaderboardBlock');
+  if(!el||!block)return;
   const lineMap={service:'服务线',delivery:'交付线',sales:'零售线'};
   const lines=['service','delivery','sales'];
+  // 检查全站是否有票数
+  const totalVotesAll=stories.reduce((s,x)=>s+(x.votes||0),0);
+  if(totalVotesAll===0){
+    block.style.display='none';
+    return;
+  }
+  block.style.display='';
   let html='';
   lines.forEach(line=>{
-    const group=stories.filter(s=>s.line===line).sort((a,b)=>(b.votes||0)-(a.votes||0)).slice(0,3);
-    if(!group.length)return;
+    const group=stories.filter(s=>s.line===line);
+    const display=pickTop3WithTieBreak(group);
+    if(!display.length)return;
     html+=`<div class="lb-line"><div class="lb-line-name">${lineMap[line]||line}</div><div class="lb-podium">`;
-    const order=[1,0,2];
-    const display=order.map(i=>group[i]).filter(Boolean);
-    display.forEach((s,di)=>{
-      const realRank=order[di]+1;
+    const order=display.length===1?[0]:display.length===2?[1,0]:[1,0,2];
+    order.forEach((oi,di)=>{
+      const s=display[oi];
+      if(!s)return;
+      const realRank=oi+1;
       const rankCls=realRank===1?'rank1':realRank===2?'rank2':'rank3';
       const crown=realRank===1?'<div class="lb-crown">👑</div>':'';
       const avatarHtml=s.avatar&&s.avatar.startsWith('data:')?
