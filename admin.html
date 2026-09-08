@@ -196,6 +196,9 @@ const _META = [{"id": 1, "title": "只有两个字，“靠谱”", "author": "�
 const storyMeta = {};
 _META.forEach(s => { storyMeta[s.id] = s; });
 
+const LINE_NAMES = { delivery: '交付线', service: '服务线', sales: '零售线' };
+const LINE_COLORS = { delivery: 'dot-delivery', service: 'dot-service', sales: 'dot-sales' };
+const BADGE_CLS = { delivery: 'badge-delivery', service: 'badge-service', sales: 'badge-sales' };
 
 async function fetchData() {
   // 1. 所有 likes
