@@ -201,32 +201,36 @@ const LINE_COLORS = { delivery: 'dot-delivery', service: 'dot-service', sales: '
 const BADGE_CLS = { delivery: 'badge-delivery', service: 'badge-service', sales: 'badge-sales' };
 
 async function fetchData() {
-  // 1. 所有 likes
-  const { data: likes, error } = await supa
+  // 1. 总票数（精确count，不受1000条限制）
+  const { count: totalVotes } = await supa
     .from('likes')
-    .select('story_id, user_token, created_at');
+    .select('id', { count: 'exact', head: true });
 
-  if (error) throw error;
+  // 2. 每故事票数 + 投票人数（分页拉取所有数据）
+  let likes = [];
+  let from = 0;
+  const PAGE = 1000;
+  while (true) {
+    const { data, error } = await supa
+      .from('likes')
+      .select('story_id, user_token')
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    likes = likes.concat(data);
+    if (data.length < PAGE) break;
+    from += PAGE;
+  }
 
-  // 2. 评论数
+  // 3. 评论数
   const { count: commentCount } = await supa
     .from('comments')
     .select('id', { count: 'exact', head: true });
 
-  // 3. 页面访问（如果有 page_views 表）
-  let viewCount = null;
-  try {
-    const { count } = await supa
-      .from('page_views')
-      .select('id', { count: 'exact', head: true });
-    viewCount = count;
-  } catch(e) {}
-
-  return { likes: likes || [], commentCount: commentCount || 0, viewCount };
+  return { likes, totalVotes: totalVotes || 0, commentCount: commentCount || 0, viewCount: null };
 }
 
-function buildStats(likes) {
-  const totalVotes = likes.length;
+function buildStats(likes, totalVotes) {
   const voters = new Set(likes.map(l => l.user_token)).size;
 
   // 每故事票数
@@ -373,8 +377,8 @@ function render(stats, commentCount, viewCount) {
 
 async function refresh() {
   try {
-    const { likes, commentCount, viewCount } = await fetchData();
-    const stats = buildStats(likes);
+    const { likes, totalVotes, commentCount, viewCount } = await fetchData();
+    const stats = buildStats(likes, totalVotes);
     render(stats, commentCount, viewCount);
     const now = new Date();
     const t = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
