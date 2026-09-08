@@ -1302,9 +1302,9 @@ let ch='';
 if(comments.length>0)ch=comments.map(c=>`<div class="comment-item"><div class="comment-avatar">${c.avatar}</div><div class="comment-body"><div class="comment-header"><span class="comment-author">${c.author}</span><span class="comment-time">${c.time||'刚刚'}</span></div><p class="comment-text">${c.text}</p></div></div>`).join('');
 else ch='<p class="comment-empty">还没有留言，成为第一个留言的人吧</p>';
 document.getElementById('storyDetailContent').innerHTML=`
-<div class="detail-tag-badge" style="color:${tag.color};background:${tag.bg};border:1px solid ${tag.color}">${tag.name} · ${tag.category}</div>
+<div class="detail-tag-badge" style="color:${tag.color};background:${tag.bg};border:1px solid ${tag.color}">${tag.name}</div>
 <h2 class="detail-title">${s.title}</h2>
-<div class="detail-meta"><div class="author-avatar">${s.avatar&&s.avatar.startsWith('data:')?`<img src="${s.avatar}" alt="${s.author}">`:s.avatar}</div><div class="author-info"><span class="author-name">${s.author}</span><span class="author-date">${formatDate(s.date)}</span></div></div>
+<div class="detail-meta"><div class="author-avatar">${s.avatar&&s.avatar.startsWith('data:')?`<img src="${s.avatar}" alt="${s.author}">`:s.avatar}</div><div class="author-info"><span class="author-name">${s.author}</span></div></div>
 ${mh}
 <div class="detail-text" id="detailBody"></div>
 <div class="detail-actions">
