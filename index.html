@@ -854,6 +854,7 @@ localStorage.setItem('dataVersion',DATA_VERSION);
 let likedIds=JSON.parse(localStorage.getItem('likedIds')||'[]');
 let viewedIds=JSON.parse(localStorage.getItem('viewedIds')||'[]');
 const DAILY_LIMIT=5;
+const VOTING_CLOSED=true;
 
 function localDateStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 const todayKey='youyi_daily_'+localDateStr();
@@ -1006,7 +1007,9 @@ card.onclick=()=>{markAsViewed(s.id);openStoryDetail(s.id)};
 const isNew=s.isNew&&!viewedIds.includes(s.id);
 const cc=getComments(s.id).length;
 const hasV=!!s.video;const allImgs=s.img?[s.img,...(s.images||[]).filter(x=>x!==s.img)]:(s.images||[]);const hasI=allImgs.length>0;
-const likeBtn=`<button class="like-btn ${dailyVotes.includes(s.id)?'voted':''}" onclick="event.stopPropagation();toggleLike(${s.id},this)"><svg class="heart-icon" viewBox="0 0 24 24" fill="${dailyVotes.includes(s.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="like-count">${(s.votes||0)>0?s.votes:''}</span></button>`;
+const likeBtn=VOTING_CLOSED
+?`<button class="like-btn voted" disabled style="opacity:.5;cursor:default;pointer-events:none"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="like-count">${(s.votes||0)>0?s.votes:''}</span></button>`
+:`<button class="like-btn ${dailyVotes.includes(s.id)?'voted':''}" onclick="event.stopPropagation();toggleLike(${s.id},this)"><svg class="heart-icon" viewBox="0 0 24 24" fill="${dailyVotes.includes(s.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="like-count">${(s.votes||0)>0?s.votes:''}</span></button>`;
 const cardBg=gradientColors[idx%4];
 const cardHt=[100,120,110,130][idx%4];
 
@@ -1127,6 +1130,7 @@ buildHeroAvatars();
 }
 
 async function toggleLike(id,btn){
+if(VOTING_CLOSED){showToast('投票已结束','感谢您的参与','normal');return;}
 const s=stories.find(x=>x.id===id);if(!s)return;
 const alreadyToday=dailyVotes.includes(id);
 if(alreadyToday){
@@ -1155,6 +1159,17 @@ renderMasonry();updateStats();
 function updateDetailLike(s){const b=document.querySelector('#storyDetailContent .like-btn-large');if(!b)return;const v=dailyVotes.includes(s.id);b.classList.toggle('voted',v);b.querySelector('svg').setAttribute('fill',v?'currentColor':'none')}
 
 function updateVotesRemaining(){
+  if(VOTING_CLOSED){
+    const el=document.getElementById('votesRemaining');
+    const txt=document.getElementById('votesRemainingText');
+    const nel=document.getElementById('navVotesRemaining');
+    const ntxt=document.getElementById('navVotesText');
+    if(el){el.style.display='';el.className='votes-remaining empty';}
+    if(txt)txt.textContent='大众评审已结束';
+    if(nel)nel.className='nav-votes-remaining empty';
+    if(ntxt)ntxt.textContent='大众评审已结束';
+    return;
+  }
   const remaining=DAILY_LIMIT-dailyVotes.length;
   const el=document.getElementById('votesRemaining');
   const txt=document.getElementById('votesRemainingText');
@@ -1351,7 +1366,7 @@ document.getElementById('storyDetailContent').innerHTML=`
 ${mh}
 <div class="detail-text" id="detailBody"></div>
 <div class="detail-actions">
-<button class="like-btn-large ${isLiked?'voted':''}" onclick="toggleLikeFromDetail(${s.id},this)"><svg viewBox="0 0 24 24" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${isLiked?'已赞':'点赞'}</button>
+<button class="like-btn-large ${isLiked?'voted':''}" ${VOTING_CLOSED?'disabled style="opacity:.5;cursor:default;pointer-events:none"':`onclick="toggleLikeFromDetail(${s.id},this)"`}><svg viewBox="0 0 24 24" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${VOTING_CLOSED?'投票已结束':isLiked?'已赞':'点赞'}</button>
 <span class="detail-comment-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${comments.length} 条留言</span>
 </div>
 <div class="comments-section">
@@ -1396,6 +1411,7 @@ document.getElementById('storyDetailModal').addEventListener('touchstart',e=>{de
 document.getElementById('storyDetailModal').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-detailStartX;if(Math.abs(dx)>60){if(dx>0)navigateDetail(-1);else navigateDetail(1)}});
 
 async function toggleLikeFromDetail(id,btn){
+if(VOTING_CLOSED){showToast('投票已结束','感谢您的参与','normal');return;}
 const s=stories.find(x=>x.id===id);if(!s)return;
 const alreadyToday=dailyVotes.includes(id);
 if(alreadyToday){
@@ -1458,6 +1474,16 @@ updateStats();
 loadVoteCounts();
 pollActivities();
 pollComments();
+
+// 过午夜自动刷新（重置每日配额 + 更新票数）
+let _lastDate = new Date().toDateString();
+setInterval(() => {
+  const today = new Date().toDateString();
+  if (today !== _lastDate) {
+    _lastDate = today;
+    loadVoteCounts();
+  }
+}, 60000);
 
 function animateNumber(el,target,duration){
 const startTime=performance.now();
