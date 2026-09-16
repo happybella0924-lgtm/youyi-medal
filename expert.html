@@ -328,6 +328,15 @@ main{padding:32px max(32px,calc((100% - 860px)/2)) 120px}
 .done-item{font-size:13px;padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;color:var(--text-soft)}
 .done-item:last-child{border-bottom:none}
 .done-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.done-edit-btn{
+  margin-top:20px;width:100%;padding:12px;
+  background:transparent;color:var(--text-muted);
+  border:1.5px solid var(--border);border-radius:9999px;
+  font-size:14px;font-weight:500;font-family:var(--sans);cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.done-edit-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-tint)}
+.done-edit-btn:active{transform:scale(.97)}
 
 /* ── toast ── */
 .toast{
@@ -434,6 +443,7 @@ main{padding:32px max(32px,calc((100% - 860px)/2)) 120px}
     <div class="done-sub">您的投票已成功记录<br>以下是您选出的故事：</div>
     <div class="done-list" id="doneList"></div>
     <div class="done-sub" style="margin-top:14px;font-size:12px">评审结果将在所有专家完成投票后公布</div>
+    <button class="done-edit-btn" onclick="editVotes()">修改选择</button>
   </div>
 </div>
 
@@ -691,11 +701,13 @@ async function submitVotes(){
 /* ── Done ── */
 function showDone(ids){
   submitted=true;
+  // restore selected set so edit can re-render correctly
+  selected=new Set(ids.map(Number));
   document.getElementById('mainScreen').style.display='none';
   document.getElementById('doneScreen').style.display='flex';
   let html='';
   for(const[line,lineIds]of Object.entries(EXPERT_IDS)){
-    lineIds.filter(id=>ids.includes(id)).forEach(id=>{
+    lineIds.filter(id=>ids.includes(Number(id))||ids.includes(id)).forEach(id=>{
       const s=stories.find(x=>x.id===id)||{author:'—',title:'—'};
       html+=`<div class="done-item">
         <span class="done-badge" style="${LINE_BADGE[line]}">${LINE_NAMES[line]}</span>
@@ -704,6 +716,24 @@ function showDone(ids){
     });
   }
   document.getElementById('doneList').innerHTML=html||'<div class="done-item">投票已记录</div>';
+}
+
+async function editVotes(){
+  const btn=document.querySelector('.done-edit-btn');
+  btn.textContent='删除中…';btn.disabled=true;
+  try{
+    const{error}=await supa.from('expert_votes').delete().eq('expert_token',expertToken);
+    if(error)throw error;
+    submitted=false;
+    // re-render cards with current selected state
+    renderAll();
+    updateProgress();
+    document.getElementById('doneScreen').style.display='none';
+    document.getElementById('mainScreen').style.display='block';
+  }catch(e){
+    btn.textContent='修改选择';btn.disabled=false;
+    showToast('操作失败：'+e.message);
+  }
 }
 
 /* ── Toast ── */
