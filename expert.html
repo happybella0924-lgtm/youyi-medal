@@ -212,6 +212,7 @@ main{padding:32px max(32px,calc((100% - 860px)/2)) 120px}
 .sc-author-info{display:flex;flex-direction:column}
 .sc-author{font-size:12px;font-weight:500;color:var(--text)}
 .sc-line-label{font-size:11px;color:var(--text-muted)}
+.sc-votes{font-style:normal;color:var(--orange);font-weight:600}
 .sc-read{
   padding:5px 13px;border-radius:9999px;font-size:11px;font-weight:600;
   cursor:pointer;border:1.5px solid var(--orange);background:transparent;color:var(--orange);
@@ -482,7 +483,7 @@ const LINE_BADGE={
   sales:'background:#f0fff4;color:#27ae60',
 };
 
-let stories=[],expertToken=null,selected=new Set(),submitted=false,currentDetailId=null;
+let stories=[],expertToken=null,selected=new Set(),submitted=false,currentDetailId=null,voteCounts={};
 
 /* ── Gate ── */
 function checkCode(){
@@ -508,8 +509,23 @@ document.getElementById('codeInput').addEventListener('keydown',e=>{
 /* ── Load stories ── */
 async function loadStories(){
   stories=STORY_DATA;
-  await checkAlreadyVoted();
+  await Promise.all([loadVoteCounts(), checkAlreadyVoted()]);
   renderAll();
+}
+
+async function loadVoteCounts(){
+  try{
+    const allIds=Object.values(EXPERT_IDS).flat();
+    let from=0,PAGE=1000,rows=[];
+    while(true){
+      const{data,error}=await supa.from('likes').select('story_id').in('story_id',allIds).range(from,from+PAGE-1);
+      if(error||!data||data.length===0)break;
+      rows=rows.concat(data);
+      if(data.length<PAGE)break;
+      from+=PAGE;
+    }
+    rows.forEach(r=>{voteCounts[r.story_id]=(voteCounts[r.story_id]||0)+1});
+  }catch(e){console.warn('loadVoteCounts',e)}
 }
 
 async function checkAlreadyVoted(){
@@ -555,7 +571,7 @@ function renderAll(){
                 <div class="sc-avatar">${avatarHtml}</div>
                 <div class="sc-author-info">
                   <span class="sc-author">${s.author}</span>
-                  <span class="sc-line-label">${LINE_NAMES[line]||line}</span>
+                  <span class="sc-line-label">${LINE_NAMES[line]||line} · <em class="sc-votes">${voteCounts[id]||0} 票</em></span>
                 </div>
               </div>
               <button class="sc-read" onclick="event.stopPropagation();openDetail(${id})">读故事</button>
