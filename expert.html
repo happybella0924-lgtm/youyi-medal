@@ -155,10 +155,9 @@ main{padding:32px max(32px,calc((100% - 860px)/2)) 120px}
 @media(max-width:1100px){.line-masonry{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:740px){.line-masonry{grid-template-columns:repeat(2,1fr);gap:8px}}
 
-/* story card — fixed height, flex column */
+/* story card */
 .s-card{
   display:flex;flex-direction:column;
-  height:260px;
   background:#fff;border-radius:18px;overflow:hidden;
   box-shadow:0 2px 12px rgba(0,0,0,.07);
   border:2px solid transparent;
@@ -170,71 +169,57 @@ main{padding:32px max(32px,calc((100% - 860px)/2)) 120px}
 .s-card.selected{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,98,42,.12),0 2px 12px rgba(0,0,0,.07)}
 .s-card.line-full:not(.selected){opacity:.45;pointer-events:none}
 
-/* card image — fixed height */
-.sc-img-wrap{position:relative;overflow:hidden;background:#f0f0f0;height:120px;flex-shrink:0}
+/* card image */
+.sc-img-wrap{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--orange-tint2),var(--orange-tint));
+  height:160px;flex-shrink:0;
+}
 .sc-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s var(--ease-out)}
 .s-card:hover .sc-img{transform:scale(1.04)}
-.sc-img-placeholder{
-  width:100%;height:100%;
-  background:linear-gradient(135deg,var(--orange-tint2),var(--orange-tint));
-  display:flex;align-items:center;justify-content:center;font-size:28px;
-}
+.sc-no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px}
 
-/* card body — flex 1 so it fills remaining space */
-.sc-body{padding:10px 12px 0;flex:1;min-height:0;display:flex;flex-direction:column}
-.sc-top{display:flex;align-items:center;gap:6px}
-.sc-rank{
-  width:18px;height:18px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;color:var(--text-muted);
-  background:var(--bg);
+/* vote button — floats over image, bottom-right, matches index.html .like-btn */
+.sc-vote-btn{
+  position:absolute;bottom:10px;right:10px;z-index:5;
+  min-width:36px;height:36px;border-radius:18px;padding:0 10px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(8px);
+  border:none;box-shadow:0 1px 6px rgba(0,0,0,.15);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:transform .15s var(--ease-out),background .2s,box-shadow .2s;
+  color:var(--text-soft);font-family:var(--sans);font-size:12px;font-weight:600;
 }
-.sc-rank.r1{background:#f5c518;color:#fff}
-.sc-rank.r2{background:#bbb;color:#fff}
-.sc-rank.r3{background:#c87533;color:#fff}
+.sc-vote-btn:hover{transform:scale(1.1);background:rgba(255,255,255,.98);color:var(--orange)}
+.sc-vote-btn:active{transform:scale(.93)}
+.sc-vote-btn.selected{background:var(--orange);color:#fff;box-shadow:0 2px 10px rgba(232,98,42,.4)}
+.sc-vote-btn svg{width:16px;height:16px;flex-shrink:0;transition:transform .3s}
+.sc-vote-btn.selected svg{animation:heartBeat .6s}
+@keyframes heartBeat{0%,100%{transform:scale(1)}30%{transform:scale(1.3)}60%{transform:scale(.9)}}
+
+/* card body */
+.sc-body{padding:10px 12px 12px}
+.sc-title{font-weight:600;font-size:14px;color:var(--text);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+  margin-bottom:8px}
+.sc-footer{display:flex;align-items:center;justify-content:space-between}
+.sc-author-wrap{display:flex;align-items:center;gap:6px}
 .sc-avatar{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  background:var(--orange-tint);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--orange-deep);overflow:hidden;
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:var(--orange-tint);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:var(--orange-deep);overflow:hidden;
 }
 .sc-avatar img{width:100%;height:100%;object-fit:cover}
-.sc-meta{flex:1;min-width:0}
-.sc-author{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sc-title{font-size:11px;color:var(--text-muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.sc-excerpt{
-  font-size:11px;color:var(--text-muted);line-height:1.5;
-  margin-top:5px;flex:1;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-
-/* card footer — pinned to bottom */
-.sc-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 12px 8px;gap:6px;flex-shrink:0;
-}
+.sc-author-info{display:flex;flex-direction:column}
+.sc-author{font-size:12px;font-weight:500;color:var(--text)}
+.sc-line-label{font-size:11px;color:var(--text-muted)}
 .sc-read{
   padding:5px 13px;border-radius:9999px;font-size:11px;font-weight:600;
   cursor:pointer;border:1.5px solid var(--orange);background:transparent;color:var(--orange);
-  font-family:var(--sans);
+  font-family:var(--sans);white-space:nowrap;flex-shrink:0;
   transition:background .18s var(--ease-out),color .18s var(--ease-out),transform .1s;
-  white-space:nowrap;flex-shrink:0;
 }
 .sc-read:hover{background:var(--orange);color:#fff}
 .sc-read:active{transform:scale(.96)}
-.sc-vote{
-  display:flex;align-items:center;gap:4px;
-  padding:5px 12px;border-radius:9999px;font-size:11px;font-weight:600;
-  border:1.5px solid rgba(0,0,0,.1);background:rgba(255,255,255,.7);
-  cursor:pointer;font-family:var(--sans);color:var(--text-muted);
-  transition:all .2s var(--ease-out);flex-shrink:0;
-}
-.sc-vote:active{transform:scale(.96)}
-.s-card.selected .sc-vote{
-  background:var(--orange);border-color:var(--orange);color:#fff;
-  box-shadow:0 3px 10px rgba(232,98,42,.25);
-}
-.sc-vote svg{width:11px;height:11px;flex-shrink:0}
 
 /* ── detail modal ── */
 .modal-overlay{
@@ -540,31 +525,31 @@ function renderAll(){
     ids.forEach((id,i)=>{
       const s=stories.find(x=>x.id===id);
       if(!s)return;
-      const rc=i<3?`r${i+1}`:'';
       const imgSrc=s.img||(s.images&&s.images[0])||'';
-      const excerpt=(s.body||s.excerpt||'').replace(/<[^>]+>/g,'').slice(0,80);
+      const avatarHtml=s.avatar?`<img src="${s.avatar}" alt="">`:(s.author||'?')[0];
+      const isSelected=selected.has(id);
       html+=`
         <div class="s-card" id="card-${id}" data-id="${id}" data-line="${line}">
-          ${imgSrc
-            ?`<div class="sc-img-wrap"><img class="sc-img" src="${imgSrc}" alt="" loading="lazy" onerror="this.parentNode.style.display='none'"></div>`
-            :`<div class="sc-img-placeholder">🏅</div>`}
-          <div class="sc-body">
-            <div class="sc-top">
-              <div class="sc-rank ${rc}">${i+1}</div>
-              <div class="sc-avatar">${s.avatar&&s.avatar.startsWith('data:')?`<img src="${s.avatar}" alt="">`:s.author[0]}</div>
-              <div class="sc-meta">
-                <div class="sc-author">${s.author}</div>
-                <div class="sc-title">${s.title}</div>
-              </div>
-            </div>
-            ${excerpt?`<div class="sc-excerpt">${excerpt}…</div>`:''}
-          </div>
-          <div class="sc-footer">
-            <button class="sc-read" onclick="event.stopPropagation();openDetail(${id})">阅读全文 →</button>
-            <button class="sc-vote" id="vbtn-${id}" onclick="event.stopPropagation();toggleSelect(${id},'${line}')">
-              <svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5 6.5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span id="vt-${id}">选择</span>
+          <div class="sc-img-wrap">
+            ${imgSrc?`<img class="sc-img" src="${imgSrc}" alt="" loading="lazy" onerror="this.style.display='none'">`:`<div class="sc-no-img">🏅</div>`}
+            <button class="sc-vote-btn${isSelected?' selected':''}" id="vbtn-${id}" onclick="event.stopPropagation();toggleSelect(${id},'${line}')">
+              <svg viewBox="0 0 24 24" fill="${isSelected?'currentColor':'none'}" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
             </button>
+          </div>
+          <div class="sc-body">
+            <h3 class="sc-title">${s.title}</h3>
+            <div class="sc-footer">
+              <div class="sc-author-wrap">
+                <div class="sc-avatar">${avatarHtml}</div>
+                <div class="sc-author-info">
+                  <span class="sc-author">${s.author}</span>
+                  <span class="sc-line-label">${LINE_NAMES[line]||line}</span>
+                </div>
+              </div>
+              <button class="sc-read" onclick="event.stopPropagation();openDetail(${id})">读故事</button>
+            </div>
           </div>
         </div>`;
     });
@@ -584,13 +569,15 @@ function toggleSelect(id,line){
   if(selected.has(id)){
     selected.delete(id);
     document.getElementById('card-'+id).classList.remove('selected');
-    document.getElementById('vt-'+id).textContent='选择';
+    const btn=document.getElementById('vbtn-'+id);
+    if(btn){btn.classList.remove('selected');btn.querySelector('svg').setAttribute('fill','none');}
   } else {
     if(selected.size>=TOTAL){showToast('总票数已达上限（15票）');return;}
     if(lineCount(line)>=LINE_MAX){showToast(`${LINE_NAMES[line]}最多选 5 个`);return;}
     selected.add(id);
     document.getElementById('card-'+id).classList.add('selected');
-    document.getElementById('vt-'+id).textContent='已选 ✓';
+    const btn=document.getElementById('vbtn-'+id);
+    if(btn){btn.classList.add('selected');btn.querySelector('svg').setAttribute('fill','currentColor');}
   }
   updateProgress();
   if(currentDetailId===id)refreshDetailBtn(id,line);
