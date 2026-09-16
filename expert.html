@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>友谊奖章 · 专家评审</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root {
+  --orange: #f47920;
+  --orange-light: #fff5ed;
+  --bg: #f5f4f0;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #888;
+  --border: rgba(0,0,0,.08);
+  --radius: 14px;
+  --sans: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* 顶部 */
+header {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+header h1 { font-size: 16px; font-weight: 600; }
+.vote-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+.vote-counter strong { color: var(--orange); font-size: 18px; font-weight: 700; }
+.vote-counter span { color: rgba(255,255,255,.7); }
+
+/* 进入页（密码） */
+#gateScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.gate-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 40px 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 32px rgba(0,0,0,.08);
+}
+.gate-logo { width: 64px; height: 64px; margin: 0 auto 20px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.gate-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.gate-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+.gate-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: var(--sans);
+  outline: none;
+  margin-bottom: 12px;
+  transition: border-color .2s;
+  text-align: center;
+  letter-spacing: 2px;
+}
+.gate-input:focus { border-color: var(--orange); }
+.gate-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity .15s;
+}
+.gate-btn:active { opacity: .85; }
+.gate-error { font-size: 13px; color: #e74c3c; margin-top: 10px; }
+
+/* 主内容 */
+#mainScreen { display: none; }
+
+/* 致评审团 banner */
+.intro-banner {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+  padding: 28px 24px;
+  margin: 0;
+}
+.intro-inner { max-width: 800px; margin: 0 auto; }
+.intro-label {
+  display: inline-block;
+  background: var(--orange);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.intro-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255,255,255,.88);
+}
+.intro-text strong { color: #fff; }
+.intro-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.intro-stat { font-size: 13px; color: rgba(255,255,255,.6); }
+.intro-stat strong { color: var(--orange); font-size: 18px; font-weight: 700; margin-right: 4px; }
+
+/* 投票进度条 */
+.progress-bar-wrap {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  position: sticky;
+  top: 53px;
+  z-index: 90;
+}
+.progress-inner { max-width: 800px; margin: 0 auto; }
+.progress-labels { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.progress-label { font-size: 13px; font-weight: 600; }
+.progress-remain { font-size: 13px; color: var(--muted); }
+.progress-remain span { color: var(--orange); font-weight: 700; }
+.progress-track { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 3px; transition: width .4s ease; }
+.line-progress { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+.line-prog-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.line-dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-delivery { background: #5b8cff; }
+.dot-service  { background: #ff6b6b; }
+.dot-sales    { background: #4cd964; }
+.line-prog-count { font-weight: 600; color: var(--text); }
+
+/* 分区 */
+main { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  margin-top: 32px;
+}
+.section-header:first-child { margin-top: 0; }
+.section-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.section-title { font-size: 16px; font-weight: 700; }
+.section-rule { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+/* 故事卡片 */
+.story-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  position: relative;
+}
+.story-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.08); transform: translateY(-1px); }
+.story-card.selected {
+  border-color: var(--orange);
+  background: #fffaf6;
+  box-shadow: 0 0 0 3px rgba(244,121,32,.12);
+}
+.story-card.disabled { opacity: .45; cursor: not-allowed; }
+.story-card.disabled:hover { transform: none; box-shadow: none; }
+.story-rank {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  flex-shrink: 0;
+}
+.story-rank.r1 { background: #f5c518; color: #fff; }
+.story-rank.r2 { background: #bbb; color: #fff; }
+.story-rank.r3 { background: #c87533; color: #fff; }
+.story-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), #d45500);
+  color: #fff; font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; overflow: hidden;
+}
+.story-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.story-info { flex: 1; min-width: 0; }
+.story-author { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+.story-title { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.story-public-votes { font-size: 11px; color: #bbb; margin-top: 3px; }
+.story-check {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .2s;
+  color: transparent;
+}
+.story-card.selected .story-check {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+}
+
+/* 提交按钮 */
+.submit-wrap {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  z-index: 100;
+}
+.submit-info { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.submit-info strong { color: var(--text); font-size: 15px; }
+.submit-btn {
+  padding: 13px 28px;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity .15s, transform .12s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.submit-btn:active { transform: scale(.97); opacity: .9; }
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+/* 完成状态 */
+#doneScreen {
+  display: none;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.done-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 48px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 32px rgba(0,0,0,.08);
+}
+.done-icon { font-size: 56px; margin-bottom: 16px; }
+.done-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.done-sub { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.done-list { text-align: left; margin: 20px 0; background: var(--bg); border-radius: 10px; padding: 14px 16px; }
+.done-list-item { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.done-list-item:last-child { border-bottom: none; }
+.done-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #1a1a1a; color: #fff; padding: 10px 20px; border-radius: 20px;
+  font-size: 13px; opacity: 0; transition: all .3s; z-index: 200; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media(max-width:480px) {
+  header { padding: 12px 16px; }
+  .intro-banner { padding: 20px 16px; }
+  .progress-bar-wrap { padding: 12px 16px; }
+  .submit-wrap { padding: 12px 16px; }
+  .gate-card { padding: 32px 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>友谊奖章 · 专家评审</h1>
+  <div class="vote-counter" id="headerCounter" style="display:none">
+    <strong id="selectedCount">0</strong>
+    <span>/ 15 票</span>
+  </div>
+</header>
+
+<!-- 密码验证 -->
+<div id="gateScreen">
+  <div class="gate-card">
+    <div class="gate-logo">🏅</div>
+    <div class="gate-title">专家评审团</div>
+    <div class="gate-sub">请输入您的专属访问码进入评审</div>
+    <input class="gate-input" id="codeInput" type="text" placeholder="请输入访问码" autocomplete="off" maxlength="20">
+    <button class="gate-btn" onclick="checkCode()">进入评审</button>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<!-- 主评审页 -->
+<div id="mainScreen">
+  <div class="intro-banner">
+    <div class="intro-inner">
+      <div class="intro-label">致专家评审团队</div>
+      <div class="intro-text">
+        我们收到 <strong>100+</strong> 个故事，经过初步筛选，有 <strong>45</strong> 个故事进入为期 7 天的大众评审，一共有 <strong id="publicVoterCount">613</strong> 位大众评委参与投票。现诚邀各位专家评审进行投票，从每条业务线的入围故事中，选出您认为最能代表「友谊奖章」精神的故事。
+      </div>
+      <div class="intro-stats">
+        <div class="intro-stat"><strong>23</strong>个故事入围专家评审</div>
+        <div class="intro-stat"><strong>15</strong>票总配额（每线最多5票）</div>
+        <div class="intro-stat"><strong>3</strong>条业务线</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-inner">
+      <div class="progress-labels">
+        <span class="progress-label">投票进度</span>
+        <span class="progress-remain">还剩 <span id="remainCount">15</span> 票</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="line-progress">
+        <div class="line-prog-item">
+          <div class="line-dot dot-delivery"></div>
+          交付线 <span class="line-prog-count" id="prog-delivery">0</span>/5
+        </div>
+        <div class="line-prog-item">
+          <div class="line-dot dot-service"></div>
+          服务线 <span class="line-prog-count" id="prog-service">0</span>/5
+        </div>
+        <div class="line-prog-item">
+          <div class="line-dot dot-sales"></div>
+          零售线 <span class="line-prog-count" id="prog-sales">0</span>/5
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="storyList"></main>
+
+  <div class="submit-wrap">
+    <div class="submit-info">
+      <strong id="submitSelected">已选 0 票</strong><br>
+      共15票，每条业务线最多5票
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitVotes()" disabled>提交评审</button>
+  </div>
+</div>
+
+<!-- 完成页 -->
+<div id="doneScreen">
+  <div class="done-card">
+    <div class="done-icon">🎉</div>
+    <div class="done-title">评审完成，感谢您的参与！</div>
+    <div class="done-sub">您的投票已成功记录，以下是您选出的故事：</div>
+    <div class="done-list" id="doneList"></div>
+    <div class="done-sub" style="margin-top:12px;font-size:12px">评审结果将在所有专家完成投票后公布</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL = 'https://mvgqbipgqcyysxuwtcen.supabase.co';
+const SUPA_KEY = 'sb_publishable_LYHVLxm6py1iTajGEK6o8A_WR_Yd8_M';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const EXPERT_CODE = 'expert2026';
+const TOTAL_LIMIT = 15;
+const LINE_LIMIT = 5;
+
+// 进入专家评审的故事
+const EXPERT_STORIES = {
+  delivery: [
+    {id:15, author:'杨燕', title:'投诉不是终点，是新关系的起点。', publicVotes:313},
+    {id:22, author:'荆子豪', title:'手写信，最纯粹的感谢', publicVotes:65},
+    {id:20, author:'石含嘉', title:'三个小时，等一条验证码，等一个回家的信号', publicVotes:64},
+    {id:29, author:'马兴源', title:'真诚相助，暖心同行', publicVotes:58},
+    {id:17, author:'梁业辉', title:'首例外籍客户车衣服务', publicVotes:40},
+    {id:26, author:'郭心蕊', title:'丝带蒙眼的浪漫求婚时刻', publicVotes:36},
+    {id:10, author:'徐彬', title:'一次远程托付，一份全力以赴', publicVotes:35},
+  ],
+  service: [
+    {id:18, author:'王磊', title:'用一次真诚沟通，换一场双向奔赴', publicVotes:364},
+    {id:13, author:'李冰', title:'2小时48分的对话', publicVotes:360},
+    {id:28, author:'马云飞', title:'"不是亲人胜似亲人"', publicVotes:263},
+    {id:11, author:'徐美琳', title:'小米温度，让世界看见', publicVotes:251},
+    {id:24, author:'赵花平', title:'脚底下的"一箱水"', publicVotes:227},
+    {id:12, author:'成都龙潭寺小米售后服务中心', title:'爱会传递', publicVotes:207},
+    {id:6,  author:'周涛', title:'车是好车，不用反反复复黑了', publicVotes:203},
+    {id:7,  author:'常怡龙', title:'抵触到信任，这份认可源于全力以赴', publicVotes:203},
+    {id:45, author:'李芳春', title:'倒车上山，轮胎报废，他跟在后头', publicVotes:203},
+  ],
+  sales: [
+    {id:44, author:'石启艳', title:'主动化解客诉危机，极致服务守住订单与口碑', publicVotes:143},
+    {id:36, author:'李为梅', title:'把握政策窗口期，专业赋能促成异地成交', publicVotes:142},
+    {id:37, author:'李天熠', title:'"战败"线索里的"生机"', publicVotes:64},
+    {id:38, author:'李强', title:'信任不是一次建立的。它也是重复出来的。', publicVotes:48},
+    {id:39, author:'李玉红', title:'"菠菜你看，我一个人开出来了，三百公里。"', publicVotes:42},
+    {id:41, author:'董浩', title:'"走了，老伙计。"', publicVotes:39},
+    {id:34, author:'张小龙', title:'我一定推荐给你', publicVotes:33},
+  ],
+};
+
+const LINE_NAMES = {delivery:'交付线', service:'服务线', sales:'零售线'};
+const LINE_COLORS = {delivery:'dot-delivery', service:'dot-service', sales:'dot-sales'};
+const BADGE_STYLE = {
+  delivery:'background:#eef2ff;color:#5b8cff',
+  service:'background:#fff0f0;color:#ff6b6b',
+  sales:'background:#f0fff4;color:#27ae60',
+};
+
+let expertToken = null;
+let selected = new Set();
+let submitted = false;
+
+// 密码验证
+function checkCode() {
+  const val = document.getElementById('codeInput').value.trim();
+  if (val === EXPERT_CODE) {
+    document.getElementById('gateScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+    document.getElementById('headerCounter').style.display = 'flex';
+    expertToken = 'expert_' + Math.random().toString(36).slice(2) + '_' + Date.now();
+    localStorage.setItem('expert_token', expertToken);
+    checkAlreadyVoted();
+    renderStories();
+  } else {
+    document.getElementById('gateError').textContent = '访问码不正确，请重试';
+    document.getElementById('codeInput').style.borderColor = '#e74c3c';
+  }
+}
+document.getElementById('codeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkCode();
+  document.getElementById('gateError').textContent = '';
+  document.getElementById('codeInput').style.borderColor = '';
+});
+
+// 检查是否已投过
+async function checkAlreadyVoted() {
+  const token = localStorage.getItem('expert_token');
+  if (!token) return;
+  const {data} = await supa.from('expert_votes').select('story_id').eq('expert_token', token);
+  if (data && data.length > 0) {
+    // 已投过，直接进入完成页
+    const ids = data.map(x => x.story_id);
+    showDone(ids);
+  }
+}
+
+// 渲染故事列表
+function renderStories() {
+  const container = document.getElementById('storyList');
+  let html = '';
+  for (const line of ['delivery','service','sales']) {
+    const stories = EXPERT_STORIES[line];
+    html += `
+      <div class="section-header">
+        <div class="section-dot ${LINE_COLORS[line]}"></div>
+        <div class="section-title">${LINE_NAMES[line]}</div>
+        <div class="section-rule">最多选 5 个</div>
+      </div>`;
+    stories.forEach((s, i) => {
+      const rank = i < 3 ? `r${i+1}` : '';
+      html += `
+        <div class="story-card" id="card-${s.id}" onclick="toggleSelect(${s.id}, '${line}')">
+          <div class="story-rank ${rank}">${i+1}</div>
+          <div class="story-avatar">${s.author[0]}</div>
+          <div class="story-info">
+            <div class="story-author">${s.author}</div>
+            <div class="story-title">${s.title}</div>
+            <div class="story-public-votes">大众评审 ${s.publicVotes} 票</div>
+          </div>
+          <div class="story-check" id="check-${s.id}">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>`;
+    });
+  }
+  container.innerHTML = html;
+}
+
+function getLine(id) {
+  for (const [line, stories] of Object.entries(EXPERT_STORIES)) {
+    if (stories.find(s => s.id === id)) return line;
+  }
+  return null;
+}
+
+function lineCount(line) {
+  return [...selected].filter(id => getLine(id) === line).length;
+}
+
+function toggleSelect(id, line) {
+  if (submitted) return;
+  const card = document.getElementById('card-' + id);
+  if (selected.has(id)) {
+    selected.delete(id);
+    card.classList.remove('selected');
+  } else {
+    if (selected.size >= TOTAL_LIMIT) {
+      showToast('总票数已达上限（15票）');
+      return;
+    }
+    if (lineCount(line) >= LINE_LIMIT) {
+      showToast(`${LINE_NAMES[line]}最多选 5 个`);
+      return;
+    }
+    selected.add(id);
+    card.classList.add('selected');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = selected.size;
+  document.getElementById('selectedCount').textContent = total;
+  document.getElementById('remainCount').textContent = TOTAL_LIMIT - total;
+  document.getElementById('submitSelected').textContent = `已选 ${total} 票`;
+  document.getElementById('progressFill').style.width = (total / TOTAL_LIMIT * 100) + '%';
+  document.getElementById('submitBtn').disabled = total === 0;
+  for (const line of ['delivery','service','sales']) {
+    document.getElementById('prog-' + line).textContent = lineCount(line);
+  }
+}
+
+async function submitVotes() {
+  if (selected.size === 0) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '提交中…';
+  try {
+    const rows = [...selected].map(id => ({story_id: id, expert_token: expertToken}));
+    const {error} = await supa.from('expert_votes').insert(rows);
+    if (error) throw error;
+    showDone([...selected]);
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '提交评审';
+    showToast('提交失败，请重试：' + e.message);
+  }
+}
+
+function showDone(ids) {
+  submitted = true;
+  document.getElementById('mainScreen').style.display = 'none';
+  const doneScreen = document.getElementById('doneScreen');
+  doneScreen.style.display = 'flex';
+
+  // 整理已选故事
+  const allStories = Object.values(EXPERT_STORIES).flat();
+  let listHtml = '';
+  for (const [line, stories] of Object.entries(EXPERT_STORIES)) {
+    const picked = stories.filter(s => ids.includes(s.id));
+    if (!picked.length) continue;
+    picked.forEach(s => {
+      listHtml += `
+        <div class="done-list-item">
+          <span class="done-badge" style="${BADGE_STYLE[line]}">${LINE_NAMES[line]}</span>
+          <span>${s.author}《${s.title.slice(0,16)}${s.title.length>16?'…':''}》</span>
+        </div>`;
+    });
+  }
+  document.getElementById('doneList').innerHTML = listHtml;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// URL参数自动填码
+const urlCode = new URLSearchParams(location.search).get('key');
+if (urlCode) {
+  document.getElementById('codeInput').value = urlCode;
+  checkCode();
+}
+</script>
+</body>
+</html>
