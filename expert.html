@@ -821,6 +821,7 @@ const EXPERT_STORIES = {
 const LINE_NAMES={delivery:"交付线",service:"服务线",sales:"销售线"};
 const LINE_COLORS={delivery:"#3b82f6",service:"#10b981",sales:"#f59e0b"};
 const TOTAL_LIMIT=5;
+const EXPERT_REVIEW_STARTED=false;
 const expertSelections={delivery:new Set(),service:new Set(),sales:new Set()};
 let expertSelected=new Set();
 const expertToken=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -895,6 +896,7 @@ function toggleExpertVote(id,el){
 }
 
 async function submitExpertVotes(){
+  if(!EXPERT_REVIEW_STARTED){showToast("评审尚未开始","请等待正式通知","normal");return;}
   if(expertSelected.size===0)return;
   if(typeof supa==="undefined"){showToast("连接失败","请刷新重试","normal");return;}
   const votes=[...expertSelected].map(id=>({story_id:id,expert_token:expertToken}));
@@ -971,6 +973,7 @@ function toggleLineVote(line, id, el) {
 }
 
 async function submitLineVotes(line) {
+  if(!EXPERT_REVIEW_STARTED){showToast("评审尚未开始","请等待正式通知","normal");return;}
   if (lineSelected[line].size === 0) return;
   if (typeof supa === "undefined") {
     showToast("连接失败", "请刷新重试", "normal");
@@ -1023,7 +1026,7 @@ async function fetchAllExpertVotesForResults(){let all=[],from=0,page=1000;while
 function getReviewResultRows(rows,line){const stories=(EXPERT_STORIES[line]||[]).map(s=>{const full=getStoryById(s.id)||s;return{id:s.id,title:s.title,author:s.author,publicVotes:FINAL_PUBLIC_VOTES[s.id]||full.votes||0,expertVotes:0}});const counts={};rows.forEach(r=>{const id=Number(r.story_id);counts[id]=(counts[id]||0)+1});stories.forEach(s=>{s.expertVotes=counts[s.id]||0});const maxPublic=Math.max(0,...stories.map(s=>s.publicVotes));const maxExpert=Math.max(0,...stories.map(s=>s.expertVotes));return stories.map(s=>{const publicScore=maxPublic?(s.publicVotes/maxPublic)*100:0;const expertScore=maxExpert?(s.expertVotes/maxExpert)*100:0;const totalScore=publicScore*.5+expertScore*.5;return{...s,publicScore,expertScore,totalScore,maxPublic,maxExpert}}).sort((a,b)=>b.totalScore-a.totalScore||b.expertScore-a.expertScore||b.publicScore-a.publicScore||a.id-b.id)}
 function renderReviewStats(rows,allRanked){const expertCount=new Set(rows.map(r=>r.expert_token).filter(Boolean)).size;const votedStories=allRanked.filter(s=>s.expertVotes>0).length;document.getElementById('reviewResultsStats').innerHTML=[['专家票总数',rows.length],['参与专家数',expertCount],['获专家票故事',votedStories],['入围故事数',allRanked.length]].map(([label,num])=>`<div class="rr-stat"><div class="rr-stat-num">${num}</div><div class="rr-stat-label">${label}</div></div>`).join('')}
 function renderResultLine(line,items){const top=items.slice(0,5);return `<article class="rr-line"><div class="rr-line-head"><div><div class="rr-line-title"><span class="rr-dot" style="background:${LINE_COLORS[line]}"></span>${LINE_NAMES[line]}</div><div class="rr-line-meta">本序列最高大众票 ${items[0]?.maxPublic||0}；最高专家票 ${items[0]?.maxExpert||0}</div></div><div class="rr-line-meta">取综合得分 Top 5</div></div><table class="rr-table"><thead><tr><th>排名</th><th>故事</th><th>作者</th><th>大众票</th><th>大众得分</th><th>专家票</th><th>专家得分</th><th>综合得分</th></tr></thead><tbody>${top.map((s,i)=>`<tr><td class="rr-rank">#${i+1}</td><td class="rr-title">${s.title}</td><td class="rr-author">${s.author}</td><td>${s.publicVotes}</td><td>${s.publicScore.toFixed(2)}</td><td>${s.expertVotes}</td><td>${s.expertScore.toFixed(2)}</td><td class="rr-score">${s.totalScore.toFixed(2)}</td></tr>`).join('')}</tbody></table></article>`}
-async function loadReviewResults(){const box=document.getElementById('reviewResultsContent');if(!box)return;box.innerHTML='<div class="results-empty">正在读取专家评审数据…</div>';try{const rows=await fetchAllExpertVotesForResults();const rankedByLine={delivery:getReviewResultRows(rows,'delivery'),sales:getReviewResultRows(rows,'sales'),service:getReviewResultRows(rows,'service')};const allRanked=[...rankedByLine.delivery,...rankedByLine.sales,...rankedByLine.service];renderReviewStats(rows,allRanked);box.innerHTML=['delivery','sales','service'].map(line=>renderResultLine(line,rankedByLine[line])).join('')}catch(e){box.innerHTML=`<div class="results-empty">读取失败：${e.message||e}</div>`}}
+async function loadReviewResults(){const box=document.getElementById('reviewResultsContent');if(!box)return;if(!EXPERT_REVIEW_STARTED){document.getElementById('reviewResultsStats').innerHTML=[['专家票总数',0],['参与专家数',0],['获专家票故事',0],['入围故事数',Object.values(EXPERT_STORIES).flat().length]].map(([label,num])=>`<div class="rr-stat"><div class="rr-stat-num">${num}</div><div class="rr-stat-label">${label}</div></div>`).join('');box.innerHTML='<div class="results-empty">专家评审尚未开始，结果将在正式评审开始后实时统计。</div>';return;}box.innerHTML='<div class="results-empty">正在读取专家评审数据…</div>';try{const rows=await fetchAllExpertVotesForResults();const rankedByLine={delivery:getReviewResultRows(rows,'delivery'),sales:getReviewResultRows(rows,'sales'),service:getReviewResultRows(rows,'service')};const allRanked=[...rankedByLine.delivery,...rankedByLine.sales,...rankedByLine.service];renderReviewStats(rows,allRanked);box.innerHTML=['delivery','sales','service'].map(line=>renderResultLine(line,rankedByLine[line])).join('')}catch(e){box.innerHTML=`<div class="results-empty">读取失败：${e.message||e}</div>`}}
 document.addEventListener('DOMContentLoaded',loadReviewResults);setInterval(loadReviewResults,30000);
 </script>
 </section>
