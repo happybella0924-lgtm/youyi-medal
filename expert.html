@@ -622,6 +622,7 @@ if(!isMobile){
   <div class="tabs-inner hero-tabs">
     <button class="htab" data-target="timeline" onclick="switchTab('timeline',this)">评选流程</button>
     <button class="htab" data-target="diaries" onclick="switchTab('diaries',this)">专家评审</button>
+    <button class="htab" data-target="reviewresults" onclick="switchTab('reviewresults',this)">实时评审结果</button>
     <button class="htab" data-target="allstories" onclick="switchTab('allstories',this)">全部故事</button>
   </div>
 </div>
@@ -1001,6 +1002,32 @@ function initLineSections() {
 
 </script>
 </section>
+<section id="reviewresults" class="tab-section" style="padding-top:32px">
+  <div style="max-width:1200px;margin:0 auto;padding:0 16px">
+    <div class="results-hero">
+      <div><div class="results-eyebrow">LIVE REVIEW RESULTS</div><h2>实时评审结果</h2><p>按业务线独立归一化计算：大众得分 50% + 专家得分 50%，每条业务线取综合得分前 5。</p></div>
+      <button class="results-refresh" onclick="loadReviewResults()">刷新结果</button>
+    </div>
+    <div class="results-formula"><strong>计算方式</strong>：大众标准化得分 = 本故事大众票 / 本业务线最高大众票 × 100；专家标准化得分 = 本故事专家票 / 本业务线最高专家票 × 100；综合得分 = 大众标准化得分 × 50% + 专家标准化得分 × 50%。</div>
+    <div id="reviewResultsStats" class="review-results-stats"></div>
+    <div id="reviewResultsContent" class="review-results-content"><div class="results-empty">正在读取专家评审数据…</div></div>
+  </div>
+<style>
+.results-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:16px;padding:28px 30px;background:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.86);border-radius:26px;box-shadow:0 14px 44px rgba(31,41,55,.08);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%)}
+.results-eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--orange);margin-bottom:8px}.results-hero h2{margin:0 0 8px;font-size:clamp(28px,4vw,48px);line-height:1.05;letter-spacing:-.05em}.results-hero p{margin:0;color:var(--text-muted);font-size:14px}.results-refresh{border:0;border-radius:9999px;background:#111;color:#fff;padding:11px 20px;font-family:var(--sans);font-weight:650;cursor:pointer;white-space:nowrap}.results-refresh:active{transform:scale(.97)}
+.results-formula{margin:0 0 18px;padding:14px 18px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.76);border-radius:16px;color:var(--text-soft);font-size:13px;line-height:1.8}.review-results-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.rr-stat{padding:16px 18px;background:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.82);border-radius:18px}.rr-stat-num{font-size:28px;font-weight:850;color:var(--orange);line-height:1}.rr-stat-label{font-size:12px;color:var(--text-muted);margin-top:7px}.review-results-content{display:grid;gap:18px}.rr-line{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.86);border-radius:24px;overflow:hidden;box-shadow:0 12px 36px rgba(31,41,55,.07)}.rr-line-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid rgba(0,0,0,.06)}.rr-line-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}.rr-dot{width:10px;height:10px;border-radius:50%}.rr-line-meta{font-size:12px;color:var(--text-muted)}.rr-table{width:100%;border-collapse:collapse}.rr-table th,.rr-table td{padding:13px 14px;text-align:left;border-bottom:1px solid rgba(0,0,0,.05);font-size:13px}.rr-table th{font-size:11px;color:var(--text-muted);font-weight:700;background:rgba(255,255,255,.36)}.rr-table tr:last-child td{border-bottom:0}.rr-rank{font-size:18px;font-weight:850;color:var(--orange);white-space:nowrap}.rr-title{font-weight:650}.rr-author{color:var(--text-muted)}.rr-score{font-size:18px;font-weight:850}.results-empty{padding:26px;background:rgba(255,255,255,.62);border-radius:20px;color:var(--text-muted)}
+@media(max-width:760px){.results-hero{align-items:flex-start;flex-direction:column;padding:22px}.review-results-stats{grid-template-columns:repeat(2,1fr)}.rr-table{display:block;overflow-x:auto}.rr-table th,.rr-table td{white-space:nowrap}}
+</style>
+<script>
+async function fetchAllExpertVotesForResults(){let all=[],from=0,page=1000;while(true){const{data,error}=await supa.from('expert_votes').select('story_id,expert_token').range(from,from+page-1);if(error)throw error;if(!data||!data.length)break;all=all.concat(data);if(data.length<page)break;from+=page;}return all;}
+function getReviewResultRows(rows,line){const stories=(EXPERT_STORIES[line]||[]).map(s=>{const full=getStoryById(s.id)||s;return{id:s.id,title:s.title,author:s.author,publicVotes:FINAL_PUBLIC_VOTES[s.id]||full.votes||0,expertVotes:0}});const counts={};rows.forEach(r=>{const id=Number(r.story_id);counts[id]=(counts[id]||0)+1});stories.forEach(s=>{s.expertVotes=counts[s.id]||0});const maxPublic=Math.max(0,...stories.map(s=>s.publicVotes));const maxExpert=Math.max(0,...stories.map(s=>s.expertVotes));return stories.map(s=>{const publicScore=maxPublic?(s.publicVotes/maxPublic)*100:0;const expertScore=maxExpert?(s.expertVotes/maxExpert)*100:0;const totalScore=publicScore*.5+expertScore*.5;return{...s,publicScore,expertScore,totalScore,maxPublic,maxExpert}}).sort((a,b)=>b.totalScore-a.totalScore||b.expertScore-a.expertScore||b.publicScore-a.publicScore||a.id-b.id)}
+function renderReviewStats(rows,allRanked){const expertCount=new Set(rows.map(r=>r.expert_token).filter(Boolean)).size;const votedStories=allRanked.filter(s=>s.expertVotes>0).length;document.getElementById('reviewResultsStats').innerHTML=[['专家票总数',rows.length],['参与专家数',expertCount],['获专家票故事',votedStories],['入围故事数',allRanked.length]].map(([label,num])=>`<div class="rr-stat"><div class="rr-stat-num">${num}</div><div class="rr-stat-label">${label}</div></div>`).join('')}
+function renderResultLine(line,items){const top=items.slice(0,5);return `<article class="rr-line"><div class="rr-line-head"><div><div class="rr-line-title"><span class="rr-dot" style="background:${LINE_COLORS[line]}"></span>${LINE_NAMES[line]}</div><div class="rr-line-meta">本序列最高大众票 ${items[0]?.maxPublic||0}；最高专家票 ${items[0]?.maxExpert||0}</div></div><div class="rr-line-meta">取综合得分 Top 5</div></div><table class="rr-table"><thead><tr><th>排名</th><th>故事</th><th>作者</th><th>大众票</th><th>大众得分</th><th>专家票</th><th>专家得分</th><th>综合得分</th></tr></thead><tbody>${top.map((s,i)=>`<tr><td class="rr-rank">#${i+1}</td><td class="rr-title">${s.title}</td><td class="rr-author">${s.author}</td><td>${s.publicVotes}</td><td>${s.publicScore.toFixed(2)}</td><td>${s.expertVotes}</td><td>${s.expertScore.toFixed(2)}</td><td class="rr-score">${s.totalScore.toFixed(2)}</td></tr>`).join('')}</tbody></table></article>`}
+async function loadReviewResults(){const box=document.getElementById('reviewResultsContent');if(!box)return;box.innerHTML='<div class="results-empty">正在读取专家评审数据…</div>';try{const rows=await fetchAllExpertVotesForResults();const rankedByLine={delivery:getReviewResultRows(rows,'delivery'),sales:getReviewResultRows(rows,'sales'),service:getReviewResultRows(rows,'service')};const allRanked=[...rankedByLine.delivery,...rankedByLine.sales,...rankedByLine.service];renderReviewStats(rows,allRanked);box.innerHTML=['delivery','sales','service'].map(line=>renderResultLine(line,rankedByLine[line])).join('')}catch(e){box.innerHTML=`<div class="results-empty">读取失败：${e.message||e}</div>`}}
+document.addEventListener('DOMContentLoaded',loadReviewResults);setInterval(loadReviewResults,30000);
+</script>
+</section>
+
 
 <section id="allstories" class="tab-section" style="padding-top:32px">
 <div style="max-width:1200px;margin:0 auto;padding:0 16px">
@@ -1310,7 +1337,7 @@ function updateActiveNav(){const ss=['hero','diaries','allstories'];let a='hero'
 function scrollToSection(id){switchTab(id);}
 function toggleMobileMenu(){}
 
-const TAB_SECTIONS=['timeline','diaries','allstories'];
+const TAB_SECTIONS=['timeline','diaries','reviewresults','allstories'];
 function movePill(btn,animate){
   const pill=document.getElementById('tabPill');
   const inner=btn.closest('.tabs-inner');
