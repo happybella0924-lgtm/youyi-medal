@@ -821,7 +821,8 @@ const EXPERT_STORIES = {
 const LINE_NAMES={delivery:"交付线",service:"服务线",sales:"销售线"};
 const LINE_COLORS={delivery:"#3b82f6",service:"#10b981",sales:"#f59e0b"};
 const TOTAL_LIMIT=5;
-const EXPERT_REVIEW_STARTED=false;
+const EXPERT_REVIEW_STARTED=true;
+const EXPERT_REVIEW_START_AT='2026-09-20T03:08:27Z';
 const expertSelections={delivery:new Set(),service:new Set(),sales:new Set()};
 let expertSelected=new Set();
 const expertToken=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
@@ -1022,7 +1023,7 @@ function initLineSections() {
 @media(max-width:760px){.results-hero{align-items:flex-start;flex-direction:column;padding:22px}.review-results-stats{grid-template-columns:repeat(2,1fr)}.rr-table{display:block;overflow-x:auto}.rr-table th,.rr-table td{white-space:nowrap}}
 </style>
 <script>
-async function fetchAllExpertVotesForResults(){let all=[],from=0,page=1000;while(true){const{data,error}=await supa.from('expert_votes').select('story_id,expert_token').range(from,from+page-1);if(error)throw error;if(!data||!data.length)break;all=all.concat(data);if(data.length<page)break;from+=page;}return all;}
+async function fetchAllExpertVotesForResults(){let all=[],from=0,page=1000;while(true){const{data,error}=await supa.from('expert_votes').select('story_id,expert_token,created_at').gte('created_at',EXPERT_REVIEW_START_AT).range(from,from+page-1);if(error)throw error;if(!data||!data.length)break;all=all.concat(data);if(data.length<page)break;from+=page;}return all;}
 function getReviewResultRows(rows,line){const stories=(EXPERT_STORIES[line]||[]).map(s=>{const full=getStoryById(s.id)||s;return{id:s.id,title:s.title,author:s.author,publicVotes:FINAL_PUBLIC_VOTES[s.id]||full.votes||0,expertVotes:0}});const counts={};rows.forEach(r=>{const id=Number(r.story_id);counts[id]=(counts[id]||0)+1});stories.forEach(s=>{s.expertVotes=counts[s.id]||0});const maxPublic=Math.max(0,...stories.map(s=>s.publicVotes));const maxExpert=Math.max(0,...stories.map(s=>s.expertVotes));return stories.map(s=>{const publicScore=maxPublic?(s.publicVotes/maxPublic)*100:0;const expertScore=maxExpert?(s.expertVotes/maxExpert)*100:0;const totalScore=publicScore*.5+expertScore*.5;return{...s,publicScore,expertScore,totalScore,maxPublic,maxExpert}}).sort((a,b)=>b.totalScore-a.totalScore||b.expertScore-a.expertScore||b.publicScore-a.publicScore||a.id-b.id)}
 function renderReviewStats(rows,allRanked){const expertCount=new Set(rows.map(r=>r.expert_token).filter(Boolean)).size;const votedStories=allRanked.filter(s=>s.expertVotes>0).length;document.getElementById('reviewResultsStats').innerHTML=[['专家票总数',rows.length],['参与专家数',expertCount],['获专家票故事',votedStories],['入围故事数',allRanked.length]].map(([label,num])=>`<div class="rr-stat"><div class="rr-stat-num">${num}</div><div class="rr-stat-label">${label}</div></div>`).join('')}
 function renderResultLine(line,items){const top=items.slice(0,5);return `<article class="rr-line"><div class="rr-line-head"><div><div class="rr-line-title"><span class="rr-dot" style="background:${LINE_COLORS[line]}"></span>${LINE_NAMES[line]}</div><div class="rr-line-meta">本序列最高大众票 ${items[0]?.maxPublic||0}；最高专家票 ${items[0]?.maxExpert||0}</div></div><div class="rr-line-meta">取综合得分 Top 5</div></div><table class="rr-table"><thead><tr><th>排名</th><th>故事</th><th>作者</th><th>大众票</th><th>大众得分</th><th>专家票</th><th>专家得分</th><th>综合得分</th></tr></thead><tbody>${top.map((s,i)=>`<tr><td class="rr-rank">#${i+1}</td><td class="rr-title">${s.title}</td><td class="rr-author">${s.author}</td><td>${s.publicVotes}</td><td>${s.publicScore.toFixed(2)}</td><td>${s.expertVotes}</td><td>${s.expertScore.toFixed(2)}</td><td class="rr-score">${s.totalScore.toFixed(2)}</td></tr>`).join('')}</tbody></table></article>`}
